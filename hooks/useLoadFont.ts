@@ -19,6 +19,10 @@ const useLoadFont = (): boolean => {
         "Judson-Italic": require("../assets/fonts/Judson/Judson-Italic.ttf"),
         "Judson-Regular": require("../assets/fonts/Judson/Judson-Regular.ttf"),
         "Inter-ExtraBold": require("../assets/fonts/Inter/Inter_24pt-ExtraBold.ttf"),
+        "Inter-Regular": require("../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
+        "InstrumentSans-Regular": require("../assets/fonts/InstrumentSans/InstrumentSans-Regular.ttf"),
+        "InstrumentSans-Bold": require("../assets/fonts/InstrumentSans/InstrumentSans-Bold.ttf"),
+        "InstrumentSans-Condensed-Bold": require("../assets/fonts/InstrumentSans/InstrumentSans_Condensed-Bold.ttf"),
       });
       setFontsLoaded(true);
     };
