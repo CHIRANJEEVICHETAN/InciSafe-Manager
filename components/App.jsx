@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   // Applying loaded custom fonts
   welcomeText: {
-    fontSize: 25,
+    fontSize: 27,
     marginTop: 130,
     marginBottom: 5,
     textAlign: "center",
