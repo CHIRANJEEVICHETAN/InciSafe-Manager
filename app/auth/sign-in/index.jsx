@@ -9,15 +9,33 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
-import CustomSVG from "./../../../components/CustomSVG";
+import CustomSVG from "./../../../components/CustomSVG";  
+import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 
 const Login = () => {
   const router = useRouter();
+  const [fontsLoaded] = useFonts({
+    "Inter-Regular": require("./../../../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
+    "Inter-ExtraBold": require("./../../../assets/fonts/Inter/Inter_24pt-ExtraBold.ttf"),
+    "Roboto-Bold": require("./../../../assets/fonts/Roboto/Roboto-Bold.ttf"),
+    "Roboto-Medium": require("./../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
+    "InstrumentSans-Bold": require("./../../../assets/fonts/InstrumentSans/InstrumentSans-Bold.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>←</Text>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
+        accessibilityLabel="Go back">
+        {/* <Text style={styles.backButtonText}>←</Text> */}
+        <Image
+          source={require("./../../../assets/images/back-button.png")}
+          style={styles.backButtonImage}
+        />
       </TouchableOpacity>
 
       <Text style={styles.title}>Welcome ! Log in to InciSafe</Text>
@@ -35,9 +53,15 @@ const Login = () => {
         <Text style={styles.emailText}>Or Login with Email</Text>
       </View>
 
-      <TextInput style={styles.input} placeholder="Email Address" />
+      <View style={styles.inputContainer}>
+      <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
+      <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
+    </View>
+    <View style={styles.inputContainer}>
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false}/>
+      <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
+    </View>
 
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry />
 
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>Forgot password?</Text>
@@ -52,13 +76,20 @@ const Login = () => {
       </Text>
 
       <TouchableOpacity style={styles.adminButton}>
+        <Image
+          source={require("./../../../assets/images/shield.png")}
+          style={styles.adminLogo}
+        />
         <Text style={styles.adminButtonText}>Log in as Admin</Text>
       </TouchableOpacity>
 
-      <Image
+      {/* <Image
         source={require("./../../../assets/images/InciSafeLogo.png")}
         style={styles.logo}
-      />
+      /> */}
+      <View style={styles.logoContainer}>
+        <LogoSVG style={styles.logo} />
+      </View>
     </View>
   );
 };
@@ -73,10 +104,16 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: "flex-start",
-    marginBottom: 5,
+    // marginTop: 10,
+    marginBottom: 15,
+    position: "relative",
+    right: 5,
+    top: 10,
   },
-  backButtonText: {
-    fontSize: 50,
+  backButtonImage: {
+    width: 35,
+    height: 35,
+    marginTop: 15,
   },
   title: {
     fontSize: 26,
@@ -131,6 +168,17 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     fontSize: 16,
   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputIcon: {
+    width: 25,
+    height: 25,
+    position: "absolute",
+    right: 10,
+  },
   forgotPassword: {
     color: "blue",
     marginBottom: 20,
@@ -178,10 +226,13 @@ const styles = StyleSheet.create({
     fontFamily: "InstrumentSans-Bold",
     fontSize: 18,
   },
-  logo: {
-    width: "100%",
-    height: 200,
+  adminLogo: {
+    width: 35,
+    height: 30,
     alignSelf: "center",
+    position: "relative",
+    right: 20,
+    // backgroundColor: Colors.WHITE,
   },
   emailContainer: {
     // flexDirection: "start",
@@ -194,6 +245,16 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     fontSize: 14,
     position: "absolute",
+  },
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  logo: {
+    width: 150,   // Base width before scaling
+    height: 150,  // Base height before scaling
+    transform: [{ scale: 1.2 }],  // Scales the logo by 1.5x
   },
 });
 export default Login;
