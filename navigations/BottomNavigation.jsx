@@ -1,35 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native'; 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import HomeScreen from './../app/user/index';
+import HelpScreen from './../app/user/HelpScreen';
+import NotificationsScreen from './../app/user/NotificationsScreen';
+import ProfileScreen from './../app/user/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
-
-const HomeScreen = () => (
-  <View style={styles.screen}>
-    <Text>Home</Text>
-  </View>
-);
-const ReportsScreen = () => (
-  <View style={styles.screen}>
-    <Text>Reports</Text>
-  </View>
-);
-const AddScreen = () => (
-  <View style={styles.screen}>
-    <Text>Add</Text>
-  </View>
-);
-const NotificationsScreen = () => (
-  <View style={styles.screen}>
-    <Text>Notifications</Text>
-  </View>
-);
-const ProfileScreen = () => (
-  <View style={styles.screen}>
-    <Text>Profile</Text>
-  </View>
-);
 
 const BottomNavigation = () => {
   return (
@@ -44,11 +21,11 @@ const BottomNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Reports"
-        component={ReportsScreen}
+        name="Help"
+        component={HelpScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bar-chart" color={color} size={size} />
+            <Ionicons name="help-circle" color={color} size={size} />
           ),
         }}
       />
@@ -82,14 +59,5 @@ const BottomNavigation = () => {
     </Tab.Navigator>
   );
 };
-
-// Styles
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default BottomNavigation;

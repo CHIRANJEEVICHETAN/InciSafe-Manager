@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const SearchBar = ({ style, inputStyle }) => {
   return (
     <View style={[styles.searchBar, style]}>
+      <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
       <TextInput placeholder="Search..." style={[styles.input, inputStyle]} />
     </View>
   );
@@ -12,11 +14,33 @@ const SearchBar = ({ style, inputStyle }) => {
 const styles = StyleSheet.create({
   searchBar: {
     padding: 10,
+    borderRadius: 50,
+    backgroundColor: '#f0f0f0',
+    width: '80%',
+    marginLeft: '10%',
+    height: 40,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   input: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 50,
+    paddingLeft: 50,
+    fontSize: 17,
+    fontFamily: 'Roboto-Bold',
+    color: '#000',
+  },
+  searchIcon: {
+    position: 'absolute',
+    width: '10%',
+    left: 10,
+    top: 8,
+    zIndex: 100,
   },
 });
 
