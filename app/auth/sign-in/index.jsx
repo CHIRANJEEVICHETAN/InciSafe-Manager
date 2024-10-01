@@ -67,7 +67,7 @@ const Login = () => {
         <Text style={styles.forgotPassword}>Forgot password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity style={styles.loginButton} onPress={() => router.push("/user")}>
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
 
