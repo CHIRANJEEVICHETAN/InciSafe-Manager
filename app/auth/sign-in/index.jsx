@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,19 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ToastAndroid,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 import CustomSVG from "./../../../components/CustomSVG";  
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+// import { auth } from "./../../../configs/FirebaseConfig";
 
-const Login = () => {
+export default function Login() {
   const router = useRouter();
+  const auth = getAuth();
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("./../../../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
     "Inter-ExtraBold": require("./../../../assets/fonts/Inter/Inter_24pt-ExtraBold.ttf"),
@@ -25,6 +29,32 @@ const Login = () => {
 
   if (!fontsLoaded) {
     return null;
+  }
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const OnLogin = async () => {
+    if (email === "" || password === "") {
+      ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
+      return;
+    }
+    await signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user);
+    router.replace("/user");
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+    console.log(errorMessage, errorCode);
+    return;
+  });
+
   }
 
   return (
@@ -54,11 +84,11 @@ const Login = () => {
       </View>
 
       <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
+      <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setEmail(text)} />
       <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
     </View>
     <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false}/>
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setPassword(text)} />
       <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
     </View>
 
@@ -67,7 +97,7 @@ const Login = () => {
         <Text style={styles.forgotPassword}>Forgot password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={() => router.push("/user")}>
+      <TouchableOpacity style={styles.loginButton} onPress={OnLogin}>
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
 
@@ -257,4 +287,3 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1.2 }],  // Scales the logo by 1.5x
   },
 });
-export default Login;

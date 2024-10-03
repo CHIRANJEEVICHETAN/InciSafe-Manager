@@ -1,12 +1,17 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import useLoadFont from './../hooks/useLoadFont';
 
 const SearchBar = ({ style, inputStyle }) => {
   return (
     <View style={[styles.searchBar, style]}>
       <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
-      <TextInput placeholder="Search..." style={[styles.input, inputStyle]} />
+      <TextInput 
+        placeholder="Search for items..." 
+        style={[styles.input, inputStyle]} 
+        placeholderTextColor="#888" // Optional improvement for contrast
+      />
     </View>
   );
 };
@@ -26,18 +31,18 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 5, // Android shadow
   },
   input: {
+    height: 40, // Match height with searchBar
     borderRadius: 50,
-    paddingLeft: 50,
+    paddingLeft: 50, // Space for the icon
     fontSize: 17,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Bold', // Ensure this font is loaded correctly
     color: '#000',
   },
   searchIcon: {
     position: 'absolute',
-    width: '10%',
     left: 10,
     top: 8,
     zIndex: 100,

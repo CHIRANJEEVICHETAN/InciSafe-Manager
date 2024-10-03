@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 const icons = [
-  { name: 'Uniform', source: require('./../assets/images/HomeScreenIcons/uniformSafety.png') },
+  { name: 'Uniform', source: require('./../assets/images/HomeScreenIcons/uniformSafety1.png') },
   { name: 'Health Safety', source: require('./../assets/images/HomeScreenIcons/healthSafety.png') },
-//   { name: 'Safety', source: require('./../assets/images/HomeScreenIcons/safety.png') },
+  // { name: 'Safety', source: require('./../assets/images/HomeScreenIcons/safety.png') },
 //   { name: 'Safety', source: require('./../assets/images/HomeScreenIcons/safety.png') },
 //   { name: 'Safety', source: require('./../assets/images/HomeScreenIcons/safety.png') },
 //   { name: 'Safety', source: require('./../assets/images/HomeScreenIcons/safety.png') },

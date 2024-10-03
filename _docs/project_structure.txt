@@ -1,0 +1,92 @@
+/INCISAFE-MANAGER
+.gitignore
+[.vscode]
+[android]
+[app]
+    ├── [admin]
+    ├── [auth]
+        ├── [sign-in]
+            └── index.jsx
+        └── [sign-up]
+            └── index.jsx
+    ├── index.tsx
+    ├── [user]
+        ├── HelpScreen.jsx
+        ├── index.jsx
+        ├── NotificationsScreen.jsx
+        └── ProfileScreen.jsx
+    └── _layout.tsx
+app.json
+[assets]
+    ├── [fonts]
+        ├── [InstrumentSans]
+            ├── InstrumentSans-Bold.ttf
+            ├── InstrumentSans-Regular.ttf
+            └── InstrumentSans_Condensed-Bold.ttf
+        ├── [Inter]
+            ├── Inter_24pt-ExtraBold.ttf
+            └── Inter_24pt-Regular.ttf
+        ├── [Judson]
+            ├── Judson-Bold.ttf
+            ├── Judson-Italic.ttf
+            └── Judson-Regular.ttf
+        ├── [Roboto]
+            ├── Roboto-Bold.ttf
+            ├── Roboto-BoldItalic.ttf
+            ├── Roboto-Italic.ttf
+            ├── Roboto-Light.ttf
+            ├── Roboto-Medium.ttf
+            ├── Roboto-Regular.ttf
+            └── Roboto-Thin.ttf
+        └── [SpaceMono]
+            └── SpaceMono-Regular.ttf
+    └── [images]
+        ├── adaptive-icon.png
+        ├── adminLogo.png
+        ├── back-arrow.png
+        ├── back-button.png
+        ├── email.png
+        ├── eye-crossed.png
+        ├── eye-shape.png
+        ├── favicon.png
+        ├── google.png
+        ├── [HomeScreenIcons]
+            ├── equipmentIssues.jpg
+            ├── healthSafety.png
+            ├── uniformSafety.png
+            └── uniformSafety1.png
+        ├── icon.png
+        ├── INCISAFE.png
+        ├── InciSafeLogo.png
+        ├── partial-react-logo.png
+        ├── react-logo.png
+        ├── react-logo@2x.png
+        ├── react-logo@3x.png
+        ├── shield.png
+        ├── splash.png
+        └── user.png
+babel.config.js
+[components]
+    ├── App.jsx
+    ├── CustomSVG.jsx
+    ├── Header.jsx
+    ├── IconGrid.jsx
+    ├── LineSVG.jsx
+    ├── LogoSVG.jsx
+    └── SearchBar.jsx
+[constants]
+    └── Colors.ts
+[hooks]
+    ├── useColorScheme.ts
+    ├── useColorScheme.web.ts
+    ├── useLoadFont.ts
+    └── useThemeColor.ts
+LICENSE
+[navigations]
+    └── BottomNavigation.jsx
+[node_modules]
+package.json
+README.md
+[scripts]
+    └── reset-project.js
+tsconfig.json

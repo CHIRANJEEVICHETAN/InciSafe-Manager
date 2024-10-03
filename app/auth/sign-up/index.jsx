@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,14 +6,21 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ToastAndroid,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 import CustomSVG from "./../../../components/CustomSVG";  
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-const SignUp = () => {
+export default function SignUp() {
+  const auth = getAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // Added state for confirm password
+  const [username, setUsername] = useState("");
   const router = useRouter();
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("./../../../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
@@ -27,11 +34,44 @@ const SignUp = () => {
     return null;
   }
 
+  const OnCreateAccount = async (email, password) => {
+    if (username === "" || email === "" || password === "") {
+      ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
+      return;
+    }
+
+    if (password !== confirmPassword) { // Add confirm password validation
+      ToastAndroid.show("Passwords do not match", ToastAndroid.LONG);
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("User created:", user);
+      ToastAndroid.show("User created successfully", ToastAndroid.LONG);
+      router.push("/auth/sign-in");
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Error creating user:", errorCode, errorMessage);
+
+      if (errorCode === 'auth/network-request-failed') {
+        ToastAndroid.show("Network error. Please check your internet connection and try again.", ToastAndroid.LONG);
+      } else if (errorCode === 'auth/email-already-in-use') {
+        ToastAndroid.show("Email already in use. Please use a different email.", ToastAndroid.LONG);
+      } else if (errorCode === 'auth/invalid-email') {
+        ToastAndroid.show("Invalid email format. Please enter a valid email.", ToastAndroid.LONG);
+      } else {
+        ToastAndroid.show(`Error: ${errorMessage}`, ToastAndroid.LONG);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
         accessibilityLabel="Go back">
-        {/* <Text style={styles.backButtonText}>←</Text> */}
         <Image
           source={require("./../../../assets/images/back-button.png")}
           style={styles.backButtonImage}
@@ -40,7 +80,6 @@ const SignUp = () => {
 
       <Text style={styles.mainTitle}>Welcome !</Text>
       <Text style={styles.secondaryTitle}>Create an account to continue</Text>
-
 
       <TouchableOpacity style={styles.googleButton}>
         <Image
@@ -54,27 +93,28 @@ const SignUp = () => {
         <CustomSVG />
         <Text style={styles.emailText}>Or SignUp with Email</Text>
       </View>
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Username" keyboardType="default" autoCapitalize="words" autoCorrect={false} />
-      <Image source={require("./../../../assets/images/user.png")} style={styles.inputIcon} />
-    </View>
 
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
-      <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
-    </View>
+      <View style={styles.inputContainer}>
+        <TextInput style={styles.input} placeholder="Username" keyboardType="default" autoCapitalize="words" autoCorrect={false} onChangeText={(text) => setUsername(text)} />
+        <Image source={require("./../../../assets/images/user.png")} style={styles.inputIcon} />
+      </View>
 
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false}/>
-      <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
-    </View>
+      <View style={styles.inputContainer}>
+        <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setEmail(text)} />
+        <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
+      </View>
 
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry autoCapitalize="none" autoCorrect={false}/>
-      <Image source={require("./../../../assets/images/eye-crossed.png")} style={styles.inputIcon} />
-    </View>
+      <View style={styles.inputContainer}>
+        <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setPassword(text)} />
+        <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
+      </View>
 
-      <TouchableOpacity style={styles.SignUpButton}>
+      <View style={styles.inputContainer}>
+        <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setConfirmPassword(text)} />
+        <Image source={require("./../../../assets/images/eye-crossed.png")} style={styles.inputIcon} />
+      </View>
+
+      <TouchableOpacity style={styles.SignUpButton} onPress={() => OnCreateAccount(email, password)}>
         <Text style={styles.SignUpButtonText}>Register</Text>
       </TouchableOpacity>
 
@@ -82,7 +122,6 @@ const SignUp = () => {
         Already have an account? <Text style={styles.registerLink} onPress={() => router.push("/auth/sign-in")}>Login now</Text>
       </Text>
 
-      
       <View style={styles.logoContainer}>
         <LogoSVG style={styles.logo} />
       </View>
@@ -95,12 +134,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#B0E0E6",
-    // justifyContent: 'center',
     alignItems: "center",
   },
   backButton: {
     alignSelf: "flex-start",
-    // marginTop: 10,
     marginBottom: 15,
     position: "relative",
     right: 5,
@@ -113,7 +150,6 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     fontSize: 30,
-    // fontWeight: 'bold',
     marginBottom: 8,
     textAlign: "center",
     fontFamily: "Inter-ExtraBold",
@@ -137,11 +173,11 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 55,
     justifyContent: "center",
-    shadowColor: "#000", // Color of the shadow
-    shadowOffset: { width: 5, height: 2 }, // Shadow offset
-    shadowOpacity: 0.5, // Shadow opacity
-    shadowRadius: 3.84, // Shadow blur radius
-    elevation: 6, // Shadow elevation
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   googleIcon: {
     width: 25,
@@ -155,7 +191,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     paddingLeft: 30,
-    fontFamily: "Roboto-Bold", // Use Roboto Bold Font
+    fontFamily: "Roboto-Bold",
   },
   orText: {
     textAlign: "center",
@@ -164,7 +200,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#fff",
     padding: 15,
-    borderRadius:20,
+    borderRadius: 20,
     marginBottom: 8,
     width: "90%",
     marginTop: 6,
@@ -206,7 +242,6 @@ const styles = StyleSheet.create({
     color: "blue",
   },
   emailContainer: {
-    // flexDirection: "start",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 15,
@@ -223,9 +258,8 @@ const styles = StyleSheet.create({
     marginTop: -18,
   },
   logo: {
-    width: 150,   // Base width before scaling
-    height: 150,  // Base height before scaling
-    transform: [{ scale: 1.2 }],  // Scales the logo by 1.5x
+    width: 150,
+    height: 150,
+    transform: [{ scale: 1.2 }],
   },
 });
-export default SignUp;

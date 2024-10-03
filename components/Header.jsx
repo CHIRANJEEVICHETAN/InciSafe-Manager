@@ -3,13 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LogoSVG from "./../components/LogoSVG";
 
-const Header = ({ username, style }) => {
+const Header = ({ username = "User", style }) => { // Default username to 'User'
   return (
     <View style={[styles.header, style]}>
       <View style={styles.logoContainer}>
         <LogoSVG style={styles.logo} />
       </View>
-      <Text style={styles.greeting}>Hello! {username}</Text>
+      <Text style={styles.greeting}>
+        Hello! {username ? username : 'User'}  {/* Fallback to 'User' if username is null/undefined */}
+      </Text>
       <View style={styles.menuContainer}>
         <TouchableOpacity onPress={() => {}} style={styles.menuIcon}>
           <Ionicons name="menu" size={30} color="black" />
@@ -21,12 +23,9 @@ const Header = ({ username, style }) => {
 
 const styles = StyleSheet.create({
   header: {
-    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // padding: 10,
-    // backgroundColor: '#f76262',
     marginTop: 10,
     height: 100,
   },
