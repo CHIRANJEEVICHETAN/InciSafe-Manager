@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     marginTop: 130,
     marginBottom: 5,
     textAlign: "center",
-    // fontFamily: "Roboto-Bold",
+    fontFamily: "Roboto-Bold",
   },
   descriptionText: {
     fontSize: 24,

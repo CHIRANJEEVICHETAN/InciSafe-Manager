@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LogoSVG from "./../components/LogoSVG";
+import { useRouter } from 'expo-router';
 
 const Header = ({ username = "User", style }) => { // Default username to 'User'
+const router = useRouter();
   return (
     <View style={[styles.header, style]}>
       <View style={styles.logoContainer}>
@@ -13,7 +15,7 @@ const Header = ({ username = "User", style }) => { // Default username to 'User'
         Hello! {username ? username : 'User'}  {/* Fallback to 'User' if username is null/undefined */}
       </Text>
       <View style={styles.menuContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.menuIcon}>
+        <TouchableOpacity onPress={() => {router.push('/userPages/settings')}} style={styles.menuIcon}>
           <Ionicons name="menu" size={30} color="black" />
         </TouchableOpacity>
       </View>
