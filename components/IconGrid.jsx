@@ -95,28 +95,35 @@ const IconGrid = ({ style }) => {
     uniformIcon: {
       borderWidth: 2,
       // borderColor: 'red',
-      marginTop:30, 
+      marginTop:30,
+      position: 'absolute',
+      bottom: 32,
+      left: 30,
+      textAlign: 'center',
     },
     healthSafetyIcon: {
       marginTop: 30,
+      textAlign: 'center',
     },
     healthSafetyIconLabel: {
       borderColor: 'blue',
       position: 'absolute',
       bottom: 10,
       width: '90%',
+      marginTop: 15,
     },
     iconLabel: {
-      marginTop: 35,
+      marginTop: 5,
       textAlign: 'center',
       fontFamily: 'Roboto-Bold',
-      fontSize: 16,
+      fontSize: 13,
     },
     uniformIconLabel: {
       borderColor: 'blue',
       position: 'absolute',
       bottom: 10,
       width: '90%',
+      textAlign: 'center',
       
     },
             
