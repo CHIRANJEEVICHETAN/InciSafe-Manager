@@ -10,6 +10,7 @@ import {
 import useLoadFont from "./../hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
 import { useRouter } from "expo-router";
+// import BottomNavigator from "./../app/user/BottomNavigator";
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -70,6 +71,7 @@ export default function App() {
           </TouchableOpacity>
         </View>
       </View>
+      {/* <BottomNavigator />  */}
     </SafeAreaView>
   );
 }
@@ -85,17 +87,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  // Updated to include overflow and borderRadius on parent view for perfect rounding
   logoContainer: {
     alignItems: "center",
     position: "absolute",
     top: 0,
-    // left: -45,
     width: "125%",
     height: 430,
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    overflow: "hidden", // Clips the image for perfect rounding
+    overflow: "hidden",
   },
   logo: {
     width: "100%",
@@ -113,19 +113,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
   },
-  // Applying loaded custom fonts
   welcomeText: {
     fontSize: 27,
     marginTop: 130,
     marginBottom: 5,
     textAlign: "center",
-    fontFamily: "Roboto-Bold", // Use the bold Roboto font
+    // fontFamily: "Roboto-Bold",
   },
   descriptionText: {
     fontSize: 24,
     textAlign: "center",
     color: "#3F2D2D",
-    fontFamily: "Roboto-Regular", // Use regular Roboto font
+    fontFamily: "Roboto-Regular",
   },
   loginButton: {
     backgroundColor: "#426BFA",
@@ -134,18 +133,18 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 10,
     width: "75%",
-    shadowColor: "#000", // Color of the shadow
-    shadowOffset: { width: 5, height: 2 }, // Shadow offset
-    shadowOpacity: 0.5, // Shadow opacity
-    shadowRadius: 3.84, // Shadow blur radius
-    elevation: 6, // Shadow elevation
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   loginButtonText: {
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily: "Roboto-Bold", // Font applied to login button text
+    fontFamily: "Roboto-Bold",
   },
   signUpButton: {
     backgroundColor: "#A8EAF3",
@@ -155,25 +154,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "75%",
     marginTop: 10,
-    shadowColor: "#000", // Color of the shadow
-    shadowOffset: { width: 5, height: 2 }, // Shadow offset
-    shadowOpacity: 0.5, // Shadow opacity
-    shadowRadius: 3.84, // Shadow blur radius
-    elevation: 6, // Shadow elevation
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   signUpButtonText: {
     color: "black",
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily: "Roboto-Bold", // Use Roboto Bold font
+    fontFamily: "Roboto-Bold",
   },
   orText: {
     fontSize: 14,
     color: "black",
     marginVertical: 10,
     marginBottom: 15,
-    fontFamily: "Roboto-Medium", // Use Roboto Medium font
+    fontFamily: "Roboto-Medium",
   },
   googleButton: {
     flexDirection: "row",
@@ -186,11 +185,11 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     width: "80%",
     justifyContent: "center",
-    shadowColor: "#000", // Color of the shadow
-    shadowOffset: { width: 5, height: 2 }, // Shadow offset
-    shadowOpacity: 0.5, // Shadow opacity
-    shadowRadius: 3.84, // Shadow blur radius
-    elevation: 6, // Shadow elevation
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   googleIcon: {
     width: 25,
@@ -204,6 +203,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     paddingLeft: 30,
-    fontFamily: "Roboto-Regular", // Use Roboto Regular font
+    fontFamily: "Roboto-Regular",
   },
 });
