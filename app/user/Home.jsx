@@ -56,12 +56,6 @@ const Home = () => {
       <SearchBar />
       <IconGrid style={styles.iconGrid} />
 
-      <TouchableOpacity onPress={() => {
-        router.push('/user/Help');
-      }}>
-        <Text>Help</Text>
-      </TouchableOpacity>
-
       {/* Logout button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>

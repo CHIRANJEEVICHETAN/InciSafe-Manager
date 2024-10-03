@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import useLoadFont from './../hooks/useLoadFont';
 
 const SearchBar = ({ style, inputStyle }) => {
+  
   return (
     <View style={[styles.searchBar, style]}>
       <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
@@ -40,6 +41,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'Roboto-Bold', // Ensure this font is loaded correctly
     color: '#000',
+    // backgroundColor: 'red',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 50,
   },
   searchIcon: {
     position: 'absolute',
