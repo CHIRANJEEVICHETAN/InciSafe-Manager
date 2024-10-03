@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
-import Header from './../../components/Header';
-import SearchBar from './../../components/SearchBar';
-import IconGrid from './../../components/IconGrid';
-import LineSVG from './../../components/LineSVG';
-import { useRouter } from 'expo-router';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';  // Import signOut
-import useLoadFont from './../../hooks/useLoadFont';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react'  // Correctly import useState and useEffect
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+import { useRouter } from 'expo-router'
 
-const Home = () => {
+
+export default function settings() {
   const router = useRouter();
-  const { isFontLoaded } = useLoadFont(); 
-  const auth = getAuth();
+ const auth = getAuth();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);  // Added loading state
-  const [username, setUsername] = useState("User");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -51,39 +45,24 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <Header username={user?.displayName || "User"} style={styles.header} />
-      <LineSVG style={styles.line} />
-      <SearchBar />
-      <IconGrid style={styles.iconGrid} />
-
-      
-
+      <Text style={styles.text}>settings</Text>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 10,
-  },
-  loadingContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    padding: 10,
-    color: "red",
-  },
-  line: {
-    marginBottom: 10,
-    marginTop: -6,
-  },
-  iconGrid: {
-    marginTop: 20,
-    transform: [{ scale: 1.2 }],
+  text: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   logoutButton: {
     marginTop: 20,
@@ -96,6 +75,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-});
-
-export default Home;
+})
