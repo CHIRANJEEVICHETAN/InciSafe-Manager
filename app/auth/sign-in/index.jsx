@@ -83,6 +83,7 @@ export default function Login() {
         <Text style={styles.emailText}>Or Login with Email</Text>
       </View>
 
+
       <View style={styles.inputContainer}>
       <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setEmail(text)} />
       <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
