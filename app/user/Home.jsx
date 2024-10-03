@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     marginTop: -6,
   },
   iconGrid: {
-    marginTop: 20,
+    marginTop: 60,
     transform: [{ scale: 1.2 }],
   },
   logoutButton: {
