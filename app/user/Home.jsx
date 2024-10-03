@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     color: "red",
   },
   line: {
-    marginBottom: 10,
-    marginTop: -6,
+    marginBottom: 15,
+    marginTop: -8,
   },
   iconGrid: {
     marginTop: 60,
