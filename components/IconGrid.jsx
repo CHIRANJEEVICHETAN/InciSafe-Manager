@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import useLoadFont from "./../hooks/useLoadFont";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const icons = [
   { name: 'Uniform', source: require('./../assets/images/HomeScreenIcons/uniformSafety.png') },
@@ -14,6 +18,18 @@ const icons = [
 ];
 
 const IconGrid = ({ style }) => {
+  const fontsLoaded = useLoadFont();
+
+  // Hide the splash screen once the fonts are loaded
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null; // Don't render anything until fonts are loaded
+  }
   return (
     <View style={[styles.grid, style]}>
       {icons.map((icon, index) => (
@@ -73,6 +89,8 @@ const IconGrid = ({ style }) => {
       borderRadius: 10,
       padding: 10,
       marginTop: 10,
+      // fontFamily: 'Roboto-Bold',
+      // fontWeight: 'bold',
     },
     uniformIcon: {
       borderWidth: 2,
@@ -89,8 +107,10 @@ const IconGrid = ({ style }) => {
       width: '90%',
     },
     iconLabel: {
-      marginTop: 5,
+      marginTop: 35,
       textAlign: 'center',
+      fontFamily: 'Roboto-Bold',
+      fontSize: 16,
     },
     uniformIconLabel: {
       borderColor: 'blue',
