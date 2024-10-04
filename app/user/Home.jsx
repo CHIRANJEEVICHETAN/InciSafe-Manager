@@ -65,8 +65,10 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 10,
+    backgroundColor: '#B0E0E6',
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    // padding: 10,
   },
   loadingContainer: {
     flex: 1,

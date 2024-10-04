@@ -14,7 +14,6 @@ import CustomSVG from "./../../../components/CustomSVG";
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-// import { auth } from "./../../../configs/FirebaseConfig";
 
 export default function Login() {
   const router = useRouter();
@@ -59,7 +58,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
+      <TouchableOpacity style={styles.backButton} onPress={() => router.replace("/")} accessibilityRole="button" 
         accessibilityLabel="Go back">
         {/* <Text style={styles.backButtonText}>←</Text> */}
         <Image
