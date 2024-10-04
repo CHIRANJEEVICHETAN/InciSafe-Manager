@@ -49,9 +49,6 @@ export default function settings() {
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
-      <View>
-        <Text style={styles.text}>User ID: {user?.uid}</Text>
-      </View>
     </View>
   )
 }

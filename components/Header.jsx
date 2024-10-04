@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     height: 100,
   },
   logoContainer: {
-    marginLeft: -80,
+    marginLeft: -70,
+    marginTop: 10,
   },
   logo: {
     width: 50,
