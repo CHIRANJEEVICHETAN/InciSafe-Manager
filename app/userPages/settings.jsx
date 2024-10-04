@@ -1,13 +1,52 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from 'expo-router';
 
 const Settings = () => {
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const router = useRouter();
+  const auth = getAuth();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  const toggleTheme = () => {
-    setIsDarkTheme(previousState => !previousState);
-  };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false); // Stop loading after auth check
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!user && !loading) {
+      router.replace('/auth/sign-in');  // Use replace to prevent back navigation to Home
+    }
+  }, [user, loading]);
+
+    // Logout function
+    const handleLogout = async () => {
+      try {
+        await signOut(auth);  // Call Firebase signOut function
+        router.replace('/auth/sign-in');  // Redirect to the sign-in screen
+      } catch (error) {
+        console.error("Error signing out: ", error);  // Handle any errors during sign out
+      }
+    };
+  
+    const toggleTheme = () => {
+      setIsDarkTheme(previousState => !previousState);
+    };
+  
+    if (loading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" /> 
+        </View>
+      );
+    }
 
   return (
     <ScrollView style={styles.container}>
@@ -62,7 +101,7 @@ const Settings = () => {
         <Text style={styles.menuText}>About</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={handleLogout}>
         <MaterialIcons name="logout" size={20} color="black" />
         <Text style={styles.menuText}>Log out</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
@@ -152,6 +191,12 @@ const styles = StyleSheet.create({
   switch: {
     position: 'absolute',
     right: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
   },
 });
 
