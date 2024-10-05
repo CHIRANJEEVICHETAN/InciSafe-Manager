@@ -32,7 +32,7 @@ const Settings = () => {
         await signOut(auth);  // Call Firebase signOut function
         router.replace('/auth/sign-in');  // Redirect to the sign-in screen
       } catch (error) {
-        console.error("Error signing out: ", error);  // Handle any errors during sign out
+        console.error("Error signing out: ", error); 
       }
     };
   
