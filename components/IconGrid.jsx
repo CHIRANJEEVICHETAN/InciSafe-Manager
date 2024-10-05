@@ -61,7 +61,7 @@ const IconGrid = ({ style }) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.iconContainer}>
-        <Text style={styles.iconLabel}>Environmental Hazards</Text>
+        <Text style={[styles.iconLabel, { width: "100%", textAlign: "center", marginTop: 10 }]}>Environmental Hazards</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/environmentalHazards.png')}
           style={styles.icon}
