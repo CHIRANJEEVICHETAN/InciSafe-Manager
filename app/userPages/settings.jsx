@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
@@ -51,6 +51,13 @@ const Settings = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
+        accessibilityLabel="Go back">
+        <Image
+          source={require("./../../assets/images/back-button.png")}
+          style={styles.backButtonImage}
+        />
+      </TouchableOpacity>
         <Ionicons name="settings-outline" size={30} color="black" style={{marginTop: 3}} />
         <Text style={styles.headerText}>Settings</Text>
       </View>
@@ -197,6 +204,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    // marginTop: 10,
+    marginBottom: -20,
+    position: "absolute",
+    left: 25,
+    top: 0,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 23,
+    zIndex: 1000,
   },
 });
 
