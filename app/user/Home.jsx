@@ -65,8 +65,10 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 10,
+    backgroundColor: '#B0E0E6',
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    // padding: 10,
   },
   loadingContainer: {
     flex: 1,
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
     marginTop: -8,
   },
   iconGrid: {
-    marginTop: 60,
+    marginTop: 80,
     transform: [{ scale: 1.2 }],
   },
   logoutButton: {
