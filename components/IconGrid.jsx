@@ -2,12 +2,13 @@ import React, { useCallback } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import useLoadFont from "./../hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
+import { useRouter } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
 
 const IconGrid = ({ style }) => {
   const fontsLoaded = useLoadFont();
-
+  const router = useRouter();
   // Hide the splash screen once the fonts are loaded
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -20,7 +21,7 @@ const IconGrid = ({ style }) => {
   }
   return (
     <View style={[styles.grid, style]}>
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/uniformSafety')}>
         <Text style={[styles.iconLabel, styles.uniformIconLabel]}>Uniform</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/uniformSafety.png')}
@@ -28,7 +29,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/healthSafety')}>
         <Text style={[styles.iconLabel, styles.healthSafetyIconLabel]}>Health Safety</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/healthSafety.png')}
@@ -36,7 +37,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/equipmentIssues')}>
         <Text style={styles.iconLabel}>Equipment Issues</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/equipmentIssues.png')}
@@ -44,7 +45,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/FireIncident')}>
         <Text style={styles.iconLabel}>Fire Incident</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/fireIncident.png')}
@@ -52,7 +53,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/Hazardousmaterials')}>
         <Text style={styles.iconLabel}>Hazardous Materials</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/hazardousMaterials.png')}
@@ -60,7 +61,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/environmentalHazards')}>
         <Text style={[styles.iconLabel, { width: "100%", textAlign: "center", marginTop: 10 }]}>Environmental Hazards</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/environmentalHazards.png')}
@@ -68,7 +69,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/policyViolations')}>
         <Text style={styles.iconLabel}>Policy Violations</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/policyViolations.png')}
@@ -76,7 +77,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/weatherHazards')}>
         <Text style={styles.iconLabel}>Weather Hazards</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/weatherHazards.png')}
@@ -84,7 +85,7 @@ const IconGrid = ({ style }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/humanErrors')}>
         <Text style={styles.iconLabel}>Human Errors</Text>
         <Image
           source={require('./../assets/images/HomeScreenIcons/humanErrors.png')}
