@@ -13,13 +13,15 @@ import { Colors } from "../../../constants/Colors";
 import CustomSVG from "./../../../components/CustomSVG";  
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 export default function SignUp() {
   const auth = getAuth();
+  const db = getFirestore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // Added state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const router = useRouter();
   const [fontsLoaded] = useFonts({
@@ -40,7 +42,7 @@ export default function SignUp() {
       return;
     }
 
-    if (password !== confirmPassword) { // Add confirm password validation
+    if (password !== confirmPassword) {
       ToastAndroid.show("Passwords do not match", ToastAndroid.LONG);
       return;
     }
@@ -48,7 +50,19 @@ export default function SignUp() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log("User created:", user);
+
+      // Update the user's display name
+      await updateProfile(user, {
+        displayName: username
+      });
+
+      // Store additional user information in Firestore with role as 'user'
+      await setDoc(doc(db, "users", user.uid), {
+        username: username,
+        email: email,
+        role: 'user' // Hardcoded role as 'user'
+      });
+
       ToastAndroid.show("User created successfully", ToastAndroid.LONG);
       router.push("/auth/sign-in");
     } catch (error) {
@@ -81,17 +95,9 @@ export default function SignUp() {
       <Text style={styles.mainTitle}>Welcome !</Text>
       <Text style={styles.secondaryTitle}>Create an account to continue</Text>
 
-      <TouchableOpacity style={styles.googleButton}>
-        <Image
-          source={require("./../../../assets/images/google.png")}
-          style={styles.googleIcon}
-        />
-        <Text style={styles.googleButtonText}>Sign up with Google</Text>
-      </TouchableOpacity>
-
       <View style={styles.emailContainer}>
         <CustomSVG />
-        <Text style={styles.emailText}>Or SignUp with Email</Text>
+        <Text style={styles.emailText}>SignUp with Email</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -160,38 +166,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontFamily: "Inter-Regular",
-  },
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.BLACK,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    width: "80%",
-    height: 55,
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 5, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.84,
-    elevation: 6,
-  },
-  googleIcon: {
-    width: 25,
-    height: 25,
-    position: "absolute",
-    left: 12,
-  },
-  googleButtonText: {
-    color: Colors.WHITE,
-    fontSize: 20,
-    fontWeight: "500",
-    textAlign: "center",
-    paddingLeft: 30,
-    fontFamily: "Roboto-Bold",
   },
   orText: {
     textAlign: "center",

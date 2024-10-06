@@ -66,7 +66,7 @@ const Settings = () => {
         <TextInput placeholder="Search" style={styles.searchText} />
       </View>
       <View style={styles.menuItemlist}>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0, marginTop: 10}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0, marginTop: 10}]} onPress={() => router.push('/userPages/editProfile')}>
         <FontAwesome name="pencil" size={22} color="black" />
         <Text style={styles.menuText}>Edit profile</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
