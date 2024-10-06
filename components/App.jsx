@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
 import useLoadFont from "./../hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
@@ -55,26 +56,30 @@ export default function App() {
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
 
+          <Text style={styles.orText}>Or</Text>
+
+
           <TouchableOpacity style={styles.signUpButton} onPress={() => router.push("/auth/sign-up")}>
             <Text style={styles.signUpButtonText}>Sign Up</Text>
           </TouchableOpacity>
 
-          <Text style={styles.orText}>Or</Text>
           
           {/* onPress={() => router.push("/auth/google-sign-in")} */}
-          <TouchableOpacity style={styles.googleButton}>
+          {/* <TouchableOpacity style={styles.googleButton}>
             <Image
               source={require("./../assets/images/google.png")}
               style={styles.googleIcon}
             />
             <Text style={styles.googleButtonText}>Continue with Google</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       {/* <BottomNavigator />  */}
     </SafeAreaView>
   );
 }
+
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -85,14 +90,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    padding: 10,
   },
   logoContainer: {
     alignItems: "center",
     position: "absolute",
     top: 0,
-    width: "125%",
-    height: 430,
+    width: "120%",
+    resizeMode: "contain",
+    height: height * 0.49,
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
     overflow: "hidden",
@@ -100,7 +106,8 @@ const styles = StyleSheet.create({
   logo: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
+    resizeMode: "contain",
+    marginLeft: -5, 
   },
   bottomContainer: {
     backgroundColor: "#CDC9C9",
@@ -108,23 +115,26 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     padding: 20,
     width: "112%",
-    height: 300,
+    height: height * 0.32,
     alignItems: "center",
     position: "absolute",
     bottom: 0,
   },
   welcomeText: {
-    fontSize: 27,
-    marginTop: 130,
+    fontSize: width * 0.064,
+    marginTop: height * 0.18,
     marginBottom: 5,
     textAlign: "center",
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Inter-ExtraBold",
   },
   descriptionText: {
-    fontSize: 24,
+    fontSize: width * 0.07,
     textAlign: "center",
     color: "#3F2D2D",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Judson-Regular",
+    // width: "80%",
+    // marginHorizontal: width * 0.1,
+    marginBottom: height * 0.01,
   },
   loginButton: {
     backgroundColor: "#426BFA",
@@ -132,6 +142,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 25,
     marginBottom: 10,
+    marginTop: height * 0.03,
     width: "75%",
     shadowColor: "#000",
     shadowOffset: { width: 5, height: 2 },
