@@ -22,6 +22,9 @@ ios/
 *.xcodeproj/
 *.xcassets
 
+# other-extension-files
+_docs/
+
 # Node.js dependencies
 node_modules/
 npm-debug.log
