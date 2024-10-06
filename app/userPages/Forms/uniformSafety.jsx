@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert, Image, Platform, KeyboardAvoidingView, FlatList } from 'react-native';
+import { SafeAreaView, View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert, Image, Platform, KeyboardAvoidingView, FlatList, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import axios from 'axios';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from './../../../configs/FirebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from './../../../configs/FirebaseConfig';
+import DateTimePickerField from './../../../components/DateTimePicker';
+import LogoSVG from './../../../components/LogoSVG';
+import LineSVG from './../../../components/LineSVG';
 
 export default function UniformSafety() {
+  // State variables for form data and UI control
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -26,7 +31,9 @@ export default function UniformSafety() {
   const [openEmployee, setOpenEmployee] = useState(false);
   const [evidence, setEvidence] = useState(null);
   const [evidenceName, setEvidenceName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
+  // Fetch departments and employees data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,11 +49,13 @@ export default function UniformSafety() {
     fetchData();
   }, []);
 
+  // Handle date selection from date picker
   const handleDateConfirm = (selectedDate) => {
     setDate(selectedDate);
     setDatePickerVisibility(false);
   };
 
+  // Handle image upload from camera or gallery
   const handleUploadEvidence = async (source) => {
     try {
       let result;
@@ -71,26 +80,19 @@ export default function UniformSafety() {
         });
       }
 
-      console.log('Image picker result:', result); // Log the entire result object
-
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedAsset = result.assets[0];
-        console.log('Selected asset:', selectedAsset);
-
         setEvidence(selectedAsset.uri);
         setEvidenceName(selectedAsset.uri.split('/').pop());
-        console.log('Evidence set:', selectedAsset.uri);
-        console.log('Evidence name set:', selectedAsset.uri.split('/').pop());
       } else {
-        console.log('Image selection was canceled or no asset was selected');
         Alert.alert('Info', 'No image was selected.');
       }
     } catch (error) {
-      console.error('Error in handleUploadEvidence:', error);
       Alert.alert('Error', 'Failed to upload evidence. Please try again. Error: ' + error.message);
     }
   };
 
+  // Reset form fields to initial state
   const handleReset = () => {
     setDate(new Date());
     setSelectedDepartment(null);
@@ -104,35 +106,71 @@ export default function UniformSafety() {
     setEvidence(null);
   };
 
-  const handleSubmit = async () => {
-    try {
-      const incidentCategory = "Uniform Safety Equipment Violation"; // Define the incident category
+  // Upload image to storage and get its URL
+  const uploadImageAndGetURL = async (imageUri) => {
+    const storage = getStorage();
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    const storageRef = ref(storage, `images/${Date.now()}-${imageUri.split('/').pop()}`);
+    
+    await uploadBytes(storageRef, blob);
+    return await getDownloadURL(storageRef);
+  };
 
+  // Format date and time for document ID
+  const formatDateTime = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}${month}${year}T${hours}${minutes}`;
+  };
+
+  const dateTime = formatDateTime(new Date());
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      const incidentCategory = "Uniform Safety Equipment Violation";
+  
+      let imageUrl = null;
+      if (evidence) {
+        imageUrl = await uploadImageAndGetURL(evidence);
+      }
+  
       const violationData = {
+        incidentCategory,
+        violationTypes,
         date: date.toISOString(),
         selectedDepartment,
         selectedEmployee,
+        ...(imageUrl && { evidence: imageUrl }), // Store image URL
         incidentDescription,
-        violationTypes,
-        incidentCategory,
       };
   
-      if (evidence) {
-        violationData.evidence = evidence;
-      }
+      const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
+      await setDoc(doc(db, "uniformSafety", customDocId), violationData); // Use setDoc with custom ID
   
-      await addDoc(collection(db, "violations"), violationData);
       Alert.alert("Success", "Form submitted successfully!");
       handleReset();
     } catch (error) {
-      console.error("Error submitting form:", error);
       Alert.alert("Error", "Failed to submit the form. Please try again.");
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
+  // Render the form content
   const renderContent = () => (
     <View style={styles.contentContainer}>
+      <View style={styles.logoContainer}>
+        <LogoSVG style={styles.logo} />
+      </View>
       <Text style={styles.header}>Uniform Safety Equipment Violation</Text>
+
+      <LineSVG style={styles.line} />
 
       <Text style={styles.label}>Violation Type:</Text>
       <FlatList
@@ -141,7 +179,7 @@ export default function UniformSafety() {
         keyExtractor={item => item.key}
       />
 
-      <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
+      {/* <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
         <Text style={styles.dateButtonText}>Select Date & Time of violation</Text>
       </TouchableOpacity>
       <DateTimePickerModal
@@ -150,7 +188,8 @@ export default function UniformSafety() {
         onConfirm={handleDateConfirm}
         onCancel={() => setDatePickerVisibility(false)}
       />
-      <Text style={styles.dateText}>{date.toLocaleString()}</Text>
+      <Text style={styles.dateText}>{date.toLocaleString()}</Text> */}
+      <DateTimePickerField />
 
       <Text style={styles.label}>Select Department</Text>
       <DropDownPicker
@@ -195,6 +234,7 @@ export default function UniformSafety() {
         </>
       )}
 
+      <Text style={styles.label}>Incident Description</Text>
       <TextInput
         placeholder="Incident Description"
         value={incidentDescription}
@@ -202,13 +242,27 @@ export default function UniformSafety() {
         multiline
         numberOfLines={4}
         style={styles.textInput}
+        placeholderTextColor="#000"
       />
 
-      <Button title="Submit" onPress={handleSubmit} />
-      <Button title="Reset" onPress={handleReset} color="red" />
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#007BFF" />
+      ) : (
+        <>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleReset} style={styles.resetButton}>
+              <Text style={styles.buttonText}>Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 
+  // Render each violation type as a checkbox
   const renderViolationType = ({ item }) => (
     <View style={styles.checkboxContainer}>
       <Checkbox
@@ -219,6 +273,7 @@ export default function UniformSafety() {
     </View>
   );
 
+  // Data for violation types
   const violationTypesData = [
     { key: 'shoes', label: 'Not wearing proper shoes' },
     { key: 'dressCode', label: 'Not following the proper dress code' },
@@ -257,13 +312,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    marginLeft: 58,
   },
   label: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: '600',
     marginVertical: 10,
   },
@@ -271,32 +327,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  dateButton: {
-    backgroundColor: '#007BFF',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  dateButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  dateText: {
-    fontSize: 18,
-    marginVertical: 10,
-    color: '#333',
-    textAlign: 'center',
+    marginLeft: 60,
   },
   dropdown: {
-    marginBottom: 20,
+    marginBottom: 10,
+    backgroundColor: '#e0f7fa',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   evidenceContainer: {
     flexDirection: 'row',
@@ -306,10 +352,20 @@ const styles = StyleSheet.create({
   evidenceButton: {
     backgroundColor: '#28a745',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 25,
     alignItems: 'center',
     flex: 1,
     marginHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   evidenceButtonText: {
     color: '#fff',
@@ -342,6 +398,71 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#e0f7fa',
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    borderRadius: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    // marginVertical: 10,
+    marginTop: -15,
+  },
+  submitButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    width: '40%',
+    alignItems: 'center',
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  resetButton: {
+    backgroundColor: '#dc2626',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    width: '40%',
+    alignItems: 'center',
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  logoContainer: {
+    marginLeft: -70,
+    marginTop: 10,
+    position: 'absolute',
+    top: -68,
+    left: 3,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    transformOrigin: 'center',
+    transform: [{ scale: 0.3 }],
+    marginRight: 10,
+  },
+  line: {
+    // marginBottom: 10,
+    marginTop: -6,
+    width: '150%',
+    borderWidth: 0.5,
+    borderColor: '#000',
+    marginLeft: -23,
+    marginRight: 10,
   },
 });
