@@ -3,16 +3,30 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LogoSVG from "./../components/LogoSVG";
 import { useRouter } from 'expo-router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useState, useEffect } from 'react';
 
-const Header = ({ username = "User", style }) => { // Default username to 'User'
-const router = useRouter();
+
+const Header = ({ style }) => {
+  const router = useRouter();
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user ? user.displayName : "User");  // Check if user is not null
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <View style={[styles.header, style]}>
       <View style={styles.logoContainer}>
         <LogoSVG style={styles.logo} />
       </View>
       <Text style={styles.greeting}>
-        Hello! {username ? username : 'User'}  {/* Fallback to 'User' if username is null/undefined */}
+        Hello! {user ? user : 'User'}  {/* Fallback to 'User' if username is null/undefined */}
       </Text>
       <View style={styles.menuContainer}>
         <TouchableOpacity onPress={() => {router.push('/userPages/settings')}} style={styles.menuIcon}>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert, Image, Platform, KeyboardAvoidingView, FlatList, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import axios from 'axios';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
@@ -12,8 +11,11 @@ import { db, storage } from './../../../configs/FirebaseConfig';
 import DateTimePickerField from './../../../components/DateTimePicker';
 import LogoSVG from './../../../components/LogoSVG';
 import LineSVG from './../../../components/LineSVG';
+import { getAuth } from 'firebase/auth';
 
 export default function UniformSafety() {
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
   // State variables for form data and UI control
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -139,6 +141,11 @@ export default function UniformSafety() {
       if (evidence) {
         imageUrl = await uploadImageAndGetURL(evidence);
       }
+
+      // Ensure you have the current user's information
+    const currentUser = auth.currentUser;
+      const username = currentUser ? currentUser.displayName : "Unknown User";
+      const email = currentUser ? currentUser.email : "Unknown Email";
   
       const violationData = {
         incidentCategory,
@@ -148,6 +155,8 @@ export default function UniformSafety() {
         selectedEmployee,
         ...(imageUrl && { evidence: imageUrl }), // Store image URL
         incidentDescription,
+        username,
+        email,
       };
   
       const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
