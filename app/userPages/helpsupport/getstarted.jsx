@@ -1,56 +1,31 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+// import { useRouter } from 'expo-router';
 
-const HelpCenter = () => {
-  const router = useRouter();
+const getstarted = () => {
+//   const router = useRouter();
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
       </View>
 
-      <Text style={styles.welcomeText}>Welcome to the Support Center</Text>
+      <Text style={styles.getstartedText}>Get Started</Text>
 
       <View style={styles.menuList}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/getstarted')}>
-          <Text style={styles.menuText}>Get Started</Text>
+        <TouchableOpacity style={styles.menuItem}>
+          <Text style={styles.menuText}>Account Creation</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>How to Report an Incident</Text>
+          <Text style={styles.menuText}>Login</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Incident Management</Text>
-          <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Notifications and Alerts</Text>
-          <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Documentation and Evidence Upload</Text>
-          <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Troubleshooting</Text>
-          <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Frequently Asked Questions (FAQs)</Text>
-          <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Contact Support</Text>
+          <Text style={styles.menuText}>System Requirements</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
       </View>
@@ -82,12 +57,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 6,
-    paddingLeft: 110,
-    paddingRight:90,
+    paddingLeft: 120,
   },
-  welcomeText: {
+  getstartedText: {
     fontSize: 21,
-    margin: 25,
+    margin: 15,
     textAlign: 'center',
     color: '#555',
   },
@@ -112,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HelpCenter;
+export default getstarted;
