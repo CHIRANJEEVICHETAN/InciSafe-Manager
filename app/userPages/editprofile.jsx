@@ -35,7 +35,7 @@ const EditProfilePage = () => {
       <View style={styles.separator} />
 
       <View style={styles.profileIconContainer}>
-        <FontAwesome name="user-circle" size={80} color="#000000" />
+        <FontAwesome name="user-circle" size={85} color="#000000" />
       </View>
       
       <View style={styles.fieldContainer}>
