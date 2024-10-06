@@ -39,10 +39,10 @@ export default function UniformSafety() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deptResponse = await axios.get('http://192.168.190.217:3000/departments');
+        const deptResponse = await axios.get('http://192.168.0.101:3000/departments');
         setDepartments(deptResponse.data.map(dept => ({ label: dept, value: dept })));
         
-        const empResponse = await axios.get('http://192.168.190.217:3000/employees');
+        const empResponse = await axios.get('http://192.168.0.101:3000/employees');
         setEmployees(empResponse.data.map(emp => ({ label: emp, value: emp })));
       } catch (error) {
         Alert.alert("Error", "Failed to fetch data from the server.");
