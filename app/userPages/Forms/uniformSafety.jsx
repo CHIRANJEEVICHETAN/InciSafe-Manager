@@ -143,7 +143,7 @@ export default function UniformSafety() {
       }
 
       // Ensure you have the current user's information
-    const currentUser = auth.currentUser;
+      const currentUser = auth.currentUser;
       const username = currentUser ? currentUser.displayName : "Unknown User";
       const email = currentUser ? currentUser.email : "Unknown Email";
   
