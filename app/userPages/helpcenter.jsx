@@ -59,48 +59,54 @@ const HelpCenter = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingTop: 25,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 28,
+    padding: 25,
     borderBottomWidth: 1.8,
     borderColor: '#ddd',
     alignContent: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  closeButton: {
-    padding: 5,
+    marginBottom: -8,
+    marginTop: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 6,
+    paddingLeft: 110,
+    paddingRight:90,
   },
   welcomeText: {
-    fontSize: 18,
-    margin: 16,
+    fontSize: 21,
+    margin: 25,
     textAlign: 'center',
     color: '#555',
   },
   menuList: {
-    marginHorizontal: 16,
+    marginHorizontal: 15,
   },
   menuItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.8,
     borderBottomColor: '#ddd',
-    marginHorizontal: 10, // Adding some margin on the sides
+    marginHorizontal: 10, 
   },
   menuText: {
     fontSize: 18,
   },
   chevron: {
     position: 'absolute',
-    right: 10,
+    right: 5,
   },
 });
 
