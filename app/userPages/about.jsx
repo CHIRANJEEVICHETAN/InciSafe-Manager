@@ -2,51 +2,51 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Terms = () => {
+const About= () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Terms & Conditions </Text>
+        <Text style={styles.headerText}> About </Text>
       </View>
 
       <View style={styles.menuList}>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Introduction</Text>
+          <Text style={styles.menuText}>About the Project</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Use of Platform</Text>
+          <Text style={styles.menuText}>Our Mission</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>User Accounts</Text>
+          <Text style={styles.menuText}>Key Features of the System</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Incident Reporting</Text>
+          <Text style={styles.menuText}>Innovation and Future Plans</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Data Privacy and Security </Text>
+          <Text style={styles.menuText}>Our Commitment to Data Security</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Suspension and Termination</Text>
+          <Text style={styles.menuText}>Our Approach to Safety</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Privacy and Confidentiality </Text>
+          <Text style={styles.menuText}>Who we serve </Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Contact Information</Text>
+          <Text style={styles.menuText}>Contact Us</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
       </View>
@@ -78,14 +78,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 6,
-    paddingLeft: 65,  
+    paddingLeft: 148,  
   },
   
   menuList: {
     marginHorizontal: 15,
     paddingTop: 70,
   },
-
+  
   menuItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Terms;
+export default About;
