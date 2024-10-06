@@ -88,7 +88,7 @@ const Settings = () => {
           style={styles.switch}
         />
       </View>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/helpSupport')}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/HelpSupport/getstarted')}>
         <Ionicons name="help-circle-outline" size={28} color="black" style={{marginLeft: -5}} />
         <Text style={styles.menuText}>Help & Support</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
