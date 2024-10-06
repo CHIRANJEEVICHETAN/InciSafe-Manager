@@ -71,7 +71,7 @@ const Settings = () => {
         <Text style={styles.menuText}>Edit profile</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/changePassword')}>
         <FontAwesome name="lock" size={22} color="black" />
         <Text style={styles.menuText}>Change Password</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
@@ -88,22 +88,22 @@ const Settings = () => {
           style={styles.switch}
         />
       </View>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/helpSupport')}>
         <Ionicons name="help-circle-outline" size={28} color="black" style={{marginLeft: -5}} />
         <Text style={styles.menuText}>Help & Support</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/terms')}>
         <MaterialIcons name="description" size={22} color="black" />
-        <Text style={styles.menuText}>Terms and Conditions</Text>
+        <Text style={styles.menuText}>Terms & Conditions</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/feedback')}>
         <MaterialIcons name="feedback" size={22} color="black" />
         <Text style={styles.menuText}>Feedback</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/about')}>
         <Ionicons name="information-circle" size={22} color="black" />
         <Text style={styles.menuText}>About</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
