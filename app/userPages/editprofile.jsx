@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react'; // Import useState
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import DateTimePickerModal from 'react-native-modal-datetime-picker'; // Import DateTimePickerModal
 
 const EditProfilePage = () => {
   const router = useRouter();
   
+  // State to manage the visibility of the date picker
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [dob, setDob] = useState(''); // State to hold the selected date of birth
+
   const handleUpdate = () => {
     // Handle the update logic here
     console.log("Update button pressed");
+  };
+
+  const handleConfirm = (date) => {
+    // Format the date as you like; here using toLocaleDateString
+    setDob(date.toLocaleDateString());
+    setDatePickerVisibility(false); // Hide the date picker
   };
 
   return (
@@ -38,11 +49,15 @@ const EditProfilePage = () => {
 
       <View style={styles.fieldContainer}>
         <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-        <TextInput 
-          style={styles.dobField} 
-          placeholder="Date of Birth" 
-          placeholderTextColor="#888"
-        />
+        <TouchableOpacity onPress={() => setDatePickerVisibility(true)} style={{ flex: 1 }}>
+          <TextInput 
+            style={styles.dobField} 
+            placeholder="Date of Birth" 
+            placeholderTextColor="#888"
+            value={dob} // Show selected date
+            editable={false} // Make the input non-editable
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.fieldContainer}>
@@ -87,6 +102,13 @@ const EditProfilePage = () => {
         <Text style={styles.updateButtonText}>Update</Text>
       </TouchableOpacity>
 
+      {/* DateTimePicker Modal */}
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date" // Change this to "datetime" if you want both date and time
+        onConfirm={handleConfirm}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
     </View>
   );
 };
@@ -128,7 +150,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     justifyContent: 'center', 
   },
-
   fieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
