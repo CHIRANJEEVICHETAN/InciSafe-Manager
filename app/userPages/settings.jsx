@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator, Image, ImageBackground } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
@@ -49,6 +49,7 @@ const Settings = () => {
     }
 
   return (
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
@@ -65,7 +66,8 @@ const Settings = () => {
         <Ionicons name="search" size={20} color="black" style={{marginLeft: 10}} />
         <TextInput placeholder="Search" style={styles.searchText} />
       </View>
-      <View style={styles.menuItemlist}>
+      {/* <View style={styles.menuItemlist}> */}
+      <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.menuItemlist}>
       <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0, marginTop: 10}]} onPress={() => router.push('/userPages/editProfile')}>
         <FontAwesome name="pencil" size={22} color="black" />
         <Text style={styles.menuText}>Edit profile</Text>
@@ -113,15 +115,16 @@ const Settings = () => {
         <Text style={styles.menuText}>Log out</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      </View>
+      </ImageBackground>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
+    // backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
     paddingTop: 30,
   },
   header: {
@@ -167,10 +170,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 30,
     marginRight: 30,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    borderWidth: 2,
-    borderColor: '#ccc',
+    borderRadius: 30,
+    overflow: 'hidden',
+    // backgroundColor: '#f0f0f0',
+    borderWidth: 2.5,
+    borderColor: '#cccff',
     height: 560, 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },

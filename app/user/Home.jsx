@@ -66,14 +66,10 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover', // or 'stretch'
+    resizeMode: 'cover',
   },
   container: {
     flex: 1,
-    // backgroundColor: '#B0E0E6',
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-    // padding: 10,
   },
   loadingContainer: {
     flex: 1,
