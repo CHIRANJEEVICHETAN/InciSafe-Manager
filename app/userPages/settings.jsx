@@ -93,7 +93,7 @@ const Settings = () => {
         <Text style={styles.menuText}>Help & Support</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]}>
+      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/terms')}>
         <MaterialIcons name="description" size={22} color="black" />
         <Text style={styles.menuText}>Terms and Conditions</Text>
         <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
