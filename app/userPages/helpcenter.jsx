@@ -34,22 +34,22 @@ const HelpCenter = () => {
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/Documentation')}>
           <Text style={styles.menuText}>Documentation and Evidence Upload</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/troubleshooting')}>
           <Text style={styles.menuText}>Troubleshooting</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/FAQ')}>
           <Text style={styles.menuText}>Frequently Asked Questions (FAQs)</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/contactSupport')}>
           <Text style={styles.menuText}>Contact Support</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
