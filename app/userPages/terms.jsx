@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const Terms = () => {
+  const router = useRouter();
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -10,42 +12,42 @@ const Terms = () => {
       </View>
 
       <View style={styles.menuList}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/Introduction')}>
           <Text style={styles.menuText}>Introduction</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/useofplatform')}>
           <Text style={styles.menuText}>Use of Platform</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/useraccount')}>
           <Text style={styles.menuText}>User Accounts</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/incidentreport')}>
           <Text style={styles.menuText}>Incident Reporting</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/dataprivacy')}>
           <Text style={styles.menuText}>Data Privacy and Security </Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/suspension')}>
           <Text style={styles.menuText}>Suspension and Termination</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/privacy')}>
           <Text style={styles.menuText}>Privacy and Confidentiality </Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/termsandcondition/contactinfo')}>
           <Text style={styles.menuText}>Contact Information</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
