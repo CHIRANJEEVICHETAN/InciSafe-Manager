@@ -54,8 +54,8 @@ const EditProfilePage = () => {
             style={styles.dobField} 
             placeholder="Date of Birth" 
             placeholderTextColor="#888"
-            value={dob} // Show selected date
-            editable={false} // Make the input non-editable
+            value={dob} 
+            editable={false}  
           />
         </TouchableOpacity>
       </View>
