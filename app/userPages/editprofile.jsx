@@ -24,8 +24,12 @@ const EditProfilePage = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
-        accessibilityLabel="Go back">
+      <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => router.back()} 
+        accessibilityRole="button" 
+        accessibilityLabel="Go back"
+      >
         <Image
           source={require("./../../assets/images/back-button.png")}
           style={styles.backButtonImage}
@@ -118,13 +122,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 25,
     backgroundColor: '#f0f0f0',
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-  },
-  closeButtonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   title: {
     fontSize: 30,
