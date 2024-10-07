@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-// import { useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 const getstarted = () => {
-//   const router = useRouter();
+  const router = useRouter();
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -14,17 +14,17 @@ const getstarted = () => {
       <Text style={styles.getstartedText}>Get Started</Text>
 
       <View style={styles.menuList}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} >
           <Text style={styles.menuText}>Account Creation</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} >
           <Text style={styles.menuText}>Login</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} >
           <Text style={styles.menuText}>System Requirements</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
