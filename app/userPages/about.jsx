@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const About= () => {
+  const router = useRouter();
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -10,42 +12,42 @@ const About= () => {
       </View>
 
       <View style={styles.menuList}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/project')}>
           <Text style={styles.menuText}>About the Project</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/mission')}>
           <Text style={styles.menuText}>Our Mission</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/features')}>
           <Text style={styles.menuText}>Key Features of the System</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/futureplan')}>
           <Text style={styles.menuText}>Innovation and Future Plans</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/datasecurity')}>
           <Text style={styles.menuText}>Our Commitment to Data Security</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/approach')}>
           <Text style={styles.menuText}>Our Approach to Safety</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/serve')}>
           <Text style={styles.menuText}>Who we serve </Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/About/contactus')}>
           <Text style={styles.menuText}>Contact Us</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>

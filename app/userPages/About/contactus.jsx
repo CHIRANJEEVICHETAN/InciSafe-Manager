@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-const Contactinfo = () => {
+const Contactus = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Terms & Conditions</Text>
+        <Text style={styles.headerText}>About</Text>
       </View>
 
-      <Text style={styles.titleText}>Contact Information</Text>
+      <Text style={styles.titleText}>Contact Us</Text>
 
       <View style={styles.contentContainer}>
         <Text style={styles.contentText}>
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Contactinfo;
+export default Contactus;
