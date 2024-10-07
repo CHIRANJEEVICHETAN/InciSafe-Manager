@@ -5,7 +5,7 @@ const useraccount = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Terms & Condition</Text>
+        <Text style={styles.headerText}>Terms & Conditions</Text>
       </View>
 
       <Text style={styles.titleText}>User Account</Text>

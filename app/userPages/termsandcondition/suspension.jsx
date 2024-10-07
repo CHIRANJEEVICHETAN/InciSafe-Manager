@@ -5,7 +5,7 @@ const suspension = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Terms & Condition</Text>
+        <Text style={styles.headerText}>Terms & Conditions</Text>
       </View>
 
       <Text style={styles.titleText}>Suspension and Termination</Text>
@@ -26,7 +26,7 @@ const suspension = () => {
             <Text style={styles.bulletText}>-  Data associated with the user account may also be deleted upon termination</Text>
           </View>
         </View>
-        
+
       </View>
     </ScrollView>
   );
