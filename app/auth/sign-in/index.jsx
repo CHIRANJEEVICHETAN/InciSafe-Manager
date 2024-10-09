@@ -14,10 +14,14 @@ import CustomSVG from "./../../../components/CustomSVG";
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 export default function Login() {
   const router = useRouter();
   const auth = getAuth();
+  const db = getFirestore();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("./../../../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
     "Inter-ExtraBold": require("./../../../assets/fonts/Inter/Inter_24pt-ExtraBold.ttf"),
@@ -30,31 +34,37 @@ export default function Login() {
     return null;
   }
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const OnLogin = async () => {
     if (email === "" || password === "") {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
       return;
     }
-    await signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log(user);
-    router.replace("/user");
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    ToastAndroid.show(errorMessage, ToastAndroid.LONG);
-    console.log(errorMessage, errorCode);
-    return;
-  });
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-  }
+      // Fetch the user's role from Firestore
+      const userDoc = doc(db, "users", user.uid);  // Assuming user data is stored in a 'users' collection
+      const userSnapshot = await getDoc(userDoc);
+
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.data();
+        const role = userData.role;  // Get the role field from the document
+
+        if (role === 'admin') {
+          router.replace("/admin/adminPages/Home");  // Navigate to admin dashboard
+        } else {
+          router.replace("/user/Home");  // Navigate to user dashboard
+        }
+      } else {
+        ToastAndroid.show("User data not found!", ToastAndroid.LONG);
+      }
+    } catch (error) {
+      const errorMessage = error.message;
+      ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+      console.log(errorMessage);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -105,7 +115,8 @@ export default function Login() {
         Not a member? <Text style={styles.registerLink} onPress={() => router.push("/auth/sign-up")}>Register now</Text>
       </Text>
 
-      <TouchableOpacity style={styles.adminButton}>
+      <TouchableOpacity style={styles.adminButton}  onPress={OnLogin}>
+
         <Image
           source={require("./../../../assets/images/shield.png")}
           style={styles.adminLogo}
