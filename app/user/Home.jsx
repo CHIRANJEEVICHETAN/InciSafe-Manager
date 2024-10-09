@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text, Dimensions, ImageBackground } from 'react-native';
 import Header from './../../components/Header';
 import SearchBar from './../../components/SearchBar';
 import IconGrid from './../../components/IconGrid';
@@ -50,23 +50,26 @@ const Home = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Header username={user?.displayName || "User"} style={styles.header} />
-      <LineSVG style={styles.line} />
-      <SearchBar />
-      <IconGrid style={styles.iconGrid} />
-
-      
-
-    </View>
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.backgroundImage}>
+      <View style={styles.container}>
+          <Header username={user?.displayName || "User"} style={styles.header} />
+          <LineSVG style={styles.line} />
+          <SearchBar />
+          <IconGrid style={styles.iconGrid} />
+      </View> 
+    </ImageBackground>
   );
 };
 
+const { width, height } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 10,
   },
   loadingContainer: {
     flex: 1,

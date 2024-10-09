@@ -14,7 +14,6 @@ import CustomSVG from "./../../../components/CustomSVG";
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-// import { auth } from "./../../../configs/FirebaseConfig";
 
 export default function Login() {
   const router = useRouter();
@@ -61,7 +60,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
+      <TouchableOpacity style={styles.backButton} onPress={() => router.replace("/")} accessibilityRole="button" 
         accessibilityLabel="Go back">
         <Image
           source={require("./../../../assets/images/back-button.png")}
@@ -71,17 +70,17 @@ export default function Login() {
 
       <Text style={styles.title}>Welcome! Log in to InciSafe</Text>
 
-      <TouchableOpacity style={styles.googleButton}>
+      {/* <TouchableOpacity style={styles.googleButton}>
         <Image
           source={require("./../../../assets/images/google.png")}
           style={styles.googleIcon}
         />
         <Text style={styles.googleButtonText}>Continue with Google</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <View style={styles.emailContainer}>
         <CustomSVG />
-        <Text style={styles.emailText}>Or Login with Email</Text>
+        <Text style={styles.emailText}>Login with Email</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -163,37 +162,41 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "Inter-ExtraBold",
   },
-  googleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.BLACK,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    width: "80%",
-    height: 55,
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 5, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.84,
-    elevation: 6,
-  },
-  googleIcon: {
-    width: 25,
-    height: 25,
-    position: "absolute",
-    left: 12,
-  },
-  googleButtonText: {
-    color: Colors.WHITE,
-    fontSize: 20,
-    fontWeight: "500",
+  // googleButton: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   backgroundColor: Colors.BLACK,
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 30,
+  //   borderRadius: 30,
+  //   borderWidth: 1,
+  //   borderColor: "#ddd",
+  //   width: "80%",
+  //   height: 55,
+  //   justifyContent: "center",
+  //   shadowColor: "#000", // Color of the shadow
+  //   shadowOffset: { width: 5, height: 2 }, // Shadow offset
+  //   shadowOpacity: 0.5, // Shadow opacity
+  //   shadowRadius: 3.84, // Shadow blur radius
+  //   elevation: 6, // Shadow elevation
+  // },
+  // googleIcon: {
+  //   width: 25,
+  //   height: 25,
+  //   position: "absolute",
+  //   left: 12,
+  // },
+  // googleButtonText: {
+  //   color: Colors.WHITE,
+  //   fontSize: 20,
+  //   fontWeight: "500",
+  //   textAlign: "center",
+  //   paddingLeft: 30,
+  //   fontFamily: "Roboto-Bold", // Use Roboto Bold Font
+  // },
+  orText: {
     textAlign: "center",
-    paddingLeft: 30,
-    fontFamily: "Roboto-Bold",
+    marginBottom: 20,
   },
   input: {
     backgroundColor: "#fff",

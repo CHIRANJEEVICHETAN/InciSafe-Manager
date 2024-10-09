@@ -2,51 +2,13 @@ import React, { useCallback } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import useLoadFont from "./../hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
+import { useRouter } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
 
-const icons = [
-  {
-    name: "Uniform",
-    source: require("./../assets/images/HomeScreenIcons/uniformSafety.png"),
-  },
-  {
-    name: "Health Safety",
-    source: require("./../assets/images/HomeScreenIcons/healthSafety.png"),
-  },
-  {
-    name: "Equipment Issues",
-    source: require("./../assets/images/HomeScreenIcons/equipmentIssues.png"),
-  },
-  {
-    name: "Fire Incident",
-    source: require("./../assets/images/HomeScreenIcons/fireIncident.png"),
-  },
-  {
-    name: "Hazardous Materials",
-    source: require("./../assets/images/HomeScreenIcons/hazardousMaterials.png"),
-  },
-  {
-    name: "Environmental Hazards",
-    source: require("./../assets/images/HomeScreenIcons/environmentalHazards.png"),
-  },
-  {
-    name: "Policy Violations",
-    source: require("./../assets/images/HomeScreenIcons/policyViolations.png"),
-  },
-  {
-    name: "Weather Hazards",
-    source: require("./../assets/images/HomeScreenIcons/weatherHazards.png"),
-  },
-  {
-    name: "Human Errors",
-    source: require("./../assets/images/HomeScreenIcons/humanErrors.png"),
-  },
-];
-
 const IconGrid = ({ style }) => {
   const fontsLoaded = useLoadFont();
-
+  const router = useRouter();
   // Hide the splash screen once the fonts are loaded
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -59,105 +21,152 @@ const IconGrid = ({ style }) => {
   }
   return (
     <View style={[styles.grid, style]}>
-      {icons.map((icon, index) => (
-        <TouchableOpacity key={index} style={styles.iconContainer}>
-          {(icon.name === "Uniform" || icon.name === "Health Safety") && (
-            <Text
-              style={[
-                styles.iconLabel,
-                icon.name === "Uniform"
-                  ? styles.uniformIconLabel
-                  : styles.healthSafetyIconLabel,
-              ]}
-            >
-              {icon.name}
-            </Text>
-          )}
-          <Image
-            source={icon.source}
-            style={[
-              styles.icon,
-              icon.name === "Uniform" && styles.uniformIcon, // Apply specific style for Uniform icon
-              icon.name === "Health Safety" && styles.healthSafetyIcon, // Apply specific style for Health Safety icon
-            ]}
-          />
-          {icon.name !== "Uniform" && icon.name !== "Health Safety" && (
-            <Text style={styles.iconLabel}>{icon.name}</Text>
-          )}
-        </TouchableOpacity>
-      ))}
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/uniformSafety')}>
+        <Text style={[styles.iconLabel, styles.uniformIconLabel]}>Uniform</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/uniformSafety.png')}
+          style={[styles.icon, styles.uniformIcon]}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/healthSafety')}>
+        <Text style={[styles.iconLabel, styles.healthSafetyIconLabel]}>Health Safety</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/healthSafety.png')}
+          style={[styles.icon, styles.healthSafetyIcon]}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/equipmentIssues')}>
+        <Text style={styles.iconLabel}>Equipment Issues</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/equipmentIssues.png')}
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/FireIncident')}>
+        <Text style={styles.iconLabel}>Fire Incident</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/fireIncident.png')}
+          style={[styles.icon, { marginTop: 30 }, { transform: [{ scale: 1.2 }] }]}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/Hazardousmaterials')}>
+        <Text style={styles.iconLabel}>Hazardous Materials</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/hazardousMaterials.png')}
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/environmentalHazards')}>
+        <Text style={[styles.iconLabel, { width: "100%", textAlign: "center", marginTop: 10 }]}>Environmental Hazards</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/environmentalHazards.png')}
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/policyViolations')}>
+        <Text style={styles.iconLabel}>Policy Violations</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/policyViolations.png')}
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/weatherHazards')}>
+        <Text style={styles.iconLabel}>Weather Hazards</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/weatherHazards.png')}
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/humanErrors')}>
+        <Text style={styles.iconLabel}>Human Errors</Text>
+        <Image
+          source={require('./../assets/images/HomeScreenIcons/humanErrors.png')}
+          style={[styles.icon, { marginTop: 30 }, { transform: [{ scale: 1.2 }] }]}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginLeft: 5,
     marginRight: 5,
-    // backgroundColor: 'red',
   },
   iconContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     margin: 20,
     marginTop: 20,
-    backgroundColor: "#00bfa5",
+    // backgroundColor: '#00bfa5',
+    borderWidth: 2,
+    borderColor: 'black',
     width: 100,
     height: 100,
     marginLeft: 5,
     marginRight: 5,
-    flexWrap: "wrap",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 20,
   },
   icon: {
     width: 50,
     height: 50,
-    justifyContent: "center",
-    // backgroundColor: '#00bfa5',
+    justifyContent: 'center',
     borderRadius: 10,
     padding: 10,
-    marginTop: 10,
-    // fontFamily: 'Roboto-Bold',
-    // fontWeight: 'bold',
+    marginTop: 15,
   },
   uniformIcon: {
     borderWidth: 2,
-    // borderColor: 'red',
-    marginTop: 30,
-    position: "absolute",
+    marginTop: 20,
+    position: 'absolute',
     bottom: 32,
     left: 30,
-    textAlign: "center",
+    textAlign: 'center',
+    transform: [{ scale: 1.2 }],
   },
   healthSafetyIcon: {
-    marginTop: 30,
-    textAlign: "center",
+    marginTop: 25,
+    textAlign: 'center',
+    transform: [{ scale: 1.2 }],
   },
   healthSafetyIconLabel: {
-    borderColor: "blue",
-    position: "absolute",
-    bottom: 10,
-    width: "90%",
+    borderColor: 'blue',
+    position: 'absolute',
+    bottom: 8,
+    width: '90%',
     marginTop: 15,
   },
   iconLabel: {
-    marginTop: 5,
-    textAlign: "center",
-    fontFamily: "Roboto-Bold",
+    borderColor: 'blue',
+    position: 'absolute',
+    bottom: 5,
+    width: '90%',
+    marginTop: 15,
+    textAlign: 'center',
     fontSize: 13,
+    fontFamily: 'Roboto-Bold',
   },
   uniformIconLabel: {
-    borderColor: "blue",
-    position: "absolute",
-    bottom: 10,
-    width: "90%",
-    textAlign: "center",
+    borderColor: 'blue',
+    position: 'absolute',
+    bottom: 8,
+    width: '100%',
+    textAlign: 'center',
   },
 });
 
