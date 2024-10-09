@@ -40,35 +40,36 @@ export default function Login() {
       return;
     }
     await signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log(user);
-    router.replace("/user");
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    ToastAndroid.show(errorMessage, ToastAndroid.LONG);
-    console.log(errorMessage, errorCode);
-    return;
-  });
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        router.replace("/user"); // Replace with the user page
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+        console.log(errorMessage, errorCode);
+      });
+  };
 
-  }
+  // Function to handle Admin Login
+  const onAdminLogin = () => {
+    // Navigating to AdminHome page
+    router.push("/adminHome"); // Ensure this path matches your actual AdminHome page path
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
         accessibilityLabel="Go back">
-        {/* <Text style={styles.backButtonText}>←</Text> */}
         <Image
           source={require("./../../../assets/images/back-button.png")}
           style={styles.backButtonImage}
         />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Welcome ! Log in to InciSafe</Text>
+      <Text style={styles.title}>Welcome! Log in to InciSafe</Text>
 
       <TouchableOpacity style={styles.googleButton}>
         <Image
@@ -83,16 +84,28 @@ export default function Login() {
         <Text style={styles.emailText}>Or Login with Email</Text>
       </View>
 
-
       <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setEmail(text)} />
-      <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
-    </View>
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setPassword(text)} />
-      <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
-    </View>
-
+        <TextInput
+          style={styles.input}
+          placeholder="Email Address"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
+      </View>
 
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>Forgot password?</Text>
@@ -103,10 +116,14 @@ export default function Login() {
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
-        Not a member? <Text style={styles.registerLink} onPress={() => router.push("/auth/sign-up")}>Register now</Text>
+        Not a member?{" "}
+        <Text style={styles.registerLink} onPress={() => router.push("/auth/sign-up")}>
+          Register now
+        </Text>
       </Text>
 
-      <TouchableOpacity style={styles.adminButton}>
+      {/* Admin Login Button */}
+      <TouchableOpacity style={styles.adminButton} onPress={onAdminLogin}>
         <Image
           source={require("./../../../assets/images/shield.png")}
           style={styles.adminLogo}
@@ -114,10 +131,6 @@ export default function Login() {
         <Text style={styles.adminButtonText}>Log in as Admin</Text>
       </TouchableOpacity>
 
-      {/* <Image
-        source={require("./../../../assets/images/InciSafeLogo.png")}
-        style={styles.logo}
-      /> */}
       <View style={styles.logoContainer}>
         <LogoSVG style={styles.logo} />
       </View>
@@ -130,12 +143,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#B0E0E6",
-    // justifyContent: 'center',
     alignItems: "center",
   },
   backButton: {
     alignSelf: "flex-start",
-    // marginTop: 10,
     marginBottom: 15,
     position: "relative",
     right: 5,
@@ -148,7 +159,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    // fontWeight: 'bold',
     marginBottom: 20,
     textAlign: "center",
     fontFamily: "Inter-ExtraBold",
@@ -165,11 +175,11 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 55,
     justifyContent: "center",
-    shadowColor: "#000", // Color of the shadow
-    shadowOffset: { width: 5, height: 2 }, // Shadow offset
-    shadowOpacity: 0.5, // Shadow opacity
-    shadowRadius: 3.84, // Shadow blur radius
-    elevation: 6, // Shadow elevation
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 6,
   },
   googleIcon: {
     width: 25,
@@ -183,16 +193,12 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     paddingLeft: 30,
-    fontFamily: "Roboto-Bold", // Use Roboto Bold Font
-  },
-  orText: {
-    textAlign: "center",
-    marginBottom: 20,
+    fontFamily: "Roboto-Bold",
   },
   input: {
     backgroundColor: "#fff",
     padding: 15,
-    borderRadius:20,
+    borderRadius: 20,
     marginBottom: 10,
     width: "90%",
     marginTop: 10,
@@ -247,7 +253,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
     width: "90%",
-    // height: 60,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -260,13 +265,10 @@ const styles = StyleSheet.create({
   adminLogo: {
     width: 35,
     height: 30,
-    alignSelf: "center",
     position: "relative",
     right: 20,
-    // backgroundColor: Colors.WHITE,
   },
   emailContainer: {
-    // flexDirection: "start",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
@@ -278,13 +280,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   logoContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   logo: {
-    width: 150,   // Base width before scaling
-    height: 150,  // Base height before scaling
-    transform: [{ scale: 1.2 }],  // Scales the logo by 1.5x
+    width: 150,
+    height: 150,
   },
 });

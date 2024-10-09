@@ -4,6 +4,8 @@ import App from "./../components/App";
 import { Redirect } from "expo-router";
 import { auth } from "./../configs/FirebaseConfig";
 
+
+
 export default function index() {
   const user = auth.currentUser;
   return (
@@ -17,3 +19,4 @@ export default function index() {
     </View>
   );
 }
+
