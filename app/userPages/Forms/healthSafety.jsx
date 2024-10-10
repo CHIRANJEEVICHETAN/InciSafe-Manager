@@ -349,12 +349,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 22,
     fontWeight: '600',
-    marginVertical: 10,
+    marginVertical: 3,
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 8,
     marginLeft: 60,
   },
   dropdown: {
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   },
   evidenceText: {
     fontSize: 16,
-    marginVertical: 10,
+    marginVertical: 15,
     textAlign: 'center',
   },
   textInput: {
@@ -437,6 +437,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     // marginVertical: 10,
     marginTop: -15,
+    // marginBottom: 50,
   },
   submitButton: {
     backgroundColor: '#28a745',
