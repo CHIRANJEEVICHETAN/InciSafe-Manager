@@ -21,6 +21,8 @@ export default function SignUp() {
   const db = getFirestore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [secureConfirmText, setSecureConfirmText] = useState(true);
+  const [secureText, setSecureText] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const router = useRouter();
@@ -48,19 +50,23 @@ export default function SignUp() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Update the user's display name
       await updateProfile(user, {
-        displayName: username
+        displayName: username,
       });
 
       // Store additional user information in Firestore with role as 'user'
       await setDoc(doc(db, "users", user.uid), {
         username: username,
         email: email,
-        role: 'user' // Hardcoded role as 'user'
+        role: "user", // Hardcoded role as 'user'
       });
 
       ToastAndroid.show("User created successfully", ToastAndroid.LONG);
@@ -70,12 +76,21 @@ export default function SignUp() {
       const errorMessage = error.message;
       console.log("Error creating user:", errorCode, errorMessage);
 
-      if (errorCode === 'auth/network-request-failed') {
-        ToastAndroid.show("Network error. Please check your internet connection and try again.", ToastAndroid.LONG);
-      } else if (errorCode === 'auth/email-already-in-use') {
-        ToastAndroid.show("Email already in use. Please use a different email.", ToastAndroid.LONG);
-      } else if (errorCode === 'auth/invalid-email') {
-        ToastAndroid.show("Invalid email format. Please enter a valid email.", ToastAndroid.LONG);
+      if (errorCode === "auth/network-request-failed") {
+        ToastAndroid.show(
+          "Network error. Please check your internet connection and try again.",
+          ToastAndroid.LONG
+        );
+      } else if (errorCode === "auth/email-already-in-use") {
+        ToastAndroid.show(
+          "Email already in use. Please use a different email.",
+          ToastAndroid.LONG
+        );
+      } else if (errorCode === "auth/invalid-email") {
+        ToastAndroid.show(
+          "Invalid email format. Please enter a valid email.",
+          ToastAndroid.LONG
+        );
       } else {
         ToastAndroid.show(`Error: ${errorMessage}`, ToastAndroid.LONG);
       }
@@ -84,8 +99,12 @@ export default function SignUp() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
-        accessibilityLabel="Go back">
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
         <Image
           source={require("./../../../assets/images/back-button.png")}
           style={styles.backButtonImage}
@@ -101,31 +120,86 @@ export default function SignUp() {
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Username" keyboardType="default" autoCapitalize="words" autoCorrect={false} onChangeText={(text) => setUsername(text)} />
-        <Image source={require("./../../../assets/images/user.png")} style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          keyboardType="default"
+          autoCapitalize="words"
+          autoCorrect={false}
+          onChangeText={(text) => setUsername(text)}
+        />
+        <Image
+          source={require("./../../../assets/images/user.png")}
+          style={styles.inputIcon}
+        />
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setEmail(text)} />
-        <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Email Address"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Image
+          source={require("./../../../assets/images/email.png")}
+          style={styles.inputIcon}
+        />
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setPassword(text)} />
-        <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={secureText} // Set secureTextEntry based on state
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+          <Image
+            source={require("./../../../assets/images/eye-shape.png")}
+            style={[styles.inputIcon, styles.eyeIcon]}
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setConfirmPassword(text)} />
-        <Image source={require("./../../../assets/images/eye-crossed.png")} style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          secureTextEntry={secureConfirmText}
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setConfirmPassword(text)}
+        />
+        <TouchableOpacity
+          onPress={() => setSecureConfirmText(!secureConfirmText)}
+        >
+          <Image
+            source={require("./../../../assets/images/eye-crossed.png")}
+            style={[styles.inputIcon, styles.eyeIcon]}
+          />
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.SignUpButton} onPress={() => OnCreateAccount(email, password)}>
+      <TouchableOpacity
+        style={styles.SignUpButton}
+        onPress={() => OnCreateAccount(email, password)}
+      >
         <Text style={styles.SignUpButtonText}>Register</Text>
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
-        Already have an account? <Text style={styles.registerLink} onPress={() => router.push("/auth/sign-in")}>Login now</Text>
+        Already have an account?{" "}
+        <Text
+          style={styles.registerLink}
+          onPress={() => router.push("/auth/sign-in")}
+        >
+          Login now
+        </Text>
       </Text>
 
       <View style={styles.logoContainer}>
@@ -133,7 +207,7 @@ export default function SignUp() {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -192,6 +266,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 10,
   },
+  eyeIcon: {
+    top: -13,
+  },
   SignUpButton: {
     backgroundColor: "#000",
     padding: 15,
@@ -227,8 +304,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   logoContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: -18,
   },
   logo: {
