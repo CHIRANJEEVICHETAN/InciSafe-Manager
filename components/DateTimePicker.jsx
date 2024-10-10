@@ -17,13 +17,13 @@ export default function DateTimePickerField() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Date & Time of violation"
+        placeholder="Date & Time of violation | click on icon ->"
         value={date}
         editable={false} // Make the input non-editable
         placeholderTextColor="#000"
       />
       <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
-        <MaterialIcons name="date-range" size={24} color="black" />
+        <MaterialIcons name="date-range" size={28} color="black" />
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
