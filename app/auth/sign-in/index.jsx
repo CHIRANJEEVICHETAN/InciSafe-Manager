@@ -22,6 +22,7 @@ export default function Login() {
   const db = getFirestore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [secureText, setSecureText] = useState(true);
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("./../../../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
     "Inter-ExtraBold": require("./../../../assets/fonts/Inter/Inter_24pt-ExtraBold.ttf"),
@@ -40,21 +41,25 @@ export default function Login() {
       return;
     }
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Fetch the user's role from Firestore
-      const userDoc = doc(db, "users", user.uid);  // Assuming user data is stored in a 'users' collection
+      const userDoc = doc(db, "users", user.uid); // Assuming user data is stored in a 'users' collection
       const userSnapshot = await getDoc(userDoc);
 
       if (userSnapshot.exists()) {
         const userData = userSnapshot.data();
-        const role = userData.role;  // Get the role field from the document
+        const role = userData.role; // Get the role field from the document
 
-        if (role === 'admin') {
-          router.replace("/admin/adminPages/Home");  // Navigate to admin dashboard
+        if (role === "admin") {
+          router.replace("/admin/adminPages/Home"); // Navigate to admin dashboard
         } else {
-          router.replace("/user/Home");  // Navigate to user dashboard
+          router.replace("/user/Home"); // Navigate to user dashboard
         }
       } else {
         ToastAndroid.show("User data not found!", ToastAndroid.LONG);
@@ -68,8 +73,12 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.replace("/")} accessibilityRole="button" 
-        accessibilityLabel="Go back">
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.replace("/")}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
         {/* <Text style={styles.backButtonText}>←</Text> */}
         <Image
           source={require("./../../../assets/images/back-button.png")}
@@ -92,16 +101,36 @@ export default function Login() {
         <Text style={styles.emailText}>Login with Email</Text>
       </View>
 
-
       <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setEmail(text)} />
-      <Image source={require("./../../../assets/images/email.png")} style={styles.inputIcon} />
-    </View>
-    <View style={styles.inputContainer}>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize="none" autoCorrect={false} onChangeText={(text) => setPassword(text)} />
-      <Image source={require("./../../../assets/images/eye-shape.png")} style={styles.inputIcon} />
-    </View>
-
+        <TextInput
+          style={styles.input}
+          placeholder="Email Address"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Image
+          source={require("./../../../assets/images/email.png")}
+          style={styles.inputIcon}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={secureText} // Set secureTextEntry based on state
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+          <Image
+            source={require("./../../../assets/images/eye-shape.png")}
+            style={[styles.inputIcon, styles.eyeIcon]}
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>Forgot password?</Text>
@@ -112,11 +141,16 @@ export default function Login() {
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
-        Not a member? <Text style={styles.registerLink} onPress={() => router.push("/auth/sign-up")}>Register now</Text>
+        Not a member?{" "}
+        <Text
+          style={styles.registerLink}
+          onPress={() => router.push("/auth/sign-up")}
+        >
+          Register now
+        </Text>
       </Text>
 
-      <TouchableOpacity style={styles.adminButton}  onPress={OnLogin}>
-
+      <TouchableOpacity style={styles.adminButton} onPress={OnLogin}>
         <Image
           source={require("./../../../assets/images/shield.png")}
           style={styles.adminLogo}
@@ -133,7 +167,7 @@ export default function Login() {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -202,7 +236,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#fff",
     padding: 15,
-    borderRadius:20,
+    borderRadius: 20,
     marginBottom: 10,
     width: "90%",
     marginTop: 10,
@@ -288,13 +322,16 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   logoContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   logo: {
-    width: 150,   // Base width before scaling
-    height: 150,  // Base height before scaling
-    transform: [{ scale: 1.2 }],  // Scales the logo by 1.5x
+    width: 150, // Base width before scaling
+    height: 150, // Base height before scaling
+    transform: [{ scale: 1.2 }], // Scales the logo by 1.5x
+  },
+  eyeIcon: {
+    top: -13,
   },
 });
