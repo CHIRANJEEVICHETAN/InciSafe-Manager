@@ -5,7 +5,7 @@ import SearchBar from './../../components/SearchBar';
 import IconGrid from './../../components/IconGrid';
 import LineSVG from './../../components/LineSVG';
 import { useRouter } from 'expo-router';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';  // Import signOut
+import { getAuth, onAuthStateChanged } from 'firebase/auth';  // Import signOut
 import useLoadFont from './../../hooks/useLoadFont';
 
 const Home = () => {
@@ -13,42 +13,7 @@ const Home = () => {
   const { isFontLoaded } = useLoadFont(); 
   const auth = getAuth();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);  // Added loading state
-  const [username, setUsername] = useState("User");
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false); // Stop loading after auth check
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!user && !loading) {
-      router.replace('/auth/sign-in');  // Use replace to prevent back navigation to Home
-    }
-  }, [user, loading]);
-
-  // Logout function
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);  // Call Firebase signOut function
-      router.replace('/auth/sign-in');  // Redirect to the sign-in screen
-    } catch (error) {
-      console.error("Error signing out: ", error);  // Handle any errors during sign out
-    }
-  };
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" /> 
-      </View>
-    );
-  }
-
+  
   return (
     <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.backgroundImage}>
       <View style={styles.container}>
