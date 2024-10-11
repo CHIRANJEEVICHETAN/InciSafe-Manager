@@ -1,21 +1,27 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from "expo-router";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+// import { useRouter } from 'expo-router';
 
-const getstarted = () => {
-  const router = useRouter();
+const trouble = () => {
+  //   const router = useRouter();
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
       </View>
 
-      <Text style={styles.getstartedText}>Get Started</Text>
+      <Text style={styles.getstartedText}>Trouble Shooting</Text>
 
       <View style={styles.menuList}>
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Account Creation</Text>
+          <Text style={styles.menuText}>1. Login Issues</Text>
           <MaterialCommunityIcons
             name="chevron-right"
             size={20}
@@ -25,7 +31,7 @@ const getstarted = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Login</Text>
+          <Text style={styles.menuText}>2. Submission Errors</Text>
           <MaterialCommunityIcons
             name="chevron-right"
             size={20}
@@ -35,7 +41,7 @@ const getstarted = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>System Requirements</Text>
+          <Text style={styles.menuText}>3. Notification Problems</Text>
           <MaterialCommunityIcons
             name="chevron-right"
             size={20}
@@ -101,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default getstarted;
+export default trouble;
