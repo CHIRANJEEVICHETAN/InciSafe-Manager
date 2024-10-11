@@ -1,31 +1,17 @@
-import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Image,
-  Platform,
-  KeyboardAvoidingView,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import axios from "axios";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Checkbox } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
-import { doc, setDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "./../../../configs/FirebaseConfig";
-import DateTimePickerField from "./../../../components/DateTimePicker";
-import LogoSVG from "./../../../components/LogoSVG";
-import LineSVG from "./../../../components/LineSVG";
-import { getAuth } from "firebase/auth";
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert, Image, Platform, KeyboardAvoidingView, FlatList, ActivityIndicator } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import axios from 'axios';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Checkbox } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+import { doc, setDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from './../../../configs/FirebaseConfig';
+import DateTimePickerField from './../../../components/DateTimePicker';
+import LogoSVG from './../../../components/LogoSVG';
+import LineSVG from './../../../components/LineSVG';
+import { getAuth } from 'firebase/auth';
 
 export default function WeatherHazards() {
   const auth = getAuth();
@@ -37,7 +23,7 @@ export default function WeatherHazards() {
   const [employees, setEmployees] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [incidentDescription, setIncidentDescription] = useState("");
+  const [incidentDescription, setIncidentDescription] = useState('');
   const [violationTypes, setViolationTypes] = useState({
     heat: false,
     cold: false,
@@ -46,28 +32,23 @@ export default function WeatherHazards() {
   const [openDepartment, setOpenDepartment] = useState(false);
   const [openEmployee, setOpenEmployee] = useState(false);
   const [evidence, setEvidence] = useState(null);
-  const [evidenceName, setEvidenceName] = useState("");
+  const [evidenceName, setEvidenceName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch departments and employees data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deptResponse = await axios.get(
-          "http://192.168.0.101:3000/departments"
-        );
-        setDepartments(
-          deptResponse.data.map((dept) => ({ label: dept, value: dept }))
-        );
+        const deptResponse = await axios.get('http://192.168.190.217:3000/departments');
+        setDepartments(deptResponse.data.map(dept => ({ label: dept, value: dept })));
+        
+        const empResponse = await axios.get('http://192.168.190.217:3000/employees');
+        setEmployees(empResponse.data.map(emp => ({ label: emp, value: emp })));
 
-        const empResponse = await axios.get(
-          "http://192.168.0.101:3000/employees"
-        );
-        setEmployees(
-          empResponse.data.map((emp) => ({ label: emp, value: emp }))
-        );
+        const sevResponse = await axios.get('http://192.168.190.217:3000/severity');
+        setSeverity(sevResponse.data.map(sev => ({ label: sev, value: sev })))
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch data from the server.");
+        Alert.alert("Error", "Failed to fetch data from the server. weatherHazards");
       }
     };
     fetchData();
@@ -83,13 +64,10 @@ export default function WeatherHazards() {
   const handleUploadEvidence = async (source) => {
     try {
       let result;
-      if (source === "camera") {
+      if (source === 'camera') {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          Alert.alert(
-            "Permission Denied",
-            "Camera access is required to take photos."
-          );
+        if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Camera access is required to take photos.');
           return;
         }
         result = await ImagePicker.launchCameraAsync({
@@ -110,15 +88,12 @@ export default function WeatherHazards() {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedAsset = result.assets[0];
         setEvidence(selectedAsset.uri);
-        setEvidenceName(selectedAsset.uri.split("/").pop());
+        setEvidenceName(selectedAsset.uri.split('/').pop());
       } else {
-        Alert.alert("Info", "No image was selected.");
+        Alert.alert('Info', 'No image was selected.');
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        "Failed to upload evidence. Please try again. Error: " + error.message
-      );
+      Alert.alert('Error', 'Failed to upload evidence. Please try again. Error: ' + error.message);
     }
   };
 
@@ -127,7 +102,7 @@ export default function WeatherHazards() {
     setDate(new Date());
     setSelectedDepartment(null);
     setSelectedEmployee(null);
-    setIncidentDescription("");
+    setIncidentDescription('');
     setViolationTypes({
       shoes: false,
       dressCode: false,
@@ -141,22 +116,19 @@ export default function WeatherHazards() {
     const storage = getStorage();
     const response = await fetch(imageUri);
     const blob = await response.blob();
-    const storageRef = ref(
-      storage,
-      `images/${Date.now()}-${imageUri.split("/").pop()}`
-    );
-
+    const storageRef = ref(storage, `images/${Date.now()}-${imageUri.split('/').pop()}`);
+    
     await uploadBytes(storageRef, blob);
     return await getDownloadURL(storageRef);
   };
 
   // Format date and time for document ID
   const formatDateTime = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${day}${month}${year}T${hours}${minutes}`;
   };
 
@@ -167,7 +139,7 @@ export default function WeatherHazards() {
     setIsLoading(true); // Start loading
     try {
       const incidentCategory = "Weather-Related Hazards";
-
+  
       let imageUrl = null;
       if (evidence) {
         imageUrl = await uploadImageAndGetURL(evidence);
@@ -177,7 +149,7 @@ export default function WeatherHazards() {
       const currentUser = auth.currentUser;
       const username = currentUser ? currentUser.displayName : "Unknown User";
       const email = currentUser ? currentUser.email : "Unknown Email";
-
+  
       const violationData = {
         incidentCategory,
         violationTypes,
@@ -189,10 +161,10 @@ export default function WeatherHazards() {
         username,
         email,
       };
-
-      const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID
+  
+      const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
       await setDoc(doc(db, "WeatherHazards", customDocId), violationData); // Use setDoc with custom ID
-
+  
       Alert.alert("Success", "Form submitted successfully!");
       handleReset();
     } catch (error) {
@@ -216,7 +188,7 @@ export default function WeatherHazards() {
       <FlatList
         data={violationTypesData}
         renderItem={renderViolationType}
-        keyExtractor={(item) => item.key}
+        keyExtractor={item => item.key}
       />
 
       {/* <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
@@ -260,16 +232,10 @@ export default function WeatherHazards() {
       />
 
       <View style={styles.evidenceContainer}>
-        <TouchableOpacity
-          style={styles.evidenceButton}
-          onPress={() => handleUploadEvidence("camera")}
-        >
+        <TouchableOpacity style={styles.evidenceButton} onPress={() => handleUploadEvidence('camera')}>
           <Text style={styles.evidenceButtonText}>Take Photo</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.evidenceButton}
-          onPress={() => handleUploadEvidence("library")}
-        >
+        <TouchableOpacity style={styles.evidenceButton} onPress={() => handleUploadEvidence('library')}>
           <Text style={styles.evidenceButtonText}>Upload from Gallery</Text>
         </TouchableOpacity>
       </View>
@@ -284,7 +250,7 @@ export default function WeatherHazards() {
       <TextInput
         placeholder="Incident Description"
         value={incidentDescription}
-        onChangeText={(text) => setIncidentDescription(text)}
+        onChangeText={text => setIncidentDescription(text)}
         multiline
         numberOfLines={4}
         style={styles.textInput}
@@ -299,10 +265,7 @@ export default function WeatherHazards() {
             <TouchableOpacity onPress={handleReset} style={styles.resetButton}>
               <Text style={styles.buttonText}>Reset</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleSubmit}
-              style={styles.submitButton}
-            >
+            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -315,13 +278,8 @@ export default function WeatherHazards() {
   const renderViolationType = ({ item }) => (
     <View style={styles.checkboxContainer}>
       <Checkbox
-        status={violationTypes[item.key] ? "checked" : "unchecked"}
-        onPress={() =>
-          setViolationTypes({
-            ...violationTypes,
-            [item.key]: !violationTypes[item.key],
-          })
-        }
+        status={violationTypes[item.key] ? 'checked' : 'unchecked'}
+        onPress={() => setViolationTypes({ ...violationTypes, [item.key]: !violationTypes[item.key] })}
       />
       <Text>{item.label}</Text>
     </View>
@@ -329,9 +287,9 @@ export default function WeatherHazards() {
 
   // Data for violation types
   const violationTypesData = [
-    { key: "heat", label: "Heat Stress" },
-    { key: "cold", label: "Cold Stress" },
-    { key: "slip", label: "Slip Hazards Due To Weather " },
+    { key: 'heat', label: 'Heat Stress' },
+    { key: 'cold', label: 'Cold Stress' },
+    { key: 'slip', label: 'Slip Hazards Due To Weather ' },
   ];
 
   return (
@@ -342,9 +300,9 @@ export default function WeatherHazards() {
           style={styles.container}
         >
           <FlatList
-            data={[{ key: "form" }]}
+            data={[{ key: 'form' }]}
             renderItem={renderContent}
-            keyExtractor={(item) => item.key}
+            keyExtractor={item => item.key}
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -355,7 +313,7 @@ export default function WeatherHazards() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: '#f5f5f5',
     padding: 5,
   },
   container: {
@@ -367,29 +325,29 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 25,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: 'center',
     marginLeft: 58,
   },
   label: {
     fontSize: 22,
-    fontWeight: "600",
+    fontWeight: '600',
     marginVertical: 10,
   },
   checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
     marginLeft: 60,
   },
   dropdown: {
     marginBottom: 10,
-    backgroundColor: "#e0f7fa",
+    backgroundColor: '#e0f7fa',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#007BFF",
-    shadowColor: "#000",
+    borderColor: '#007BFF',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -399,20 +357,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   evidenceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
   },
   evidenceButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: '#28a745',
     padding: 10,
     borderRadius: 25,
-    alignItems: "center",
+    alignItems: 'center',
     flex: 1,
     marginHorizontal: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -422,15 +380,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   evidenceButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
   },
   evidenceImage: {
-    width: "100%",
+    width: '100%',
     height: 300,
     marginVertical: 10,
     borderRadius: 25,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -439,83 +397,83 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderWidth: 0.5,
-    borderColor: "#000",
+    borderColor: '#000',
   },
   evidenceText: {
     fontSize: 16,
     marginVertical: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
   textInput: {
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: "#e0f7fa",
+    backgroundColor: '#e0f7fa',
     borderWidth: 1,
-    borderColor: "#007BFF",
+    borderColor: '#007BFF',
     borderRadius: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     // marginVertical: 10,
     marginTop: -15,
   },
   submitButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: '#28a745',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
-    width: "40%",
-    alignItems: "center",
+    width: '40%',
+    alignItems: 'center',
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3.84,
     elevation: 5,
   },
   resetButton: {
-    backgroundColor: "#dc2626",
+    backgroundColor: '#dc2626',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
-    width: "40%",
-    alignItems: "center",
+    width: '40%',
+    alignItems: 'center',
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3.84,
     elevation: 5,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 16,
   },
   logoContainer: {
     marginLeft: -70,
     marginTop: 10,
-    position: "absolute",
+    position: 'absolute',
     top: -68,
     left: 3,
   },
   logo: {
     width: 50,
     height: 50,
-    transformOrigin: "center",
+    transformOrigin: 'center',
     transform: [{ scale: 0.3 }],
     marginRight: 10,
   },
   line: {
     // marginBottom: 10,
     marginTop: -6,
-    width: "150%",
+    width: '150%',
     borderWidth: 0.5,
-    borderColor: "#000",
+    borderColor: '#000',
     marginLeft: -23,
     marginRight: 10,
   },

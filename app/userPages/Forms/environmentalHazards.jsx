@@ -1,88 +1,52 @@
-import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Image,
-  Platform,
-  KeyboardAvoidingView,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import axios from "axios";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Checkbox } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
-import { doc, setDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "./../../../configs/FirebaseConfig";
-import DateTimePickerField from "./../../../components/DateTimePicker";
-import LogoSVG from "./../../../components/LogoSVG";
-import LineSVG from "./../../../components/LineSVG";
-import { getAuth } from "firebase/auth";
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert, Image, Platform, KeyboardAvoidingView, FlatList, ActivityIndicator } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import axios from 'axios';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Checkbox } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+import { doc, setDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from './../../../configs/FirebaseConfig';
+import DateTimePickerField from './../../../components/DateTimePicker';
+import LogoSVG from './../../../components/LogoSVG';
+import LineSVG from './../../../components/LineSVG';
+import { getAuth } from 'firebase/auth';
 
-export default function FireIncident() {
+export default function EnvironmentalHazard() {
   const auth = getAuth();
   const [user, setUser] = useState(null);
   // State variables for form data and UI control
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [Severity, setSeverity] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const [selectedSeverity, setSelectedSeverity] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [incidentDescription, setIncidentDescription] = useState("");
+  const [incidentDescription, setIncidentDescription] = useState('');
   const [violationTypes, setViolationTypes] = useState({
-    fire: false,
+    air: false,
+    noise: false,
+    water: false,
   });
-  const [openSeverity, setOpenSeverity] = useState(null);
   const [openDepartment, setOpenDepartment] = useState(false);
   const [openEmployee, setOpenEmployee] = useState(false);
-  const [openHazard, setOpenHazard] = useState(false);
-  const [selectedHazard, setSelectedHazard] = useState(null);
-  const [hazardItems, setHazardItems] = useState([
-    { label: "Slip", value: "slip" },
-    { label: "Trip", value: "trip" },
-    { label: "Fall", value: "fall" },
-  ]);
   const [evidence, setEvidence] = useState(null);
-  const [evidenceName, setEvidenceName] = useState("");
+  const [evidenceName, setEvidenceName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch departments and employees data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deptResponse = await axios.get(
-          "http://192.168.190.217:3000/departments"
-        );
-        setDepartments(
-          deptResponse.data.map((dept) => ({ label: dept, value: dept }))
-        );
+        const deptResponse = await axios.get('http://192.168.190.217:3000/departments');
+        setDepartments(deptResponse.data.map(dept => ({ label: dept, value: dept })));
+        
+        const empResponse = await axios.get('http://192.168.190.217:3000/employees');
+        setEmployees(empResponse.data.map(emp => ({ label: emp, value: emp })));
 
-        const empResponse = await axios.get(
-          "http://192.168.190.217:3000/employees"
-        );
-        setEmployees(
-          empResponse.data.map((emp) => ({ label: emp, value: emp }))
-        );
-
-        const sevResponse = await axios.get(
-          "http://192.168.190.217:3000/severity"
-        );
-        setSeverity(
-          sevResponse.data.map((sev) => ({ label: sev, value: sev }))
-        );
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch data from the server.");
+        Alert.alert("Error", "Failed to fetch data from the server. In environmentalHazards" + error.message);
       }
     };
     fetchData();
@@ -98,13 +62,10 @@ export default function FireIncident() {
   const handleUploadEvidence = async (source) => {
     try {
       let result;
-      if (source === "camera") {
+      if (source === 'camera') {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          Alert.alert(
-            "Permission Denied",
-            "Camera access is required to take photos."
-          );
+        if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Camera access is required to take photos.');
           return;
         }
         result = await ImagePicker.launchCameraAsync({
@@ -125,27 +86,25 @@ export default function FireIncident() {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedAsset = result.assets[0];
         setEvidence(selectedAsset.uri);
-        setEvidenceName(selectedAsset.uri.split("/").pop());
+        setEvidenceName(selectedAsset.uri.split('/').pop());
       } else {
-        Alert.alert("Info", "No image was selected.");
+        Alert.alert('Info', 'No image was selected.');
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        "Failed to upload evidence. Please try again. Error: " + error.message
-      );
+      Alert.alert('Error', 'Failed to upload evidence. Please try again. Error: ' + error.message);
     }
   };
 
   // Reset form fields to initial state
   const handleReset = () => {
     setDate(new Date());
-    setSelectedSeverity(null);
     setSelectedDepartment(null);
     setSelectedEmployee(null);
-    setIncidentDescription("");
+    setIncidentDescription('');
     setViolationTypes({
-      fire: false,
+      shoes: false,
+      dressCode: false,
+      safetyGears: false,
     });
     setEvidence(null);
   };
@@ -155,23 +114,20 @@ export default function FireIncident() {
     const storage = getStorage();
     const response = await fetch(imageUri);
     const blob = await response.blob();
-    const storageRef = ref(
-      storage,
-      "images/${Date.now()}-${imageUri.split(" / ").pop()}"
-    );
-
+    const storageRef = ref(storage, `images/${Date.now()}-${imageUri.split('/').pop()}`);
+    
     await uploadBytes(storageRef, blob);
     return await getDownloadURL(storageRef);
   };
 
   // Format date and time for document ID
   const formatDateTime = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return "${day}${month}${year}T${hours}${minutes}";
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}${month}${year}T${hours}${minutes}`;
   };
 
   const dateTime = formatDateTime(new Date());
@@ -180,8 +136,8 @@ export default function FireIncident() {
   const handleSubmit = async () => {
     setIsLoading(true); // Start loading
     try {
-      const incidentCategory = "Fire and Electrical Hazard Incident Form";
-
+      const incidentCategory = "Environmental Hazard Reporting Form";
+  
       let imageUrl = null;
       if (evidence) {
         imageUrl = await uploadImageAndGetURL(evidence);
@@ -191,11 +147,10 @@ export default function FireIncident() {
       const currentUser = auth.currentUser;
       const username = currentUser ? currentUser.displayName : "Unknown User";
       const email = currentUser ? currentUser.email : "Unknown Email";
-
+  
       const violationData = {
         incidentCategory,
         violationTypes,
-        selectedSeverity,
         date: date.toISOString(),
         selectedDepartment,
         selectedEmployee,
@@ -204,10 +159,10 @@ export default function FireIncident() {
         username,
         email,
       };
-
-      const customDocId = "violation-${selectedDepartment}-${dateTime}"; // Create a custom document ID
-      await setDoc(doc(db, "FireIncident", customDocId), violationData); // Use setDoc with custom ID
-
+  
+      const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
+      await setDoc(doc(db, "EnvironmentalHazard", customDocId), violationData); // Use setDoc with custom ID
+  
       Alert.alert("Success", "Form submitted successfully!");
       handleReset();
     } catch (error) {
@@ -223,34 +178,15 @@ export default function FireIncident() {
       <View style={styles.logoContainer}>
         <LogoSVG style={styles.logo} />
       </View>
-      <Text style={styles.header}>
-        Fire and Electrical Hazard Incident Form
-      </Text>
+      <Text style={styles.header}>Environmental Hazard Reporting Form</Text>
 
       <LineSVG style={styles.line} />
 
-      <View style={{ flex: 1 }}>
-        <Text style={styles.label}>Violation Type:</Text>
-        <View style={{ marginBottom: 30 }}>
-          <FlatList
-            data={violationTypesData}
-            renderItem={renderViolationType}
-            keyExtractor={(item) => item.key}
-            style={{ flexGrow: 0 }}
-            zIndex={8000}
-          />
-        </View>
-      </View>
-      {/* <Text style={styles.label}>Select Severity</Text> */}
-      <DropDownPicker
-        open={openSeverity}
-        value={selectedSeverity}
-        items={Severity}
-        setOpen={setOpenSeverity}
-        setValue={setSelectedSeverity}
-        placeholder="Select Incident Severity"
-        style={styles.dropdown}
-        zIndex={7000}
+      <Text style={styles.label}>Violation Type:</Text>
+      <FlatList
+        data={violationTypesData}
+        renderItem={renderViolationType}
+        keyExtractor={item => item.key}
       />
 
       {/* <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
@@ -276,7 +212,7 @@ export default function FireIncident() {
         searchable
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
-        zIndex={6000}
+        zIndex={5000}
       />
 
       <Text style={styles.label}>Employee Details</Text>
@@ -294,16 +230,10 @@ export default function FireIncident() {
       />
 
       <View style={styles.evidenceContainer}>
-        <TouchableOpacity
-          style={styles.evidenceButton}
-          onPress={() => handleUploadEvidence("camera")}
-        >
+        <TouchableOpacity style={styles.evidenceButton} onPress={() => handleUploadEvidence('camera')}>
           <Text style={styles.evidenceButtonText}>Take Photo</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.evidenceButton}
-          onPress={() => handleUploadEvidence("library")}
-        >
+        <TouchableOpacity style={styles.evidenceButton} onPress={() => handleUploadEvidence('library')}>
           <Text style={styles.evidenceButtonText}>Upload from Gallery</Text>
         </TouchableOpacity>
       </View>
@@ -318,7 +248,7 @@ export default function FireIncident() {
       <TextInput
         placeholder="Incident Description"
         value={incidentDescription}
-        onChangeText={(text) => setIncidentDescription(text)}
+        onChangeText={text => setIncidentDescription(text)}
         multiline
         numberOfLines={4}
         style={styles.textInput}
@@ -333,10 +263,7 @@ export default function FireIncident() {
             <TouchableOpacity onPress={handleReset} style={styles.resetButton}>
               <Text style={styles.buttonText}>Reset</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleSubmit}
-              style={styles.submitButton}
-            >
+            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -348,44 +275,19 @@ export default function FireIncident() {
   // Render each violation type as a checkbox
   const renderViolationType = ({ item }) => (
     <View style={styles.checkboxContainer}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Checkbox
-          status={violationTypes[item.key] ? "checked" : "unchecked"}
-          onPress={() =>
-            setViolationTypes({
-              ...violationTypes,
-              [item.key]: !violationTypes[item.key],
-            })
-          }
-        />
-        <Text>{item.label}</Text>
-      </View>
-
-      {item.key === "fire" && (
-        <View style={styles.dropdownContainer}>
-          <DropDownPicker
-            open={openHazard}
-            value={selectedHazard}
-            items={hazardItems}
-            setOpen={setOpenHazard}
-            setValue={setSelectedHazard}
-            setItems={setHazardItems}
-            placeholder="Electrical Hazard"
-            style={styles.ElectricalDropdown}
-            containerStyle={{ width: "100%" }}
-            zIndex={99999}
-            zIndexInverse={9999}
-          />
-        </View>
-      )}
+      <Checkbox
+        status={violationTypes[item.key] ? 'checked' : 'unchecked'}
+        onPress={() => setViolationTypes({ ...violationTypes, [item.key]: !violationTypes[item.key] })}
+      />
+      <Text>{item.label}</Text>
     </View>
   );
 
   // Data for violation types
   const violationTypesData = [
-    { key: "fire", label: "Fire Hazard" },
-    // { key: 'miss', label: 'Near Miss' },
-    // { key: 'unsafe', label: 'Unsafe Working Conditions' },
+    { key: 'air', label: 'Air Quality Violation' },
+    { key: 'noise', label: 'Noise Hazard' },
+    { key: 'water', label: 'Water/Soil Contamination' },
   ];
 
   return (
@@ -396,9 +298,9 @@ export default function FireIncident() {
           style={styles.container}
         >
           <FlatList
-            data={[{ key: "form" }]}
+            data={[{ key: 'form' }]}
             renderItem={renderContent}
-            keyExtractor={(item) => item.key}
+            keyExtractor={item => item.key}
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -409,7 +311,7 @@ export default function FireIncident() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: '#f5f5f5',
     padding: 5,
   },
   container: {
@@ -421,29 +323,29 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 25,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: 'center',
     marginLeft: 58,
   },
   label: {
     fontSize: 22,
-    fontWeight: "600",
+    fontWeight: '600',
     marginVertical: 10,
   },
   checkboxContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    marginBottom: 5,
-    // marginLeft: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginLeft: 60,
   },
   dropdown: {
     marginBottom: 10,
-    backgroundColor: "#e0f7fa",
+    backgroundColor: '#e0f7fa',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#007BFF",
-    shadowColor: "#000",
+    borderColor: '#007BFF',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -451,23 +353,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    zIndex: 5000,
   },
   evidenceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
   },
   evidenceButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: '#28a745',
     padding: 10,
     borderRadius: 25,
-    alignItems: "center",
+    alignItems: 'center',
     flex: 1,
     marginHorizontal: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -477,15 +378,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   evidenceButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
   },
   evidenceImage: {
-    width: "100%",
+    width: '100%',
     height: 300,
     marginVertical: 10,
     borderRadius: 25,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -494,111 +395,84 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderWidth: 0.5,
-    borderColor: "#000",
+    borderColor: '#000',
   },
   evidenceText: {
     fontSize: 16,
     marginVertical: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
   textInput: {
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: "#e0f7fa",
+    backgroundColor: '#e0f7fa',
     borderWidth: 1,
-    borderColor: "#007BFF",
+    borderColor: '#007BFF',
     borderRadius: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     // marginVertical: 10,
     marginTop: -15,
-    // marginBottom: 50,
   },
   submitButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: '#28a745',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
-    width: "40%",
-    alignItems: "center",
+    width: '40%',
+    alignItems: 'center',
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3.84,
     elevation: 5,
   },
   resetButton: {
-    backgroundColor: "#dc2626",
+    backgroundColor: '#dc2626',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
-    width: "40%",
-    alignItems: "center",
+    width: '40%',
+    alignItems: 'center',
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3.84,
     elevation: 5,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 16,
   },
   logoContainer: {
     marginLeft: -70,
     marginTop: 10,
-    position: "absolute",
+    position: 'absolute',
     top: -68,
     left: 3,
   },
   logo: {
     width: 50,
     height: 50,
-    transformOrigin: "center",
+    transformOrigin: 'center',
     transform: [{ scale: 0.3 }],
     marginRight: 10,
   },
   line: {
     // marginBottom: 10,
     marginTop: -6,
-    width: "150%",
+    width: '150%',
     borderWidth: 0.5,
-    borderColor: "#000",
+    borderColor: '#000',
     marginLeft: -23,
     marginRight: 10,
-  },
-  ElectricalDropdown: {
-    // marginTop: 10,
-    marginBottom: 10,
-    backgroundColor: "#e0f7fa",
-    zIndex: 99999,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#007BFF",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    height: 20,
-  },
-  dropdownContainer: {
-    // marginTop: 10, // Adds space between the checkbox and dropdown
-    width: "45%",
-    // height: 350,
-    // backgroundColor: "red",
-    height: "auto",
-    marginLeft: 100,
   },
 });
