@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput,  ImageBackground} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -31,8 +31,9 @@ const EditProfilePage = () => {
   };
 
   return (
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
     <View style={styles.container}>
-      <TouchableOpacity 
+      {/* <TouchableOpacity 
         style={styles.backButton} 
         onPress={() => router.back()} 
         accessibilityRole="button" 
@@ -41,8 +42,8 @@ const EditProfilePage = () => {
         <Image
           source={require("./../../assets/images/back-button.png")}
           style={styles.backButtonImage}
-        />
-      </TouchableOpacity>
+        /> */}
+      {/* </TouchableOpacity> */}
       <Text style={styles.title}>Edit Profile</Text>
       <View style={styles.separator} />
 
@@ -122,21 +123,22 @@ const EditProfilePage = () => {
         onCancel={hideDatePicker}
       />
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 25,
-    backgroundColor: '#f0f0f0',
+    padding: 15,
+    // backgroundColor: '#f0f0f0',
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 35,
-    marginTop: -10,
+    marginTop: 25,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -159,17 +161,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     borderWidth: 1,
-    borderColor: '#ccc',
+    // borderColor: '#ccc',
     marginVertical: 5,
     marginHorizontal: 8,
     borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 1 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 2,
+    // elevation: 5,
     height: 50,
     marginBottom: 10,
   },
@@ -179,48 +181,48 @@ const styles = StyleSheet.create({
   },
   usernameField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     padding: 5,
   },
   dobField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
   },
   emailField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
   },
   contactField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
   },
   altContactField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     height: 40, 
   },
   addressField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#EBEDF9',
     height: 40, 
     marginTop: 0,  
     padding: 5,
   },
-  backButton: {
-    alignSelf: "flex-start",
-    marginTop: 10,
-    marginBottom: -20,
-    position: "relative",
-    right: 5,
-    top: 10,
-    zIndex: 1000,
-  },
-  backButtonImage: {
-    width: 40,
-    height: 40,
-    marginTop: 15,
-    zIndex: 1000,
-  },
+//   backButton: {
+//     alignSelf: "flex-start",
+//     marginTop: 10,
+//     marginBottom: -20,
+//     position: "relative",
+//     right: 5,
+//     top: 10,
+//     zIndex: 1000,
+//   },
+//   backButtonImage: {
+//     width: 40,
+//     height: 40,
+//     marginTop: 15,
+//     zIndex: 1000,
+//   },
   updateButton: {
     backgroundColor: '#14AE5C',
     borderRadius: 40,
