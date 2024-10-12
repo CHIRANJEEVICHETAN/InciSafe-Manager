@@ -14,42 +14,42 @@ const HelpCenter = () => {
       <Text style={styles.welcomeText}>Welcome to the Support Center</Text>
 
       <View style={styles.menuList}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/HelpSupport/getstarted')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/getstarted')}>
           <Text style={styles.menuText}>Get Started</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/incidentReport')}>
           <Text style={styles.menuText}>How to Report an Incident</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/incidentManagement')}>
           <Text style={styles.menuText}>Incident Management</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/notifications')}>
           <Text style={styles.menuText}>Notifications and Alerts</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/Documentation')}>
           <Text style={styles.menuText}>Documentation and Evidence Upload</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/troubleshooting')}>
           <Text style={styles.menuText}>Troubleshooting</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/FAQ')}>
           <Text style={styles.menuText}>Frequently Asked Questions (FAQs)</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/userPages/helpsupport/contactSupport')}>
           <Text style={styles.menuText}>Contact Support</Text>
           <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
         </TouchableOpacity>
