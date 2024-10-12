@@ -35,6 +35,10 @@ export default function Login() {
     return null;
   }
 
+  const handleBackPress = () => {
+    router.replace("/");
+  };
+
   const OnLogin = async () => {
     if (email === "" || password === "") {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
@@ -75,7 +79,7 @@ export default function Login() {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => router.replace("/")}
+        onPress={handleBackPress}
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >

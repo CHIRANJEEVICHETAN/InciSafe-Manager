@@ -12,8 +12,12 @@ import DateTimePickerField from './../../../components/DateTimePicker';
 import LogoSVG from './../../../components/LogoSVG';
 import LineSVG from './../../../components/LineSVG';
 import { getAuth } from 'firebase/auth';
+import { useRouter } from "expo-router";
+import getConfig from "./../../../configs/config";
 
 export default function UniformSafety() {
+  const { BASE_URL } = getConfig();
+  const router = useRouter();
   const auth = getAuth();
   const [user, setUser] = useState(null);
   // State variables for form data and UI control
@@ -23,7 +27,7 @@ export default function UniformSafety() {
   const [employees, setEmployees] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [incidentDescription, setIncidentDescription] = useState('');
+  const [incidentDescription, setIncidentDescription] = useState("");
   const [violationTypes, setViolationTypes] = useState({
     shoes: false,
     dressCode: false,
@@ -32,20 +36,28 @@ export default function UniformSafety() {
   const [openDepartment, setOpenDepartment] = useState(false);
   const [openEmployee, setOpenEmployee] = useState(false);
   const [evidence, setEvidence] = useState(null);
-  const [evidenceName, setEvidenceName] = useState('');
+  const [evidenceName, setEvidenceName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch departments and employees data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deptResponse = await axios.get('http://192.168.190.217:3000/departments');
-        setDepartments(deptResponse.data.map(dept => ({ label: dept, value: dept })));
-        
-        const empResponse = await axios.get('http://192.168.190.217:3000/employees');
-        setEmployees(empResponse.data.map(emp => ({ label: emp, value: emp })));
+        const deptResponse = await axios.get(`${BASE_URL}/departments`);
+        setDepartments(
+          deptResponse.data.map((dept) => ({ label: dept, value: dept }))
+        );
+
+        const empResponse = await axios.get(`${BASE_URL}/employees`);
+        setEmployees(
+          empResponse.data.map((emp) => ({ label: emp, value: emp }))
+        );
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch data from the server. In UniformSafety");
+        Alert.alert(
+          "Error",
+          "Failed to fetch data from the server. In UniformSafety" +
+            error.message
+        );
       }
     };
     fetchData();
@@ -61,10 +73,13 @@ export default function UniformSafety() {
   const handleUploadEvidence = async (source) => {
     try {
       let result;
-      if (source === 'camera') {
+      if (source === "camera") {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
-          Alert.alert('Permission Denied', 'Camera access is required to take photos.');
+        if (status !== "granted") {
+          Alert.alert(
+            "Permission Denied",
+            "Camera access is required to take photos."
+          );
           return;
         }
         result = await ImagePicker.launchCameraAsync({
@@ -85,12 +100,15 @@ export default function UniformSafety() {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedAsset = result.assets[0];
         setEvidence(selectedAsset.uri);
-        setEvidenceName(selectedAsset.uri.split('/').pop());
+        setEvidenceName(selectedAsset.uri.split("/").pop());
       } else {
-        Alert.alert('Info', 'No image was selected.');
+        Alert.alert("Info", "No image was selected.");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to upload evidence. Please try again. Error: ' + error.message);
+      Alert.alert(
+        "Error",
+        "Failed to upload evidence. Please try again. Error: " + error.message
+      );
     }
   };
 
@@ -99,7 +117,7 @@ export default function UniformSafety() {
     setDate(new Date());
     setSelectedDepartment(null);
     setSelectedEmployee(null);
-    setIncidentDescription('');
+    setIncidentDescription("");
     setViolationTypes({
       shoes: false,
       dressCode: false,
@@ -113,61 +131,114 @@ export default function UniformSafety() {
     const storage = getStorage();
     const response = await fetch(imageUri);
     const blob = await response.blob();
-    const storageRef = ref(storage, `images/${Date.now()}-${imageUri.split('/').pop()}`);
-    
+    const storageRef = ref(
+      storage,
+      `images/${Date.now()}-${imageUri.split("/").pop()}`
+    );
+
     await uploadBytes(storageRef, blob);
     return await getDownloadURL(storageRef);
   };
 
   // Format date and time for document ID
   const formatDateTime = (date) => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${day}${month}${year}T${hours}${minutes}`;
   };
 
   const dateTime = formatDateTime(new Date());
 
   // Handle form submission
+  // const handleSubmit = async () => {
+  //   setIsLoading(true); // Start loading
+  //   try {
+  //     const incidentCategory = "Uniform Safety Equipment Violation";
+
+  //     let imageUrl = null;
+  //     if (evidence) {
+  //       imageUrl = await uploadImageAndGetURL(evidence);
+  //     }
+
+  //     // Ensure you have the current user's information
+  //     const currentUser = auth.currentUser;
+  //     const username = currentUser ? currentUser.displayName : "Unknown User";
+  //     const email = currentUser ? currentUser.email : "Unknown Email";
+
+  //     const violationData = {
+  //       incidentCategory,
+  //       violationTypes,
+  //       date: date.toISOString(),
+  //       selectedDepartment,
+  //       selectedEmployee,
+  //       ...(imageUrl && { evidence: imageUrl }), // Store image URL
+  //       incidentDescription,
+  //       username,
+  //       email,
+  //     };
+
+  //     const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID
+  //     await setDoc(doc(db, "uniformSafety", customDocId), violationData); // Use setDoc with custom ID
+
+  //     Alert.alert("Success", "Form submitted successfully!");
+  //     handleReset();
+  //   } catch (error) {
+  //     Alert.alert("Error", "Failed to submit the form. Please try again.");
+  //   } finally {
+  //     setIsLoading(false); // Stop loading
+  //   }
+  // };
   const handleSubmit = async () => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       const incidentCategory = "Uniform Safety Equipment Violation";
-  
+
       let imageUrl = null;
       if (evidence) {
         imageUrl = await uploadImageAndGetURL(evidence);
       }
 
-      // Ensure you have the current user's information
       const currentUser = auth.currentUser;
       const username = currentUser ? currentUser.displayName : "Unknown User";
       const email = currentUser ? currentUser.email : "Unknown Email";
-  
+
       const violationData = {
         incidentCategory,
         violationTypes,
         date: date.toISOString(),
         selectedDepartment,
         selectedEmployee,
-        ...(imageUrl && { evidence: imageUrl }), // Store image URL
+        ...(imageUrl && { evidence: imageUrl }),
         incidentDescription,
         username,
         email,
       };
-  
-      const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
-      await setDoc(doc(db, "uniformSafety", customDocId), violationData); // Use setDoc with custom ID
-  
-      Alert.alert("Success", "Form submitted successfully!");
+
+      const customDocId = `violation-${selectedDepartment}-${dateTime}`;
+      await setDoc(doc(db, "uniformSafety", customDocId), violationData);
+
+      // Navigate to SuccessPage with params using Expo Router
+      router.push({
+        pathname: "/userPages/Forms/success",
+        params: {
+          docId: customDocId,
+          departmentName: selectedDepartment,
+          submissionDate: date.toISOString().split("T")[0],
+          incidentCategory: incidentCategory,
+        },
+      });
+
       handleReset();
     } catch (error) {
-      Alert.alert("Error", "Failed to submit the form. Please try again.");
+      Alert.alert(
+        "Error",
+        "Failed to submit the form. Please try again." + error.message
+      );
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -185,7 +256,7 @@ export default function UniformSafety() {
       <FlatList
         data={violationTypesData}
         renderItem={renderViolationType}
-        keyExtractor={item => item.key}
+        keyExtractor={(item) => item.key}
       />
 
       {/* <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
@@ -229,10 +300,16 @@ export default function UniformSafety() {
       />
 
       <View style={styles.evidenceContainer}>
-        <TouchableOpacity style={styles.evidenceButton} onPress={() => handleUploadEvidence('camera')}>
+        <TouchableOpacity
+          style={styles.evidenceButton}
+          onPress={() => handleUploadEvidence("camera")}
+        >
           <Text style={styles.evidenceButtonText}>Take Photo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.evidenceButton} onPress={() => handleUploadEvidence('library')}>
+        <TouchableOpacity
+          style={styles.evidenceButton}
+          onPress={() => handleUploadEvidence("library")}
+        >
           <Text style={styles.evidenceButtonText}>Upload from Gallery</Text>
         </TouchableOpacity>
       </View>
@@ -247,7 +324,7 @@ export default function UniformSafety() {
       <TextInput
         placeholder="Incident Description"
         value={incidentDescription}
-        onChangeText={text => setIncidentDescription(text)}
+        onChangeText={(text) => setIncidentDescription(text)}
         multiline
         numberOfLines={4}
         style={styles.textInput}
@@ -262,7 +339,10 @@ export default function UniformSafety() {
             <TouchableOpacity onPress={handleReset} style={styles.resetButton}>
               <Text style={styles.buttonText}>Reset</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+            <TouchableOpacity
+              onPress={handleSubmit}
+              style={styles.submitButton}
+            >
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -275,8 +355,13 @@ export default function UniformSafety() {
   const renderViolationType = ({ item }) => (
     <View style={styles.checkboxContainer}>
       <Checkbox
-        status={violationTypes[item.key] ? 'checked' : 'unchecked'}
-        onPress={() => setViolationTypes({ ...violationTypes, [item.key]: !violationTypes[item.key] })}
+        status={violationTypes[item.key] ? "checked" : "unchecked"}
+        onPress={() =>
+          setViolationTypes({
+            ...violationTypes,
+            [item.key]: !violationTypes[item.key],
+          })
+        }
       />
       <Text>{item.label}</Text>
     </View>
@@ -284,9 +369,9 @@ export default function UniformSafety() {
 
   // Data for violation types
   const violationTypesData = [
-    { key: 'shoes', label: 'Not wearing proper shoes' },
-    { key: 'dressCode', label: 'Not following the proper dress code' },
-    { key: 'safetyGears', label: 'Missing gloves/other safety gears' },
+    { key: "shoes", label: "Not wearing proper shoes" },
+    { key: "dressCode", label: "Not following the proper dress code" },
+    { key: "safetyGears", label: "Missing gloves/other safety gears" },
   ];
 
   return (
@@ -297,9 +382,9 @@ export default function UniformSafety() {
           style={styles.container}
         >
           <FlatList
-            data={[{ key: 'form' }]}
+            data={[{ key: "form" }]}
             renderItem={renderContent}
-            keyExtractor={item => item.key}
+            keyExtractor={(item) => item.key}
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
