@@ -98,7 +98,7 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 25,
   },
   scrollContainer: {
     flex: 1,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
     borderRadius: 30,
     borderWidth: 2.5,
-    borderColor: '#cccff',
+    // borderColor: '#cccff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
@@ -158,8 +158,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#ddd',
     marginLeft: 20,
     marginRight: 10,
   },
