@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ImageBackground } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -17,14 +17,15 @@ const ChangePasswordPage = () => {
   };
 
   return (
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
+      {/* <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
         accessibilityLabel="Go back">
         <Image
           source={require("./../../assets/images/back-button.png")}
           style={styles.backButtonImage}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <Text style={styles.title}>Change Password</Text>
       <View style={styles.separator} />
@@ -82,14 +83,15 @@ const ChangePasswordPage = () => {
         </TouchableOpacity>
       </View>
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 25,
-    backgroundColor: '#f0f0f0',
+    padding: 15,
+    // backgroundColor: '#f0f0f0',
   },
   profileIconContainer: {
     alignItems: 'center',
@@ -101,8 +103,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
-    marginTop: -10,
+    marginBottom: 5,
+    marginTop: 25,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -120,17 +122,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     borderWidth: 1,
-    borderColor: '#ccc',
+    // borderColor: '#ccc',
     marginVertical: 5,
     marginHorizontal: 8,
     borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 1 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 2,
+    // elevation: 5,
     height: 60,
     marginBottom: 10,
   },
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
   },
   inputField: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     padding: 5,
   },
   buttonContainer: {
@@ -163,26 +165,26 @@ const styles = StyleSheet.create({
     flex: 0.48,
     alignItems: 'center',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  backButton: {
-    alignSelf: "flex-start",
-    marginTop: 10,
-    marginBottom: -20,
-    position: "relative",
-    right: 5,
-    top: 10,
-    zIndex: 1000,
-  },
-  backButtonImage: {
-    width: 35,
-    height: 35,
-    marginTop: 15,
-    zIndex: 1000,
-  },
+  // buttonText: {
+  //   color: '#fff',
+  //   fontSize: 18,
+  //   fontWeight: 'bold',
+  // },
+  // backButton: {
+  //   alignSelf: "flex-start",
+  //   marginTop: 10,
+  //   marginBottom: -20,
+  //   position: "relative",
+  //   right: 5,
+  //   top: 10,
+  //   zIndex: 1000,
+  // },
+  // backButtonImage: {
+  //   width: 35,
+  //   height: 35,
+  //   marginTop: 15,
+  //   zIndex: 1000,
+  // },
 });
 
 export default ChangePasswordPage;
