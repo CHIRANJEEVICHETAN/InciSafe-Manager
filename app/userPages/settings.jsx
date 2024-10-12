@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator, Image, ImageBackground } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
+
+const MenuItem = ({ icon, title, onPress }) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+    {icon}
+    <Text style={styles.menuText}>{title}</Text>
+    <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
+  </TouchableOpacity>
+);
 
 const Settings = () => {
   const router = useRouter();
@@ -14,7 +22,7 @@ const Settings = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoading(false); // Stop loading after auth check
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -22,107 +30,78 @@ const Settings = () => {
 
   useEffect(() => {
     if (!user && !loading) {
-      router.replace('/auth/sign-in');  // Use replace to prevent back navigation to Home
+      router.replace('/auth/sign-in');
     }
   }, [user, loading]);
 
-    // Logout function
-    const handleLogout = async () => {
-      try {
-        await signOut(auth);  // Call Firebase signOut function
-        router.replace('/auth/sign-in');  // Redirect to the sign-in screen
-      } catch (error) {
-        console.error("Error signing out: ", error); 
-      }
-    };
-  
-    const toggleTheme = () => {
-      setIsDarkTheme(previousState => !previousState);
-    };
-  
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" /> 
-        </View>
-      );
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.replace('/auth/sign-in');
+    } catch (error) {
+      console.error("Error signing out: ", error); 
     }
+  };
+  
+  const toggleTheme = () => {
+    setIsDarkTheme(previousState => !previousState);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" /> 
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" 
-        accessibilityLabel="Go back">
-        <Image
-          source={require("./../../assets/images/back-button.png")}
-          style={styles.backButtonImage}
-        />
-      </TouchableOpacity>
-        <Ionicons name="settings-outline" size={30} color="black" style={{marginTop: 3}} />
-        <Text style={styles.headerText}>Settings</Text>
-      </View>
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={25} color="black" style={{marginLeft: 10}} />
-        <TextInput placeholder="Search" style={styles.searchText} />
-      </View>
-      <View style={styles.menuItemlist}>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0, marginTop: 10}]} onPress={() => router.push('/userPages/editProfile')}>
-        <FontAwesome name="pencil" size={22} color="black" />
-        <Text style={styles.menuText}>Edit profile</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/changePassword')}>
-        <FontAwesome name="lock" size={22} color="black" />
-        <Text style={styles.menuText}>Change Password</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      <View style={[styles.menuItem, {borderBottomWidth: 0}]}>
-        <FontAwesome name="moon-o" size={22} color="black" />
-        <Text style={styles.menuText}>Theme</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isDarkTheme ? "#f5dd4b" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleTheme}
-          value={isDarkTheme}
-          style={styles.switch}
-        />
-      </View>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/helpcenter')}>
-        <Ionicons name="help-circle-outline" size={28} color="black" style={{marginLeft: -5}} />
-        <Text style={styles.menuText}>Help & Support</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/terms')}>
-        <MaterialIcons name="description" size={22} color="black" />
-        <Text style={styles.menuText}>Terms and Conditions</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/feedback')}>
-        <MaterialIcons name="feedback" size={22} color="black" />
-        <Text style={styles.menuText}>Feedback</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={() => router.push('/userPages/about')}>
-        <Ionicons name="information-circle" size={22} color="black" />
-        <Text style={styles.menuText}>About</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, {borderBottomWidth: 0}]} onPress={handleLogout}>
-        <MaterialIcons name="logout" size={20} color="black" />
-        <Text style={styles.menuText}>Log out</Text>
-        <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
-      </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
+            <Image source={require("./../../assets/images/back-button.png")} style={styles.backButtonImage} />
+          </TouchableOpacity>
+          <Ionicons name="settings-outline" size={30} color="black" style={{marginTop: 3}} />
+          <Text style={styles.headerText}>Settings</Text>
+        </View>
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={25} color="black" style={{marginLeft: 10}} />
+          <TextInput placeholder="Search" style={styles.searchText} />
+        </View>
+        <View style={styles.menuItemlist}>
+          <MenuItem icon={<FontAwesome name="pencil" size={22} color="black" />} title="Edit profile" onPress={() => router.push('/userPages/editProfile')} />
+          <MenuItem icon={<FontAwesome name="lock" size={22} color="black" />} title="Change Password" onPress={() => router.push('/userPages/changePassword')} />
+          <View style={styles.menuItem}>
+            <FontAwesome name="moon-o" size={22} color="black" />
+            <Text style={styles.menuText}>Theme</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={isDarkTheme ? "#f5dd4b" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleTheme}
+              value={isDarkTheme}
+              style={styles.switch}
+            />
+          </View>
+          <MenuItem icon={<Ionicons name="help-circle-outline" size={28} color="black" />} title="Help & Support" onPress={() => router.push('/userPages/helpcenter')} />
+          <MenuItem icon={<MaterialIcons name="description" size={22} color="black" />} title="Terms & Conditions" onPress={() => router.push('/userPages/terms')} />
+          <MenuItem icon={<MaterialIcons name="feedback" size={22} color="black" />} title="Feedback" onPress={() => router.push('/userPages/feedback')} />
+          <MenuItem icon={<Ionicons name="information-circle" size={22} color="black" />} title="About" onPress={() => router.push('/userPages/about')} />
+          <MenuItem icon={<MaterialIcons name="logout" size={20} color="black" />} title="Log out" onPress={handleLogout} />
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
     paddingTop: 30,
+  },
+  scrollContainer: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -156,7 +135,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   searchText: {
-    // marginLeft: 5,
     color: '#000',
     fontSize: 18,
     fontWeight: 'bold',
@@ -167,11 +145,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 30,
     marginRight: 30,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    borderWidth: 2,
-    borderColor: '#ccc',
-    height: 560, 
+    borderRadius: 30,
+    borderWidth: 2.5,
+    borderColor: '#cccff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
@@ -203,11 +179,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
   },
   backButton: {
     alignSelf: "flex-start",
-    // marginTop: 10,
     marginBottom: -20,
     position: "absolute",
     left: 25,

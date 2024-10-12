@@ -6,13 +6,18 @@ app.use(express.json());
 
 const departments = ['HR', 'Engineering', 'Sales', 'Marketing'];
 const employees = ['John Doe - 1001', 'Jane Smith - 1002', 'Alice Johnson - 1003', 'Bob Brown - 1003'];
+const severity = ["minor", "moderate", "severe"];
 
-app.get('/departments', (req, res) => {
+app.get("/departments", (req, res) => {
   res.json(departments);
 });
 
-app.get('/employees', (req, res) => {
+app.get("/employees", (req, res) => {
   res.json(employees);
+});
+
+app.get("/severity", (req, res) => {
+  res.json(severity);
 });
 
 app.listen(port, () => {
