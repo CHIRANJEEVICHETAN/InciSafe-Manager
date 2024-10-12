@@ -38,6 +38,17 @@ export default function SignUp() {
     return null;
   }
 
+  // Function to generate a unique 6-digit code based on the user UID
+  const generateUserId = (userId) => {
+    let hash = 0;
+    for (let i = 0; i < userId.length; i++) {
+      hash = (hash << 5) - hash + userId.charCodeAt(i);
+      hash |= 0; // Convert to 32bit integer
+    }
+    const userIdNumber = Math.abs(hash) % 1000000; // Ensure it's always positive and up to 6 digits
+    return userIdNumber.toString().padStart(6, "0");
+  };
+
   const OnCreateAccount = async (email, password) => {
     if (username === "" || email === "" || password === "") {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
@@ -62,11 +73,15 @@ export default function SignUp() {
         displayName: username,
       });
 
+      // Generate the unique 6-digit user ID based on user.uid
+      const uniqueUserId = generateUserId(user.uid);
+
       // Store additional user information in Firestore with role as 'user'
       await setDoc(doc(db, "users", user.uid), {
         username: username,
         email: email,
         role: "user", // Hardcoded role as 'user'
+        userId: uniqueUserId,
       });
 
       ToastAndroid.show("User created successfully", ToastAndroid.LONG);
