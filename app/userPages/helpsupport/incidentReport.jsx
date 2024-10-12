@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 
 const Incident = () => {
   return (
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
@@ -37,13 +38,14 @@ const Incident = () => {
         </View>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 10,
   },
   header: {
     flexDirection: "row",
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: -8,
+    marginBottom: -15,
     marginTop: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 22,
-    margin: 15,
+    margin: 25,
     textAlign: "center",
     color: "#555",
     marginBottom: 55,
@@ -79,14 +81,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "baseline",
     paddingVertical: 10,
-    borderBottomWidth: 0.8,
-    borderBottomColor: "#ddd",
+    // borderBottomWidth: 0.8,
+    // borderBottomColor: "#ddd",
     marginHorizontal: 15,
+    // padding:5,
   },
   menuText: {
     fontSize: 18,
     marginBottom: 15,
-    color: "#333",
+    color: "#222",
   },
   bulletContainer: {
     paddingLeft: 20,
@@ -94,8 +97,8 @@ const styles = StyleSheet.create({
   },
   bulletText: {
     fontSize: 16,
-    color: "#555",
-    marginBottom: 5,
+    color: "#333",
+    marginBottom: 4,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -18,6 +18,7 @@ const Feedback = () => {
   };
 
   return (
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Feedback</Text>
 
@@ -63,20 +64,21 @@ const Feedback = () => {
         <Text style={styles.submitButtonText}>Submit Feedback</Text>
       </TouchableOpacity>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f0f0f0',
+    padding: 13,
+    // backgroundColor: '#f0f0f0',
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: -33,
+    marginBottom: -35,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -95,31 +97,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 6,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#ccc',
+    // borderColor: '#ccc',
     marginVertical: 9,
-    borderRadius: 10,
-    elevation: 3,
+    borderRadius: 15,
+    // elevation: 3,
   },
   icon: {
-    marginRight: 7.5,
+    marginRight: 10,
+    marginLeft: 10,
   },
   inputField: {
     flex: 1,
     padding: 8,
-    backgroundColor: '#fff',
+
   },
   suggestionField: {
     flex: 1,
     padding: 8,
-    backgroundColor: '#fff',
-    height: 80, 
+    height: 100, 
   },
   submitButton: {
     backgroundColor: '#14AE5C',
     borderRadius: 40,
-    padding: 18,
+    padding: 20,
     alignItems: 'center',
     marginTop: 20,
   },

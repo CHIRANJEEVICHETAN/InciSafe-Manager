@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ImageBackground
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 // import { useRouter } from 'expo-router';
@@ -12,6 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const trouble = () => {
   //   const router = useRouter();
   return (
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
@@ -51,20 +53,21 @@ const trouble = () => {
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 10,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 25,
     borderBottomWidth: 1.8,
-    borderColor: "#ddd",
+    borderColor: "#ccc",
     alignContent: "center",
   },
   headerText: {
@@ -94,16 +97,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 20,
-    borderBottomWidth: 0.8,
-    borderBottomColor: "#ddd",
-    marginHorizontal: 10,
+    // borderBottomWidth: 0.8,
+    // borderBottomColor: "#ddd",
+    marginHorizontal: 5,
   },
   menuText: {
     fontSize: 18,
   },
   chevron: {
     position: "absolute",
-    right: 5,
+    right: 2,
   },
 });
 

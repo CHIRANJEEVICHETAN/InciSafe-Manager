@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 
 const ContactSupport = () => {
   return (
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
@@ -15,24 +16,25 @@ const ContactSupport = () => {
           If you have any questions or concerns about these Terms, please
           contact our support team:
         </Text>
-        <Text style={styles.contactInfo}>Email: support@incisafe.com</Text>
+        <Text style={styles.contactInfo}>Email: incisafemanager@gmail.com</Text>
         <Text style={styles.contactInfo}>Phone: 1-800-123-4567</Text>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 10,
   },
   header: {
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 25,
     borderBottomWidth: 1.8,
-    borderColor: "#ddd",
+    borderColor: "#ccc",
   },
   headerText: {
     fontSize: 30,
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 22,
-    margin: 18,
+    margin: 20,
     textAlign: "center",
     color: "#555",
     marginBottom: 55,

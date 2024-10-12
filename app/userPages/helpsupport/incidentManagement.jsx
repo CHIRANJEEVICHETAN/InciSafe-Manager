@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 
 const IncidentManagement = () => {
   return (
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
@@ -41,18 +42,19 @@ const IncidentManagement = () => {
         </View>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 10,
   },
   header: {
     flexDirection: "row",
     justifyContent: "center",
-    padding: 25,
+    padding: 20,
     borderBottomWidth: 1.8,
     borderColor: "#ddd",
     alignItems: "center",
@@ -71,21 +73,21 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 22,
-    margin: 15,
+    margin: 25,
     textAlign: "center",
     color: "#555",
-    marginBottom: 55,
+    marginBottom: 45,
   },
   menuList: {
     marginHorizontal: 15,
   },
   menuItem: {
     justifyContent: "space-between",
-    alignItems: "baseline",
+    alignItems: 'baseline',
     paddingVertical: 10,
-    borderBottomWidth: 0.8,
-    borderBottomColor: "#ddd",
-    marginHorizontal: 15,
+    // borderBottomWidth: 0.8,
+    // borderBottomColor: "#ddd",
+    marginHorizontal: 5,
   },
   menuText: {
     fontSize: 18,
