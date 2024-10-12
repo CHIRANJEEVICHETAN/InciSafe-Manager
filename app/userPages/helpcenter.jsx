@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 const HelpCenter = () => {
   const router = useRouter();
   return (
+    <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
@@ -55,20 +56,21 @@ const HelpCenter = () => {
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 7,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 25,
     borderBottomWidth: 1.8,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     alignContent: 'center',
   },
   headerText: {
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 21,
-    margin: 25,
+    margin: 35,
     textAlign: 'center',
     color: '#555',
   },
@@ -98,9 +100,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
-    borderBottomWidth: 0.8,
-    borderBottomColor: '#ddd',
+    paddingVertical: 21.5,
+    // borderBottomWidth: 0.8,
+    // borderBottomColor: '#ccc',
     marginHorizontal: 10, 
   },
   menuText: {
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
   },
   chevron: {
     position: 'absolute',
-    right: 5,
+    right: 2,
   },
 });
 

@@ -130,7 +130,7 @@ const EditProfilePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    padding: 10,
     // backgroundColor: '#f0f0f0',
   },
   title: {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 35,
-    marginTop: 25,
+    marginTop: 35,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -203,10 +203,8 @@ const styles = StyleSheet.create({
   },
   addressField: {
     flex: 1,
-    // backgroundColor: '#EBEDF9',
-    height: 40, 
-    marginTop: 0,  
     padding: 5,
+    height: 50,
   },
 //   backButton: {
 //     alignSelf: "flex-start",

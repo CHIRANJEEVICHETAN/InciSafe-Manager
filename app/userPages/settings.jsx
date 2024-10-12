@@ -59,9 +59,9 @@ const Settings = () => {
     <ImageBackground source={require('./../../assets/images/background.jpg')} style={styles.container}>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
+          {/* <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
             <Image source={require("./../../assets/images/back-button.png")} style={styles.backButtonImage} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Ionicons name="settings-outline" size={30} color="black" style={{marginTop: 3}} />
           <Text style={styles.headerText}>Settings</Text>
         </View>
@@ -98,7 +98,7 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingTop: 50,
   },
   scrollContainer: {
     flex: 1,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   menuItemlist: {
-    marginTop: 20,
+    marginTop: 30,
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 30,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    elevation: 5,
+    // elevation: 5,
   },
   menuItem: {
     flexDirection: 'row',
