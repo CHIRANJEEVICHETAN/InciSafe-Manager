@@ -1,60 +1,61 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
 
 const Future = () => {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>About</Text>
-      </View>
-
-      <Text style={styles.titleText}>Innovation and Future Plans</Text>
-
-      <View style={styles.menuList}>
-        <View style={styles.menuItem}>
-          <Text style={styles.menuText}>1. Advanced Predictive Analytics</Text>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bulletText}>- Incorporating machine learning models to predict potential incidents based on historical data.</Text>
-          </View>
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>About</Text>
         </View>
 
-        <View style={styles.menuItem}>
-          <Text style={styles.menuText}>2. NLP (Natural Language Processing)</Text>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bulletText}>- Adding speech-to-text features for faster, hands-free incident reporting.</Text>
+        <Text style={styles.titleText}>Innovation and Future Plans</Text>
+
+        <View style={styles.menuList}>
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>1. Advanced Predictive Analytics</Text>
+            <View style={styles.bulletContainer}>
+              <Text style={styles.bulletText}>- Incorporating machine learning models to predict potential incidents based on historical data.</Text>
+            </View>
+          </View>
+
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>2. NLP (Natural Language Processing)</Text>
+            <View style={styles.bulletContainer}>
+              <Text style={styles.bulletText}>- Adding speech-to-text features for faster, hands-free incident reporting.</Text>
+            </View>
+          </View>
+
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>3. Enhanced UI/UX</Text>
+            <View style={styles.bulletContainer}>
+              <Text style={styles.bulletText}>- Continuously improving the user interface for smoother workflows and easier navigation.</Text>
+            </View>
+          </View>
+
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>4. Integration with Wearable Devices</Text>
+            <View style={styles.bulletContainer}>
+              <Text style={styles.bulletText}>- Allowing users to report incidents directly from smart devices (e.g., smartwatches).</Text>
+            </View>
           </View>
         </View>
-
-        <View style={styles.menuItem}>
-          <Text style={styles.menuText}>3. Enhanced UI/UX</Text>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bulletText}>- Continuously improving the user interface for smoother workflows and easier navigation.</Text>
-          </View>
-        </View>
-
-        <View style={styles.menuItem}>
-          <Text style={styles.menuText}>4. Integration with Wearable Devices</Text>
-          <View style={styles.bulletContainer}>
-            <Text style={styles.bulletText}>- Allowing users to report incidents directly from smart devices (e.g., smartwatches).</Text>
-          </View>
-        </View>
-
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    paddingTop: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center', 
-    padding: 25,
+    padding: 20,
     borderBottomWidth: 1.8,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     alignItems: 'center',
   },
   headerText: {
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 22,
-    margin: 15,
+    margin: 20,
     textAlign: 'center',
     color: '#555',
     marginBottom: 55, 
@@ -83,17 +84,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'baseline',
     paddingVertical: 10,
-    borderBottomWidth: 0.8,
-    borderBottomColor: '#ddd',
     marginHorizontal: 15,
     textAlign: 'justify', 
   },
   menuText: {
     fontSize: 18,
-    marginBottom: 15,
-    color: '#333',
+    marginBottom: 5, 
     textAlign: 'justify',
+  },
+  bulletContainer: {
+    marginLeft: 20, 
+    marginBottom: 15, 
+  },
+  bulletText: {
+    fontSize: 16,
+    color: '#555', 
+    lineHeight: 22, 
+    position: 'relative',
   },
 });
 
-export default Future ;
+export default Future;

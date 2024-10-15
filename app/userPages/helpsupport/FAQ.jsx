@@ -96,12 +96,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingVertical: 10,
     // borderBottomWidth: 0.8,
-    // borderBottomColor: "#ddd",
+    // borderBottomColor: "#aaa",
   },
   questionText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#00796b",
+    color: "#111f",
     marginBottom: 5,
   },
   answerText: {

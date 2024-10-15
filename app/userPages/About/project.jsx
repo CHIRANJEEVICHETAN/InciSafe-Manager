@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
 
 const project = () => {
   return (
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>About</Text>
@@ -44,20 +45,21 @@ const project = () => {
         </View>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center', 
-    padding: 25,
+    padding: 20,
     borderBottomWidth: 1.8,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     alignItems: 'center',
   },
   headerText: {
@@ -80,20 +82,20 @@ const styles = StyleSheet.create({
     marginBottom: 55, 
   },
   menuList: {
-    marginHorizontal: 15,
+    marginHorizontal: 10,
   },
   menuItem: {
     justifyContent: 'space-between',
     alignItems: 'baseline',
     paddingVertical: 10,
-    borderBottomWidth: 0.8,
-    borderBottomColor: '#ddd',
-    marginHorizontal: 15,
+    // borderBottomWidth: 0.8,
+    // borderBottomColor: '#ddd',
+    marginHorizontal: 5,
     
   },
   menuText: {
     fontSize: 18,
-    marginBottom: 15,
+    marginBottom: 10,
     color: '#333',
     textAlign: 'justify', 
   },
