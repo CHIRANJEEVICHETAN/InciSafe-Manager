@@ -12,8 +12,12 @@ import DateTimePickerField from './../../../components/DateTimePicker';
 import LogoSVG from './../../../components/LogoSVG';
 import LineSVG from './../../../components/LineSVG';
 import { getAuth } from 'firebase/auth';
+import { useRouter } from "expo-router";
+import getConfig from "./../../../configs/config";
 
 export default function EnvironmentalHazard() {
+  const { BASE_URL } = getConfig();
+  const router = useRouter();
   const auth = getAuth();
   const [user, setUser] = useState(null);
   // State variables for form data and UI control
@@ -39,10 +43,10 @@ export default function EnvironmentalHazard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deptResponse = await axios.get('http://192.168.190.217:3000/departments');
+        const deptResponse = await axios.get(`${BASE_URL}/departments`);
         setDepartments(deptResponse.data.map(dept => ({ label: dept, value: dept })));
         
-        const empResponse = await axios.get('http://192.168.190.217:3000/employees');
+        const empResponse = await axios.get(`${BASE_URL}/employees`);
         setEmployees(empResponse.data.map(emp => ({ label: emp, value: emp })));
 
       } catch (error) {
@@ -163,7 +167,20 @@ export default function EnvironmentalHazard() {
       const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
       await setDoc(doc(db, "EnvironmentalHazard", customDocId), violationData); // Use setDoc with custom ID
   
-      Alert.alert("Success", "Form submitted successfully!");
+      // Alert.alert("Success", "Form submitted successfully!");
+
+      // Navigate to SuccessPage with params using Expo Router
+      router.push({
+        pathname: "/userPages/Forms/success",
+        params: {
+          docId: customDocId,
+          departmentName: selectedDepartment,
+          submissionDate: date.toISOString().split("T")[0],
+          incidentCategory: incidentCategory,
+        },
+      });
+
+      
       handleReset();
     } catch (error) {
       Alert.alert("Error", "Failed to submit the form. Please try again.");
