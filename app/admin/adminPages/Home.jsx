@@ -8,7 +8,7 @@ import {
   Dimensions,
   ImageBackground,
 } from "react-native";
-import Header from "./../../../components/Header";
+import AdminHeader from "./../../../components/adminHeader";
 import SearchBar from "./../../../components/SearchBar";
 import LineSVG from "./../../../components/LineSVG";
 import { useRouter } from "expo-router";
@@ -28,14 +28,17 @@ const Home = () => {
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
-        <Header username={user?.displayName || "User"} style={styles.header} />
+        <AdminHeader
+          username={user?.displayName || "User"}
+          style={styles.header}
+        />
         <LineSVG style={styles.line} />
         <SearchBar style={styles.searchBar} />
 
         <View style={styles.menuContainer}>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => router.push("/adminDashboard")}
+            onPress={() => router.push("/admin/adminScreens/Dashboard")}
           >
             <MaterialCommunityIcons
               name="view-dashboard"
@@ -47,7 +50,9 @@ const Home = () => {
 
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => router.push("/incidentReports")}
+            onPress={() =>
+              router.push("/admin/adminScreens/incidentManagement")
+            }
           >
             <MaterialCommunityIcons
               name="file-document-outline"
@@ -59,7 +64,7 @@ const Home = () => {
 
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => router.push("/category")}
+            onPress={() => router.push("user/Home")}
           >
             <MaterialCommunityIcons name="view-grid" size={50} color="black" />
             <Text style={styles.menuText}>CATEGORY</Text>
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: width * 0.8,
-    height: 100,
+    height: 160,
     backgroundColor: "#e0f7fa",
     borderRadius: 10,
     marginBottom: 20,

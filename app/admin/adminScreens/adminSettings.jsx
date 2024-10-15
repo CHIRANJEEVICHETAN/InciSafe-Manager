@@ -1,10 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput, ActivityIndicator, Image, ImageBackground } from 'react-native';
-import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Switch,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  Image,
+  ImageBackground,
+} from "react-native";
+import {
+  Ionicons,
+  FontAwesome,
+  MaterialIcons,
+  MaterialCommunityIcons,
+  FontAwesome6,
+  FontAwesome5,
+} from "@expo/vector-icons";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "expo-router";
 
-const Settings = () => {
+const adminSettings = () => {
   const router = useRouter();
   const auth = getAuth();
   const [loading, setLoading] = useState(true);
@@ -22,35 +40,35 @@ const Settings = () => {
 
   useEffect(() => {
     if (!user && !loading) {
-      router.replace('/auth/sign-in');  // Use replace to prevent back navigation to Home
+      router.replace("/auth/sign-in"); // Use replace to prevent back navigation to Home
     }
   }, [user, loading]);
 
-    // Logout function
-    const handleLogout = async () => {
-      try {
-        await signOut(auth);  // Call Firebase signOut function
-        router.replace('/auth/sign-in');  // Redirect to the sign-in screen
-      } catch (error) {
-        console.error("Error signing out: ", error); 
-      }
-    };
-  
-    const toggleTheme = () => {
-      setIsDarkTheme(previousState => !previousState);
-    };
-  
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" /> 
-        </View>
-      );
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Call Firebase signOut function
+      router.replace("/auth/sign-in"); // Redirect to the sign-in screen
+    } catch (error) {
+      console.error("Error signing out: ", error);
     }
+  };
+
+  const toggleTheme = () => {
+    setIsDarkTheme((previousState) => !previousState);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <ImageBackground
-      source={require("./../../assets/images/background.jpg")}
+      source={require("../../../assets/images/background.jpg")}
       style={styles.container}
     >
       <ScrollView style={styles.container}>
@@ -62,7 +80,7 @@ const Settings = () => {
             accessibilityLabel="Go back"
           >
             <Image
-              source={require("./../../assets/images/back-button.png")}
+              source={require("./../../../assets/images/back-button.png")}
               style={styles.backButtonImage}
             />
           </TouchableOpacity>
@@ -85,7 +103,7 @@ const Settings = () => {
         </View>
         {/* <View style={styles.menuItemlist}> */}
         <ImageBackground
-          source={require("./../../assets/images/background.jpg")}
+          source={require("./../../../assets/images/background.jpg")}
           style={styles.menuItemlist}
         >
           <TouchableOpacity
@@ -128,15 +146,15 @@ const Settings = () => {
           </View>
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/helpcenter")}
+            onPress={() => router.push("/admin/adminScreens/Dashboard")}
           >
-            <Ionicons
-              name="help-circle-outline"
+            <MaterialIcons
+              name="dashboard"
               size={28}
               color="black"
               style={{ marginLeft: -5 }}
             />
-            <Text style={styles.menuText}>Help & Support</Text>
+            <Text style={styles.menuText}>Dashboard</Text>
             <MaterialCommunityIcons
               name="chevron-right"
               size={20}
@@ -146,10 +164,12 @@ const Settings = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/terms")}
+            onPress={() =>
+              router.push("/admin/adminScreens/incidentManagement")
+            }
           >
-            <MaterialIcons name="description" size={22} color="black" />
-            <Text style={styles.menuText}>Terms & Conditions</Text>
+            <MaterialIcons name="leaderboard" size={22} color="black" />
+            <Text style={styles.menuText}>Incident Management</Text>
             <MaterialCommunityIcons
               name="chevron-right"
               size={20}
@@ -159,10 +179,10 @@ const Settings = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/feedback")}
+            onPress={() => router.push("admin/adminScreens/userManagement")}
           >
-            <MaterialIcons name="feedback" size={22} color="black" />
-            <Text style={styles.menuText}>Feedback</Text>
+            <FontAwesome6 name="users-rectangle" size={22} color="black" />
+            <Text style={styles.menuText}>User Management</Text>
             <MaterialCommunityIcons
               name="chevron-right"
               size={20}
@@ -172,12 +192,12 @@ const Settings = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/about")}
+            onPress={() => router.push("admin/adminScreens/reportDownload")}
           >
-            <Ionicons name="information-circle" size={22} color="black" />
-            <Text style={styles.menuText}>About</Text>
+            <FontAwesome5 name="file-download" size={22} color="black" />
+            <Text style={styles.menuText}>Report Download</Text>
             <MaterialCommunityIcons
-              name="chevron-right"
+              name="download"
               size={20}
               color="black"
               style={styles.chevron}
@@ -209,41 +229,41 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 16,
   },
   headerText: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
     padding: 8,
     margin: 16,
     marginBottom: 10,
     borderRadius: 35,
     height: 50,
     width: "83%",
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
     marginLeft: 35,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
   searchText: {
     // marginLeft: 5,
-    color: '#000',
+    color: "#000",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 20,
     width: "100%",
   },
@@ -252,23 +272,23 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 30,
-    overflow: 'hidden',
+    overflow: "hidden",
     // backgroundColor: '#f0f0f0',
     borderWidth: 2.5,
-    borderColor: '#cccff',
-    height: 560, 
-    shadowColor: '#000',
+    borderColor: "#cccff",
+    height: 560,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
     marginLeft: 20,
     marginRight: 10,
   },
@@ -277,18 +297,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   chevron: {
-    position: 'absolute',
+    position: "absolute",
     right: 20,
   },
   switch: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)",
   },
   backButton: {
     alignSelf: "flex-start",
@@ -307,4 +327,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Settings;
+export default adminSettings;
