@@ -84,7 +84,7 @@ const Settings = () => {
               style={styles.switch}
             />
           </View>
-          <MenuItem icon={<Ionicons name="help-circle-outline" size={28} color="black" />} title="Help & Support" onPress={() => router.push('/userPages/helpcenter')} />
+          <MenuItem icon={<Ionicons name="help-circle-outline" size={24} color="black" />} title="Help & Support" onPress={() => router.push('/userPages/helpcenter')} />
           <MenuItem icon={<MaterialIcons name="description" size={22} color="black" />} title="Terms & Conditions" onPress={() => router.push('/userPages/terms')} />
           <MenuItem icon={<MaterialIcons name="feedback" size={22} color="black" />} title="Feedback" onPress={() => router.push('/userPages/feedback')} />
           <MenuItem icon={<Ionicons name="information-circle" size={22} color="black" />} title="About" onPress={() => router.push('/userPages/about')} />
@@ -180,20 +180,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backButton: {
-    alignSelf: "flex-start",
-    marginBottom: -20,
-    position: "absolute",
-    left: 25,
-    top: 0,
-    zIndex: 1000,
-  },
-  backButtonImage: {
-    width: 30,
-    height: 30,
-    marginTop: 23,
-    zIndex: 1000,
-  },
+  // backButton: {
+  //   alignSelf: "flex-start",
+  //   marginBottom: -20,
+  //   position: "absolute",
+  //   left: 25,
+  //   top: 0,
+  //   zIndex: 1000,
+  // },
+  // backButtonImage: {
+  //   width: 30,
+  //   height: 30,
+  //   marginTop: 23,
+  //   zIndex: 1000,
+  // },
 });
 
 export default Settings;
