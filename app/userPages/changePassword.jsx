@@ -6,14 +6,22 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
-  Image,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import {
+  getAuth,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  updatePassword,
+} from "firebase/auth";
 
 const ChangePasswordPage = () => {
   const router = useRouter();
-
+  const [email, setEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [reEnterPassword, setReEnterPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
@@ -25,8 +33,36 @@ const ChangePasswordPage = () => {
   const toggleReEnterPasswordVisibility = () =>
     setShowReEnterPassword(!showReEnterPassword);
 
-  const handleConfirm = () => {
-    console.log("Confirm button pressed");
+  const handleConfirm = async () => {
+    if (newPassword !== reEnterPassword) {
+      alert("New passwords do not match!");
+      return;
+    }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user && email === user.email) {
+      try {
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          currentPassword
+        );
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, newPassword);
+        alert("Password updated successfully!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setReEnterPassword("");
+        setEmail("");
+        router.replace("/");
+      } catch (error) {
+        console.error("Error updating password:", error);
+        alert("Error updating password. Please try again.");
+      }
+    } else {
+      alert("Incorrect email or user not authenticated.");
+    }
   };
 
   const handleCancel = () => {
@@ -39,24 +75,11 @@ const ChangePasswordPage = () => {
       style={styles.container}
     >
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <Image
-            source={require("./../../assets/images/back-button.png")}
-            style={styles.backButtonImage}
-          />
-        </TouchableOpacity>
         <Text style={styles.title}>Change Password</Text>
         <View style={styles.separator} />
-
         <View style={styles.profileIconContainer}>
           <FontAwesome name="lock" size={70} color="#000000" />
         </View>
-
         <View style={styles.fieldContainer}>
           <FontAwesome
             name="envelope"
@@ -68,9 +91,10 @@ const ChangePasswordPage = () => {
             style={styles.inputField}
             placeholder="Email-ID"
             placeholderTextColor="#888"
+            value={email}
+            onChangeText={setEmail}
           />
         </View>
-
         <View style={styles.fieldContainer}>
           <FontAwesome
             name="lock"
@@ -83,6 +107,8 @@ const ChangePasswordPage = () => {
             placeholder="Current Password"
             placeholderTextColor="#888"
             secureTextEntry={!showCurrentPassword}
+            value={currentPassword}
+            onChangeText={setCurrentPassword}
           />
           <TouchableOpacity onPress={toggleCurrentPasswordVisibility}>
             <FontAwesome
@@ -93,7 +119,6 @@ const ChangePasswordPage = () => {
             />
           </TouchableOpacity>
         </View>
-
         <View style={styles.fieldContainer}>
           <FontAwesome
             name="lock"
@@ -106,6 +131,8 @@ const ChangePasswordPage = () => {
             placeholder="New Password"
             placeholderTextColor="#888"
             secureTextEntry={!showNewPassword}
+            value={newPassword}
+            onChangeText={setNewPassword}
           />
           <TouchableOpacity onPress={toggleNewPasswordVisibility}>
             <FontAwesome
@@ -116,7 +143,6 @@ const ChangePasswordPage = () => {
             />
           </TouchableOpacity>
         </View>
-
         <View style={styles.fieldContainer}>
           <FontAwesome
             name="lock"
@@ -129,6 +155,8 @@ const ChangePasswordPage = () => {
             placeholder="Re-enter Password"
             placeholderTextColor="#888"
             secureTextEntry={!showReEnterPassword}
+            value={reEnterPassword}
+            onChangeText={setReEnterPassword}
           />
           <TouchableOpacity onPress={toggleReEnterPasswordVisibility}>
             <FontAwesome
@@ -139,7 +167,6 @@ const ChangePasswordPage = () => {
             />
           </TouchableOpacity>
         </View>
-
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.confirmButton}
@@ -147,7 +174,6 @@ const ChangePasswordPage = () => {
           >
             <Text style={styles.buttonText}>Confirm</Text>
           </TouchableOpacity>
-
           <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
@@ -169,12 +195,11 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 5,
-    marginLeft: 15,
-    marginTop: -10,
+    marginTop: 35,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -192,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 8,
-    borderWidth: 1.5,
+    borderWidth: 1,
     marginVertical: 5,
     marginHorizontal: 8,
     borderRadius: 15,
@@ -215,11 +240,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 40,
     marginHorizontal: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 6,
   },
   confirmButton: {
     backgroundColor: "#14AE5C",
@@ -239,21 +259,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
-  },
-  backButton: {
-    alignSelf: "flex-start",
-    marginTop: 10,
-    marginBottom: -20,
-    position: "relative",
-    right: 5,
-    top: 10,
-    zIndex: 1000,
-  },
-  backButtonImage: {
-    width: 35,
-    height: 35,
-    marginTop: 15,
-    zIndex: 1000,
   },
 });
 

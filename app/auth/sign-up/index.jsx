@@ -14,7 +14,7 @@ import CustomSVG from "./../../../components/CustomSVG";
 import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function SignUp() {
   const auth = getAuth();
@@ -82,6 +82,7 @@ export default function SignUp() {
         email: email,
         role: "user", // Hardcoded role as 'user'
         userId: uniqueUserId,
+        createdAt: serverTimestamp(),
       });
 
       ToastAndroid.show("User created successfully", ToastAndroid.LONG);

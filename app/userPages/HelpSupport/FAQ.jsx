@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 
 const FAQSection = () => {
   return (
+    <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
@@ -53,20 +54,21 @@ const FAQSection = () => {
         </View>
       </View>
     </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
+    padding: 10,
   },
   header: {
     justifyContent: "center",
     alignItems: "center",
     padding: 25,
     borderBottomWidth: 1.5,
-    borderColor: "#ddd",
+    borderColor: "#ccc",
   },
   headerText: {
     fontSize: 30,
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 21,
-    margin: 15,
+    margin: 25,
     textAlign: "center",
     color: "#555",
     paddingBottom: 25,
@@ -93,13 +95,13 @@ const styles = StyleSheet.create({
   faqItem: {
     marginBottom: 15,
     paddingVertical: 10,
-    borderBottomWidth: 0.8,
-    borderBottomColor: "#ddd",
+    // borderBottomWidth: 0.8,
+    // borderBottomColor: "#aaa",
   },
   questionText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#00796b",
+    color: "#111f",
     marginBottom: 5,
   },
   answerText: {

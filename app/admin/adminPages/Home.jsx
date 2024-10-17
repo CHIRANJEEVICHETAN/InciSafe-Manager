@@ -40,11 +40,7 @@ const Home = () => {
             style={styles.menuItem}
             onPress={() => router.push("/admin/adminScreens/Dashboard")}
           >
-            <MaterialCommunityIcons
-              name="view-dashboard"
-              size={50}
-              color="black"
-            />
+            <MaterialCommunityIcons name="chart-box" size={50} color="black" />
             <Text style={styles.menuText}>DASHBOARD</Text>
           </TouchableOpacity>
 
@@ -55,7 +51,7 @@ const Home = () => {
             }
           >
             <MaterialCommunityIcons
-              name="file-document-outline"
+              name="file-document"
               size={50}
               color="black"
             />

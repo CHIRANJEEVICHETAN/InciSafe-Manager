@@ -136,7 +136,11 @@ export default function Login() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          router.push("/auth/pwdReset");
+        }}
+      >
         <Text style={styles.forgotPassword}>Forgot password?</Text>
       </TouchableOpacity>
 
