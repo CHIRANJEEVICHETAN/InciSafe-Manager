@@ -32,6 +32,12 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "474f04c5-1b57-49e7-96b8-1ec950bc3668"
+      }
+    },
+    "owner": "incisafemanager"
   }
 }

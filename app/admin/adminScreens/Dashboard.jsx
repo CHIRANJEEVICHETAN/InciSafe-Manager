@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { BarChart } from "react-native-chart-kit";
 import LogoSVG from "../../../components/LogoSVG";
 import { useRouter } from "expo-router";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./../../../configs/FirebaseConfig"; // Import your Firestore instance
 
 const StatCard = ({ title, value }) => (
   <View style={styles.statCard}>
@@ -21,8 +23,63 @@ const StatCard = ({ title, value }) => (
 );
 
 const AdminDashboard = () => {
+  const [totalIncidents, setTotalIncidents] = useState(0);
+  const [activeIncidents, setActiveIncidents] = useState(0);
+  const [resolvedIncidents, setResolvedIncidents] = useState(0);
+  const [notificationsSent, setNotificationsSent] = useState(0);
+
   const router = useRouter();
-  // We'll add the component logic here
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categories = [
+          "BehaviourIncident",
+          "ChemicalIncident",
+          "EnvironmentalHazard",
+          "EquipmentIssues",
+          "FireIncident",
+          "HealthSafety",
+          "PolicyViolation",
+          "WeatherHazards",
+          "uniformSafety",
+        ];
+
+        let total = 0;
+        let active = 0;
+        let resolved = 0;
+        let notifications = 0;
+
+        // Fetch incidents from all categories
+        for (const category of categories) {
+          const querySnapshot = await getDocs(collection(db, category));
+          total += querySnapshot.size; // Total incidents
+
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.status === "active") {
+              active++; // Active incidents
+            } else if (data.status === "resolved") {
+              resolved++; // Resolved incidents
+            }
+            if (data.notificationSent) {
+              notifications++; // Notifications sent
+            }
+          });
+        }
+
+        setTotalIncidents(total);
+        setActiveIncidents(active);
+        setResolvedIncidents(resolved);
+        setNotificationsSent(notifications);
+      } catch (error) {
+        console.error("Error fetching incident data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const chartData = {
     labels: [
       "Health & Safety",
@@ -32,7 +89,7 @@ const AdminDashboard = () => {
     ],
     datasets: [
       {
-        data: [20, 15, 10, 5],
+        data: [20, 15, 10, 5], // This should be dynamic later
       },
     ],
   };
@@ -44,6 +101,7 @@ const AdminDashboard = () => {
     strokeWidth: 2,
     barPercentage: 0.5,
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -64,14 +122,15 @@ const AdminDashboard = () => {
 
         <LogoSVG style={styles.logo} />
 
-        {/* We'll add the statistics cards here */}
+        {/* Statistics Cards */}
         <View style={styles.statsContainer}>
-          <StatCard title="Total Incidents" value="90" />
-          <StatCard title="Active Incidents" value="10" />
-          <StatCard title="Resolved Incidents" value="90" />
+          <StatCard title="Total Incidents" value={totalIncidents} />
+          <StatCard title="Active Incidents" value={activeIncidents} />
+          <StatCard title="Resolved Incidents" value={resolvedIncidents} />
+          <StatCard title="Notifications Sent" value={notificationsSent} />
         </View>
 
-        {/* We'll add the bar chart here */}
+        {/* Bar Chart */}
         <View style={styles.chartContainer}>
           <Text style={styles.chartTitle}>Incident Categories Analysis</Text>
           <BarChart
@@ -97,7 +156,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // padding: 16,
     marginTop: 50,
   },
   headerTitle: {
@@ -125,7 +183,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginTop: -1,
   },
-  // We'll add more styles as we build the component
   statsContainer: {
     flexDirection: "column",
     justifyContent: "space-around",
@@ -135,7 +192,6 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "white",
     borderRadius: 55,

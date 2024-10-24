@@ -169,6 +169,8 @@ export default function FireIncident() {
         date: date.toISOString(),
         selectedDepartment,
         selectedEmployee,
+        status: "active", // Set the initial status to "active"
+        notificationSent: false, // Set the initial notification status to "false"
         ...(imageUrl && { evidence: imageUrl }), // Store image URL
         incidentDescription,
         username,
