@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
+  Image,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -74,6 +75,17 @@ const ChangePasswordPage = () => {
       source={require("./../../assets/images/background.jpg")}
       style={styles.container}
     >
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
+        <Image
+          source={require("./../../assets/images/back-button.png")}
+          style={styles.backButtonImage}
+        />
+      </TouchableOpacity>
       <View style={styles.container}>
         <Text style={styles.title}>Change Password</Text>
         <View style={styles.separator} />
@@ -186,7 +198,7 @@ const ChangePasswordPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 15,
   },
   profileIconContainer: {
     alignItems: "center",
@@ -194,17 +206,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 25,
   },
+  backButton: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 1,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+  },
   title: {
     fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 5,
-    marginTop: 35,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 6,
+    marginTop:25,
   },
   separator: {
     height: 1.8,

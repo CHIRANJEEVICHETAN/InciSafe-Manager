@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   SafeAreaView,
+  ImageBackground,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -125,6 +126,10 @@ const EditProfilePage = () => {
   };
 
   return (
+    <ImageBackground
+      source={require("./../../assets/images/background.jpg")}
+      style={styles.container}
+    >
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.backButton}
@@ -235,29 +240,29 @@ const EditProfilePage = () => {
         onCancel={() => setDatePickerVisibility(false)}
       />
     </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 25,
-    backgroundColor: "#f0f0f0",
+    padding: 10,
   },
   backButton: {
     alignSelf: "flex-start",
     marginTop: 10,
     marginBottom: -20,
     position: "relative",
-    right: 5,
+    right: -5,
     top: 10,
-    zIndex: 1000,
+    zIndex: 1,
   },
   backButtonImage: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     marginTop: 15,
-    zIndex: 1000,
+    zIndex: 1,
   },
   title: {
     fontSize: 30,
@@ -298,17 +303,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 5,
-    backgroundColor: "#f0f0f0",
     borderWidth: 1,
-    borderColor: "#ccc",
     marginVertical: 5,
     marginHorizontal: 8,
     borderRadius: 15,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 5,
     height: 50,
     marginBottom: 10,
   },
@@ -318,25 +317,20 @@ const styles = StyleSheet.create({
   },
   usernameField: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
     padding: 5,
   },
   dobField: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
   },
   contactField: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
   },
   altContactField: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
     height: 40,
   },
   addressField: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
     height: 40,
     marginTop: 0,
     padding: 5,

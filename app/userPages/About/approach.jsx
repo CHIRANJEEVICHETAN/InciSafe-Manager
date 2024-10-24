@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
-
+import { View, Text, StyleSheet, ScrollView,Image,TouchableOpacity, ImageBackground } from 'react-native';
+import { useRouter } from 'expo-router';
 const approach = () => {
+  const router = useRouter();
   return (
-    
     <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
+            <Image source={require("../../../assets/images/back-button.png")} style={styles.backButtonImage} />
+          </TouchableOpacity>
         <Text style={styles.headerText}>About</Text>
       </View>
 
       <Text style={styles.titleText}>Our Approach to Safety</Text>
-
       <View style={styles.menuList}>
         <View style={styles.menuItem}>
           <Text style={styles.menuText}>1. Streamlined Reporting: Making it easy for employees to report incidents within seconds, enabling quick responses.</Text>
@@ -35,6 +37,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: -20,
+    position: "absolute",
+    left: 15,
+    top: 10,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 25,
+    zIndex: 1000,
   },
   header: {
     flexDirection: 'row',
@@ -60,8 +76,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     margin: 20,
     textAlign: 'center',
-    color: '#555',
+    color: '#000',
     marginBottom: 45, 
+    fontWeight: 'bold',
   },
   menuList: {
     marginHorizontal: 5,

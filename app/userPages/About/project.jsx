@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
-
+import { View, Text, StyleSheet, ScrollView,Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { useRouter } from 'expo-router';
 const project = () => {
+  const router = useRouter();
   return (
     <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
+            <Image source={require("../../../assets/images/back-button.png")} style={styles.backButtonImage} />
+          </TouchableOpacity>
         <Text style={styles.headerText}>About</Text>
       </View>
 
@@ -54,10 +58,25 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: -20,
+    position: "absolute",
+    left: 7,
+    top: 10,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 25,
+    zIndex: 1000,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'center', 
-    padding: 20,
+    padding: 15,
+    // margin:35,
     borderBottomWidth: 1.8,
     borderColor: '#ccc',
     alignItems: 'center',
@@ -79,7 +98,7 @@ const styles = StyleSheet.create({
     margin: 15,
     textAlign: 'center',
     color: '#555',
-    marginBottom: 55, 
+    marginBottom: 35, 
   },
   menuList: {
     marginHorizontal: 10,
@@ -96,7 +115,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 18,
     marginBottom: 10,
-    color: '#333',
+    color: '#222',
     textAlign: 'justify', 
   },
 });
