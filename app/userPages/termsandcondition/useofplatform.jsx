@@ -104,16 +104,17 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    // padding: 20,
+    paddingVertical: 20,
     marginTop: 25,
     borderBottomWidth: 1.8,
     borderColor: "#ccc",
+    marginBottom:30,
   },
   headerText: {
     flex: 1,
     fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 5,
+    // marginBottom: 35,
     textAlign: "center",
     marginTop: -10,
     color: "#000",
@@ -130,14 +131,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: "bold",
   },
-  underline: {
-    width: 150, // Length to match the length of the title
-    borderBottomColor: "black",
-    borderBottomWidth: 2,
-    marginHorizontal: "auto",
-    marginBottom: 10,
-    alignSelf: "center", // Center the underline
-  },
+  // underline: {
+  //   width: 150, // Length to match the length of the title
+  //   borderBottomColor: "black",
+  //   borderBottomWidth: 2,
+  //   marginHorizontal: "auto",
+  //   marginBottom: 10,
+  //   alignSelf: "center", // Center the underline
+  // },
   menuList: {
     marginHorizontal: 15,
   },

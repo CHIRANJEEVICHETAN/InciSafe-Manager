@@ -92,14 +92,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: 'bold', // Add bold to the title
   },
-  underline: {
-    width: 175, // Adjust length to match the length of the title
-    borderBottomColor: 'black',
-    borderBottomWidth: 2,
-    marginHorizontal: 'auto',
-    marginBottom: 20,
-    alignSelf: 'center', // Center the underline
-  },
+  // underline: {
+  //   width: 175, // Adjust length to match the length of the title
+  //   borderBottomColor: 'black',
+  //   borderBottomWidth: 2,
+  //   marginHorizontal: 'auto',
+  //   marginBottom: 20,
+  //   alignSelf: 'center', // Center the underline
+  // },
   menuList: {
     marginHorizontal: 5,
   },

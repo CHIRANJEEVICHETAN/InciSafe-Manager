@@ -89,11 +89,13 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   titleText: {
-    fontSize: 22,
-    margin: 20,
+    fontSize: 23,
+    margin: 10,
     textAlign: 'center',
-    color: '#555',
-    marginBottom: 55, 
+    color: 'black',
+    marginBottom: 30,
+    marginTop:25,
+    fontWeight:'bold'
   },
   menuList: {
     marginHorizontal: 15,
@@ -107,18 +109,26 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 18,
-    marginBottom: 5, 
-    textAlign: 'justify',
+    color: '#000',
+    textAlign: 'left',
+    paddingRight: 10,
+    marginRight: 8,
+    marginLeft: 5,
+    lineHeight: 23,
+    fontWeight:'450',
+    
   },
   bulletContainer: {
     marginLeft: 20, 
     marginBottom: 15, 
   },
   bulletText: {
-    fontSize: 16,
-    color: '#555', 
-    lineHeight: 22, 
-    position: 'relative',
+    fontSize: 17.5,
+    color: "#000",
+    fontWeight: "450",
+    marginBottom: 5,
+    textAlign: "justify",
+    // fontSize:18,
   },
 });
 

@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 18,
     marginBottom: 15,
-    color: '#333',
+    color: '#000',
     textAlign: 'justify',
   },
 });

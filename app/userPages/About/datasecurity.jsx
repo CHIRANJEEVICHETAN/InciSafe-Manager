@@ -78,11 +78,13 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   titleText: {
-    fontSize: 22,
-    margin: 20,
+    fontSize: 23,
+    margin: 10,
     textAlign: 'center',
-    color: '#555',
-    marginBottom: 55, 
+    color: 'black',
+    marginBottom: 30,
+    marginTop:25,
+    fontWeight:'bold'
   },
   menuList: {
     marginHorizontal: 15,
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 18,
     marginBottom: 15,
-    color: '#333',
+    color: '#000',
     textAlign: 'justify',
   },
 });

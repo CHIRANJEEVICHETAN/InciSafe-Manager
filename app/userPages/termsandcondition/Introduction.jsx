@@ -113,14 +113,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight:'bold'
   },
-  shortUnderline: {
-    width: 120,
-    borderBottomColor: 'black',
-    borderBottomWidth: 2,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    alignSelf: 'center',
-  },
+  // shortUnderline: {
+  //   width: 120,
+  //   borderBottomColor: 'black',
+  //   borderBottomWidth: 2,
+  //   marginHorizontal: 20,
+  //   marginBottom: 20,
+  //   alignSelf: 'center',
+  // },
   menuList: {
     marginHorizontal: 10,
   },
