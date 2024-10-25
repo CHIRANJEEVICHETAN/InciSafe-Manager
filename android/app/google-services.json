@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723897235084",
+    "project_id": "incisafe-manager-1a9c3",
+    "storage_bucket": "incisafe-manager-1a9c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723897235084:android:8d8eb6d8ed8abb8f3f6da9",
+        "android_client_info": {
+          "package_name": "com.loginware.incisafe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-13i3a08hyC8yxhAKPV9UB7B9S9rwBMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
