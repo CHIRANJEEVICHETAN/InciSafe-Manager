@@ -139,7 +139,7 @@ export default function BehaviourIncident() {
   const handleSubmit = async () => {
     setIsLoading(true); // Start loading
     try {
-      const incidentCategory = "Behaviour and Human Error Incident ";
+      const incidentCategory = "Behaviour and Human Error Incident";
   
       let imageUrl = null;
       if (evidence) {
