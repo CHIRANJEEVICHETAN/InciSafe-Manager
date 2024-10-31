@@ -21,6 +21,8 @@ import {
 } from "@expo/vector-icons";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+
 
 const adminSettings = () => {
   const router = useRouter();
@@ -47,24 +49,30 @@ const adminSettings = () => {
   // Logout function
   const handleLogout = async () => {
     try {
-      await signOut(auth); // Call Firebase signOut function
-      router.replace("/auth/sign-in"); // Redirect to the sign-in screen
+      setLoading(true); // Start loading
+      await signOut(auth);  // Call Firebase signOut function
+      await AsyncStorage.removeItem('user'); // Clear user data from AsyncStorage
+      setUser(null); // Clear user state
+      router.replace('/auth/sign-in');  // Redirect to the sign-in screen
     } catch (error) {
-      console.error("Error signing out: ", error);
+      console.error("Error signing out: ", error); 
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   const toggleTheme = () => {
-    setIsDarkTheme((previousState) => !previousState);
+    setIsDarkTheme(previousState => !previousState);
   };
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#0000ff" /> 
       </View>
     );
   }
+
 
   return (
     <ImageBackground

@@ -7,42 +7,68 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function NotificationsPage() {
   const router = useRouter();
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const db = getFirestore();
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const storedNotifications = await AsyncStorage.getItem('notifications');
+      if (storedNotifications) {
+        setNotifications(JSON.parse(storedNotifications));
+      }
+    } catch (error) {
+      console.error("Failed to load notifications from storage", error);
+    }
+
+    if (user) {
+      const userNotificationsRef = collection(db, "notifications", user.uid, "userNotifications");
+      const q = query(userNotificationsRef);
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const notificationsData = querySnapshot.docs.map(doc => ({
+          title: doc.data().title,
+          body: doc.data().body,
+        }));
+        setNotifications(notificationsData);
+        setLoading(false);
+
+        // Store notifications offline
+        AsyncStorage.setItem('notifications', JSON.stringify(notificationsData))
+          .catch(error => console.error("Failed to save notifications to storage", error));
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        setLoading(false);
+      }
+    }
+  };
 
   useEffect(() => {
-    // Simulating receiving notifications
-    // const interval = setInterval(() => {
-    //   addNotification();
-    // }, 1000); // Add a new notification every 5 seconds for demonstration
+    fetchNotifications();
+  }, [user]);
 
-    return () => clearInterval(interval);
-  }, []);
-
-  const addNotification = () => {
-    const newNotification = {
-      id: Date.now(),
-      title: `New Incident ${Math.floor(Math.random() * 100)}`,
-      reporter: ["JOHN", "JAMES", "ROBOTO", "ANNIE", "JAY", "SAI"][
-        Math.floor(Math.random() * 6)
-      ],
-      daysAgo: Math.floor(Math.random() * 20) + 1,
-    };
-    setNotifications((prevNotifications) => [
-      newNotification,
-      ...prevNotifications,
-    ]);
-  };
-
-  const clearAllNotifications = () => {
-    setNotifications([]);
-  };
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
 
   return (
     <ImageBackground
@@ -65,8 +91,8 @@ export default function NotificationsPage() {
           <Text style={styles.headerText}>Notifications</Text>
         </View>
         <ScrollView style={styles.notificationContainer}>
-          {notifications.map((notification) => (
-            <View key={notification.id} style={styles.notificationItem}>
+          {notifications.map((notification, index) => (
+            <View key={index} style={styles.notificationItem}>
               <Ionicons
                 name="person-outline"
                 size={24}
@@ -77,21 +103,18 @@ export default function NotificationsPage() {
                 <Text style={styles.notificationTitle}>
                   {notification.title}
                 </Text>
-                <Text style={styles.notificationSubtitle}>
-                  reported by {notification.reporter}
+                <Text style={styles.notificationBody}>
+                  {notification.body}
                 </Text>
               </View>
-              <Text style={styles.daysAgo}>
-                {notification.daysAgo} days ago
-              </Text>
             </View>
           ))}
         </ScrollView>
         <TouchableOpacity
-          style={styles.clearButton}
-          onPress={clearAllNotifications}
+          style={styles.refreshButton}
+          onPress={fetchNotifications}
         >
-          <Text style={styles.clearButtonText}>Clear All</Text>
+          <Text style={styles.refreshButtonText}>Refresh</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -141,11 +164,14 @@ const styles = StyleSheet.create({
   },
   notificationContent: {
     flex: 1,
+    width: "100%",
   },
   notificationTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: "white",
+    // width: "100%",
+    // backgroundColor: "red",
   },
   notificationSubtitle: {
     fontSize: 14,
@@ -155,14 +181,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "rgba(255, 255, 255, 0.7)",
   },
-  clearButton: {
+  refreshButton: {
     backgroundColor: "#4CAF50",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
     marginBottom: 20,
   },
-  clearButtonText: {
+  refreshButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
@@ -181,5 +207,15 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 15,
     zIndex: 1000,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  notificationBody: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.7)",
   },
 });

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, TextInput
 import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const Settings = () => {
   const router = useRouter();
@@ -26,27 +27,32 @@ const Settings = () => {
     }
   }, [user, loading]);
 
-    // Logout function
-    const handleLogout = async () => {
-      try {
-        await signOut(auth);  // Call Firebase signOut function
-        router.replace('/auth/sign-in');  // Redirect to the sign-in screen
-      } catch (error) {
-        console.error("Error signing out: ", error); 
-      }
-    };
-  
-    const toggleTheme = () => {
-      setIsDarkTheme(previousState => !previousState);
-    };
-  
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" /> 
-        </View>
-      );
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      setLoading(true); // Start loading
+      await signOut(auth);  // Call Firebase signOut function
+      await AsyncStorage.removeItem('user'); // Clear user data from AsyncStorage
+      setUser(null); // Clear user state
+      router.replace('/auth/sign-in');  // Redirect to the sign-in screen
+    } catch (error) {
+      console.error("Error signing out: ", error); 
+    } finally {
+      setLoading(false); // Stop loading
     }
+  };
+
+  const toggleTheme = () => {
+    setIsDarkTheme(previousState => !previousState);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" /> 
+      </View>
+    );
+  }
 
   return (
     <ImageBackground
@@ -83,7 +89,6 @@ const Settings = () => {
           />
           <TextInput placeholder="Search" style={styles.searchText} />
         </View>
-        {/* <View style={styles.menuItemlist}> */}
         <ImageBackground
           source={require("./../../assets/images/background.jpg")}
           style={styles.menuItemlist}
@@ -205,7 +210,6 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'linear-gradient(180deg, #A8E6CF 0%, #DCEDC1 100%)',
     paddingTop: 30,
   },
   header: {
@@ -240,7 +244,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   searchText: {
-    // marginLeft: 5,
     color: '#000',
     fontSize: 18,
     fontWeight: 'bold',
@@ -253,7 +256,6 @@ const styles = StyleSheet.create({
     marginRight: 30,
     borderRadius: 30,
     overflow: 'hidden',
-    // backgroundColor: '#f0f0f0',
     borderWidth: 2.5,
     borderColor: '#cccff',
     height: 560, 
@@ -292,7 +294,6 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: "flex-start",
-    // marginTop: 10,
     marginBottom: -20,
     position: "absolute",
     left: 25,

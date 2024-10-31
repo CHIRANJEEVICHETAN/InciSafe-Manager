@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -164,13 +165,16 @@ export default function IncidentManagement() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <Ionicons name="arrow-back" size={24} color="#000" />
+      <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require("./../../../assets/images/back-button.png")}
+              style={styles.backButtonImage}
+          />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Incident Management</Text>
       </View>
@@ -311,6 +315,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginHorizontal: 10,
     borderRadius: 5,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    // marginTop: 10,
+    // marginBottom: -10,
+    position: "absolute",
+    left: 18,
+    top: -8,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 23,
+    zIndex: 1000,
   },
   headerCell: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
@@ -15,6 +16,7 @@ import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 export default function Login() {
   const router = useRouter();
@@ -30,6 +32,26 @@ export default function Login() {
     "Roboto-Medium": require("./../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "InstrumentSans-Bold": require("./../../../assets/fonts/InstrumentSans/InstrumentSans-Bold.ttf"),
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const checkLoginState = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          if (user.role === "admin") {
+            router.replace("/admin/adminPages/Home");
+          } else {
+            router.replace("/user/Home");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to retrieve user data:", error);
+      }
+    };
+    checkLoginState();
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -39,11 +61,12 @@ export default function Login() {
     router.replace("/");
   };
 
-  const OnLogin = async () => {
+  const OnLogin = async (isAdminLogin = false) => {
     if (email === "" || password === "") {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
       return;
     }
+    setIsLoading(true); // Start loading
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -60,10 +83,22 @@ export default function Login() {
         const userData = userSnapshot.data();
         const role = userData.role; // Get the role field from the document
 
-        if (role === "admin") {
-          router.replace("/admin/adminPages/Home"); // Navigate to admin dashboard
+        // Store user data in AsyncStorage
+        await AsyncStorage.setItem('user', JSON.stringify({ uid: user.uid, role }));
+
+        // Check role based on the button clicked
+        if (isAdminLogin) {
+          if (role === "admin") {
+            router.replace("/admin/adminPages/Home"); // Navigate to admin dashboard
+          } else {
+            ToastAndroid.show("You are not an Admin", ToastAndroid.LONG);
+          }
         } else {
-          router.replace("/user/Home"); // Navigate to user dashboard
+          if (role === "user") {
+            router.replace("/user/Home"); // Navigate to user dashboard
+          } else {
+            ToastAndroid.show("Click on Login as Admin for admin login", ToastAndroid.LONG);
+          }
         }
       } else {
         ToastAndroid.show("User data not found!", ToastAndroid.LONG);
@@ -72,6 +107,8 @@ export default function Login() {
       const errorMessage = error.message;
       ToastAndroid.show(errorMessage, ToastAndroid.LONG);
       console.log(errorMessage);
+    } finally {
+      setIsLoading(false); // End loading
     }
   };
 
@@ -83,7 +120,6 @@ export default function Login() {
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >
-        {/* <Text style={styles.backButtonText}>←</Text> */}
         <Image
           source={require("./../../../assets/images/back-button.png")}
           style={styles.backButtonImage}
@@ -91,14 +127,6 @@ export default function Login() {
       </TouchableOpacity>
 
       <Text style={styles.title}>Welcome ! Log in to InciSafe</Text>
-
-      {/* <TouchableOpacity style={styles.googleButton}>
-        <Image
-          source={require("./../../../assets/images/google.png")}
-          style={styles.googleIcon}
-        />
-        <Text style={styles.googleButtonText}>Continue with Google</Text>
-      </TouchableOpacity> */}
 
       <View style={styles.emailContainer}>
         <CustomSVG />
@@ -144,8 +172,12 @@ export default function Login() {
         <Text style={styles.forgotPassword}>Forgot password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={OnLogin}>
-        <Text style={styles.loginButtonText}>Login</Text>
+      <TouchableOpacity style={styles.loginButton} onPress={() => OnLogin(false)} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Login</Text>
+        )}
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
@@ -158,18 +190,24 @@ export default function Login() {
         </Text>
       </Text>
 
-      <TouchableOpacity style={styles.adminButton} onPress={OnLogin}>
-        <Image
-          source={require("./../../../assets/images/shield.png")}
-          style={styles.adminLogo}
-        />
-        <Text style={styles.adminButtonText}>Log in as Admin</Text>
+      <TouchableOpacity
+        style={styles.adminButton}
+        onPress={() => OnLogin(true)}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <>
+            <Image
+              source={require("./../../../assets/images/shield.png")}
+              style={styles.adminLogo}
+            />
+            <Text style={styles.adminButtonText}>Log in as Admin</Text>
+          </>
+        )}
       </TouchableOpacity>
 
-      {/* <Image
-        source={require("./../../../assets/images/InciSafeLogo.png")}
-        style={styles.logo}
-      /> */}
       <View style={styles.logoContainer}>
         <LogoSVG style={styles.logo} />
       </View>
@@ -205,38 +243,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "Inter-ExtraBold",
   },
-  // googleButton: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   backgroundColor: Colors.BLACK,
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 30,
-  //   borderRadius: 30,
-  //   borderWidth: 1,
-  //   borderColor: "#ddd",
-  //   width: "80%",
-  //   height: 55,
-  //   justifyContent: "center",
-  //   shadowColor: "#000", // Color of the shadow
-  //   shadowOffset: { width: 5, height: 2 }, // Shadow offset
-  //   shadowOpacity: 0.5, // Shadow opacity
-  //   shadowRadius: 3.84, // Shadow blur radius
-  //   elevation: 6, // Shadow elevation
-  // },
-  // googleIcon: {
-  //   width: 25,
-  //   height: 25,
-  //   position: "absolute",
-  //   left: 12,
-  // },
-  // googleButtonText: {
-  //   color: Colors.WHITE,
-  //   fontSize: 20,
-  //   fontWeight: "500",
-  //   textAlign: "center",
-  //   paddingLeft: 30,
-  //   fontFamily: "Roboto-Bold", // Use Roboto Bold Font
-  // },
   orText: {
     textAlign: "center",
     marginBottom: 20,

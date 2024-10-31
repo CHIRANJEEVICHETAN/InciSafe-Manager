@@ -104,9 +104,12 @@ expo-env.d.ts
 
 # configs
 backend/serviceAccountKey.json
+backend/assets/serviceAccountKey.json
 configs/incisafe-manager-1a9c3-firebase-adminsdk-e2tf4-1ac4223bf9.json
 
 .easignore
 
 # Allow google-services.json to be tracked
 !android/app/google-services.json
+
+%ProgramData%

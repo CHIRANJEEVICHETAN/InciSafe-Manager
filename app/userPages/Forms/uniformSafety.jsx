@@ -153,44 +153,6 @@ export default function UniformSafety() {
   const dateTime = formatDateTime(new Date());
 
   // Handle form submission
-  // const handleSubmit = async () => {
-  //   setIsLoading(true); // Start loading
-  //   try {
-  //     const incidentCategory = "Uniform Safety Equipment Violation";
-
-  //     let imageUrl = null;
-  //     if (evidence) {
-  //       imageUrl = await uploadImageAndGetURL(evidence);
-  //     }
-
-  //     // Ensure you have the current user's information
-  //     const currentUser = auth.currentUser;
-  //     const username = currentUser ? currentUser.displayName : "Unknown User";
-  //     const email = currentUser ? currentUser.email : "Unknown Email";
-
-  //     const violationData = {
-  //       incidentCategory,
-  //       violationTypes,
-  //       date: date.toISOString(),
-  //       selectedDepartment,
-  //       selectedEmployee,
-  //       ...(imageUrl && { evidence: imageUrl }), // Store image URL
-  //       incidentDescription,
-  //       username,
-  //       email,
-  //     };
-
-  //     const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID
-  //     await setDoc(doc(db, "uniformSafety", customDocId), violationData); // Use setDoc with custom ID
-
-  //     Alert.alert("Success", "Form submitted successfully!");
-  //     handleReset();
-  //   } catch (error) {
-  //     Alert.alert("Error", "Failed to submit the form. Please try again.");
-  //   } finally {
-  //     setIsLoading(false); // Stop loading
-  //   }
-  // };
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
@@ -211,8 +173,8 @@ export default function UniformSafety() {
         date: date.toISOString(),
         selectedDepartment,
         selectedEmployee,
-        status: "active", // Set the initial status to "active"
-        notificationSent: false, // Set the initial notification status to "false"
+        status: "active",
+        notificationSent: false,
         ...(imageUrl && { evidence: imageUrl }),
         incidentDescription,
         username,
@@ -221,6 +183,21 @@ export default function UniformSafety() {
 
       const customDocId = `violation-${selectedDepartment}-${dateTime}`;
       await setDoc(doc(db, "uniformSafety", customDocId), violationData);
+
+      // Send notification request to the server
+      const notificationResponse = await axios.post(`${BASE_URL}/sendNotification`, {
+        title: `A new Incident Reported - ${incidentCategory}`,
+        body: `Incident Reported by ${username} at ${date.toLocaleString()} in ${selectedDepartment}`,
+        date: date.toISOString(),
+        username: username,
+        userId: currentUser.uid,
+      });
+
+      // Check if the notification was sent successfully
+      if (notificationResponse.status === 200) {
+        // Update the document to set notificationSent to true
+        await setDoc(doc(db, "uniformSafety", customDocId), { notificationSent: true }, { merge: true });
+      }
 
       // Navigate to SuccessPage with params using Expo Router
       router.push({

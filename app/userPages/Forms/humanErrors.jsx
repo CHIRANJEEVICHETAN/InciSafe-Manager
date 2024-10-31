@@ -167,10 +167,22 @@ export default function BehaviourIncident() {
   
       const customDocId = `violation-${selectedDepartment}-${dateTime}`; // Create a custom document ID 
       await setDoc(doc(db, "BehaviourIncident", customDocId), violationData); // Use setDoc with custom ID
-  
-      // Alert.alert("Success", "Form submitted successfully!");
 
-      // Navigate to SuccessPage with params using Expo Router
+      // Send notification request to the server
+      const notificationResponse = await axios.post(`${BASE_URL}/sendNotification`, {
+        title: `A new Incident Reported - ${incidentCategory}`,
+        body: `Incident Reported by ${username} at ${date.toLocaleString()} in ${selectedDepartment}`,
+        date: date.toISOString(),
+        username: username,
+        userId: currentUser.uid,
+      });
+
+      // Check if the notification was sent successfully
+      if (notificationResponse.status === 200) {
+        // Update the document to set notificationSent to true
+        await setDoc(doc(db, "BehaviourIncident", customDocId), { notificationSent: true }, { merge: true });
+      }
+
       router.push({
         pathname: "/userPages/Forms/success",
         params: {

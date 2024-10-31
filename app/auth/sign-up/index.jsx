@@ -15,6 +15,7 @@ import LogoSVG from "./../../../components/LogoSVG";
 import { useFonts } from "expo-font";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 export default function SignUp() {
   const auth = getAuth();
@@ -85,8 +86,11 @@ export default function SignUp() {
         createdAt: serverTimestamp(),
       });
 
+      // Store user data in AsyncStorage
+      await AsyncStorage.setItem('user', JSON.stringify({ uid: user.uid, role: "user" }));
+
       ToastAndroid.show("User created successfully", ToastAndroid.LONG);
-      router.push("/auth/sign-in");
+      router.push("/user/Home");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
