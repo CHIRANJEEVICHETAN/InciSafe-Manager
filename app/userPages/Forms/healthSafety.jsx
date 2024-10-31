@@ -235,6 +235,8 @@ export default function HealthSafety() {
         placeholder="Select Incident Severity"
         style={styles.dropdown}
         zIndex={7000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       {/* <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
@@ -261,6 +263,8 @@ export default function HealthSafety() {
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
         zIndex={6000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       <Text style={styles.label}>Employee Details</Text>
@@ -275,6 +279,8 @@ export default function HealthSafety() {
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
         zIndex={4000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       <View style={styles.evidenceContainer}>

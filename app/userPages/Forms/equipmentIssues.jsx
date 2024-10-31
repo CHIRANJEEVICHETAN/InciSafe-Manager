@@ -245,6 +245,8 @@ export default function EquipmentIssues() {
         placeholder="Select Incident Severity"
         style={[styles.dropdown, { marginTop: -13}]}
         zIndex={7000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       {/* <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
@@ -271,6 +273,8 @@ export default function EquipmentIssues() {
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
         zIndex={6000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       <Text style={styles.label}>Employee Details</Text>
@@ -285,6 +289,8 @@ export default function EquipmentIssues() {
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
         zIndex={4000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       <View style={styles.evidenceContainer}>

@@ -15,14 +15,46 @@ import SearchBar from "./../../components/SearchBar";
 import IconGrid from "./../../components/IconGrid";
 import LineSVG from "./../../components/LineSVG";
 import { useRouter } from "expo-router";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import signOut
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import useLoadFont from "./../../hooks/useLoadFont";
+import { db } from "./../../configs/FirebaseConfig";
 
 const Home = () => {
   const router = useRouter();
   const { isFontLoaded } = useLoadFont();
   const auth = getAuth();
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userRole = userDoc.data().role;
+            setRole(userRole);
+            setUser(currentUser);
+          }
+        } catch (error) {
+          console.error("Error fetching user role: ", error);
+        }
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth, db]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <ImageBackground
@@ -43,16 +75,17 @@ const Home = () => {
         <Header username={user?.displayName || "User"} style={styles.header} />
         <LineSVG style={styles.line} />
         <SearchBar />
+        {role === "admin" && (
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/admin/adminPages/Home");
+            }}
+            style={styles.adminButton}
+          >
+            <Text style={styles.adminText}>admin Page</Text>
+          </TouchableOpacity>
+        )}
         <IconGrid style={styles.iconGrid} />
-        <TouchableOpacity
-          onPress={() => {
-            router.push("/admin/adminPages/Home");
-          }}
-        >
-          <View style={styles.logoutButton}>
-            <Text style={styles.logoutText}>admin Page</Text>
-          </View>
-        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -85,14 +118,18 @@ const styles = StyleSheet.create({
     marginTop: 80,
     transform: [{ scale: 1.2 }],
   },
-  logoutButton: {
-    marginTop: 30,
-    padding: 10,
-    backgroundColor: "#f00",
-    borderRadius: 10,
+  adminButton: {
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#000",
+    height: 40,
+    width: 120,
+    borderRadius: 10,
+    alignSelf: "center",
+    position: "absolute",
+    bottom: 10,
   },
-  logoutText: {
+  adminText: {
     color: "#fff",
     fontWeight: "bold",
   },

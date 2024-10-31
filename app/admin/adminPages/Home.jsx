@@ -12,15 +12,48 @@ import AdminHeader from "./../../../components/adminHeader";
 import SearchBar from "./../../../components/SearchBar";
 import LineSVG from "./../../../components/LineSVG";
 import { useRouter } from "expo-router";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import signOut
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import useLoadFont from "./../../../hooks/useLoadFont";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { db } from "./../../../configs/FirebaseConfig";
 
 const Home = () => {
   const router = useRouter();
   const { isFontLoaded } = useLoadFont();
   const auth = getAuth();
-  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userRole = userDoc.data().role;
+            if (userRole !== "admin") {
+              router.push("/user/Home");
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching user role: ", error);
+        }
+      } else {
+        router.replace("/");
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth, db, router]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <ImageBackground
@@ -29,7 +62,7 @@ const Home = () => {
     >
       <View style={styles.container}>
         <AdminHeader
-          username={user?.displayName || "User"}
+          username={auth.currentUser?.displayName || "User"}
           style={styles.header}
         />
         <LineSVG style={styles.line} />
@@ -117,6 +150,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18,
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

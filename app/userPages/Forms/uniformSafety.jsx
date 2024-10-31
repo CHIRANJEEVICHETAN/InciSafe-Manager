@@ -262,6 +262,8 @@ export default function UniformSafety() {
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
         zIndex={5000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       <Text style={styles.label}>Employee Details</Text>
@@ -276,6 +278,8 @@ export default function UniformSafety() {
         searchPlaceholder="Type to filter..."
         style={styles.dropdown}
         zIndex={4000}
+        dropDownDirection="BOTTOM"
+        listMode="SCROLLVIEW"
       />
 
       <View style={styles.evidenceContainer}>

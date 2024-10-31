@@ -21,7 +21,8 @@ const employees = [
   "Bob Brown - 1004", // Corrected duplicate ID
 ];
 const severity = ["minor", "moderate", "severe"];
-const incidentCategories = ["Environmental Hazard Reporting Form", "Equipment-Related Incident", "Fire and Electrical Hazard Incident", "Hazardous Material Handling Incident", "Health & Safety Incident Violation", "Behaviour and Human Error Incident", "Work Policy Violation Incident", "Uniform Safety Equipment Violation", "Weather-Related Hazards"];
+const incidentCategories = ["BehaviourIncident", "ChemicalIncident", "EnvironmentalHazard", "EquipmentIssues", "FireIncident", "HealthSafety",
+  "PolicyViolation", "WeatherHazards", "uniformSafety",];
 
 // Endpoint to get departments
 app.get("/departments", (req, res) => {

@@ -276,7 +276,7 @@ export default function IncidentManagement() {
 
       <TouchableOpacity
         style={styles.downloadButton}
-        onPress={() => alert("Report downloading feature will be implemented.")}
+        onPress={() => router.push("/admin/adminScreens/reportDownload")}
         accessibilityLabel="Download report"
       >
         <Text style={styles.downloadButtonText}>Download Report</Text>
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#4CAF50",
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 50,
     margin: 20,
   },
   downloadButtonText: {
