@@ -1,130 +1,181 @@
-import { View, Text } from "react-native";
+import { registerRootComponent } from 'expo';
+import { firebaseConfig } from './../configs/FirebaseConfig';
+import { initializeApp, getApps } from "firebase/app";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import App from "./../components/App";
 import { Redirect } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, { AndroidImportance, AuthorizationStatus, EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
+import getConfig from "./../configs/config";
 
-export default function index() {
+// Initialize Firebase immediately
+if (getApps().length === 0) {
+  initializeApp(firebaseConfig);
+}
+
+function AppWrapper() {
   const [user, setUser] = useState(null);
+  const [isFirebaseReady, setIsFirebaseReady] = useState(false);
+  const { BASE_URL } = getConfig();
 
   useEffect(() => {
-    const checkUserState = async () => {
-      const storedUser = await AsyncStorage.getItem('user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    };
-    checkUserState();
-
-    async function requestUserPermission() {
-      const settings = await notifee.requestPermission();
-      if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-        console.log("Permission settings:", settings);
-      } else {
-        console.log("User declined notification permission");
-      }
-    }
-    requestUserPermission();
-
-    // Subscribe to user topic
-    const subscribeToTopic = async () => {
+    const initializeFirebaseServices = async () => {
       try {
-        await messaging().subscribeToTopic("all_users");
-        console.log("Subscribed to all users topic");
-      } catch (error) {
-        console.error("Error subscribing to all users topic:", error);
-      }
-    };
-    subscribeToTopic();
+        // Ensure Firebase is initialized
+        if (getApps().length === 0) {
+          initializeApp(firebaseConfig);
+        }
 
-    // Create notification channel
-    const createNotificationChannel = async () => {
-      await notifee.createChannel({
-        id: "default",
-        name: "Default Channel",
-        importance: AndroidImportance.HIGH,
-        sound: "default",
-      });
-    };
-    createNotificationChannel();
+        // Initialize other Firebase services
+        await messaging().registerDeviceForRemoteMessages();
 
-    const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
-      console.log("Notification Foreground received", remoteMessage);
+        setIsFirebaseReady(true);
 
-      await notifee.displayNotification({
-        title: remoteMessage.notification?.title || "Incisafe Notification",
-        body: remoteMessage.notification?.body || "New notification",
-        android: {
-          channelId: "default",
-          importance: AndroidImportance.HIGH,
-          sound: "default",
-          pressAction: {
+    // Rest of your initialization logic
+        const checkUserState = async () => {
+          const storedUser = await AsyncStorage.getItem('user');
+          if (storedUser) {
+            setUser(JSON.parse(storedUser));
+          }
+        };
+        await checkUserState();
+
+        const requestUserPermission = async () => {
+          const settings = await notifee.requestPermission();
+          if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+            console.log("Permission settings:", settings);
+          } else {
+            console.log("User declined notification permission");
+          }
+        };
+        await requestUserPermission();
+
+        const subscribeToTopic = async () => {
+          try {
+            await messaging().subscribeToTopic("all_users");
+            console.log("Subscribed to all users topic");
+          } catch (error) {
+            console.error("Error subscribing to all users topic:", error);
+          }
+        };
+        await subscribeToTopic();
+
+        const createNotificationChannel = async () => {
+          await notifee.createChannel({
             id: "default",
-          },
-        },
-      });
-    });
+            name: "Default Channel",
+            importance: AndroidImportance.HIGH,
+            sound: "default",
+          });
+        };
+        await createNotificationChannel();
 
-    // Handle background messages
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log("Message handled in the background!", remoteMessage);
-      await notifee.displayNotification({
-        title: remoteMessage.notification?.title || "Incisafe",
-        body: remoteMessage.notification?.body || "New notification",
-        android: {
-          channelId: "default",
-          importance: AndroidImportance.HIGH,
-          sound: "default",
-          pressAction: {
-            id: "default",
-          },
-        },
-      });
-    });
+        const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
+          console.log("Notification Foreground received", remoteMessage);
 
-    const unsubscribeOnBackgroundEvent = notifee.onBackgroundEvent(async ({ type, detail }) => {
-      console.log("Background event handled", type, detail);
-      if (type === EventType.PRESS) {
-        console.log("Notification pressed in background", detail.notification);
-      }
-    });
+          await notifee.displayNotification({
+            title: remoteMessage.notification?.title || "Incisafe Notification",
+            body: remoteMessage.notification?.body || "New notification",
+            android: {
+              channelId: "default",
+              importance: AndroidImportance.HIGH,
+              sound: "default",
+              pressAction: {
+                id: "default",
+              },
+            },
+          });
+        });
 
-    // Request FCM token
-    const getToken = async () => {
-      try {
-        const token = await messaging().getToken();
-        console.log("FCM Token:", token);
-        // You can send this token to your server to send push notifications
+        messaging().setBackgroundMessageHandler(async remoteMessage => {
+          console.log("Message handled in the background!", remoteMessage);
+          await notifee.displayNotification({
+            title: remoteMessage.notification?.title || "Incisafe",
+            body: remoteMessage.notification?.body || "New notification",
+            android: {
+              channelId: "default",
+              importance: AndroidImportance.HIGH,
+              sound: "default",
+              pressAction: {
+                id: "default",
+              },
+            },
+          });
+        });
+
+        const unsubscribeOnBackgroundEvent = notifee.onBackgroundEvent(async ({ type, detail }) => {
+          console.log("Background event handled", type, detail);
+          if (type === EventType.PRESS) {
+            console.log("Notification pressed in background", detail.notification);
+          }
+        });
+
+        const sendTokenToBackend = async (token: string) => {
+          try {
+            const response = await fetch(`${BASE_URL}/storeFCMToken`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ token }),
+            });
+            if (!response.ok) {
+              throw new Error('Failed to send FCM token to backend');
+            }
+            console.log('FCM token sent to backend successfully');
+          } catch (error) {
+            console.error('Error sending FCM token to backend:', error);
+          }
+        };
+
+        const getToken = async () => {
+          try {
+            const token = await messaging().getToken();
+            console.log("FCM Token:", token);
+            await sendTokenToBackend(token);
+          } catch (error) {
+            console.error("Error getting FCM token:", error);
+          }
+        };
+        await getToken();
+
+        const unsubscribeOnTokenRefresh = messaging().onTokenRefresh(async token => {
+          console.log("FCM Token refreshed:", token);
+          await sendTokenToBackend(token);
+        });
+
+        return () => {
+          unsubscribeOnMessage();
+          if (typeof unsubscribeOnBackgroundEvent === 'function') {
+            unsubscribeOnBackgroundEvent();
+          }
+          unsubscribeOnTokenRefresh();
+        };
       } catch (error) {
-        console.error("Error getting FCM token:", error);
+        console.error("Error initializing Firebase services:", error);
+        setIsFirebaseReady(true); // Set to true even on error to allow the app to proceed
       }
     };
-    getToken();
 
-    // Handle token refresh
-    const unsubscribeOnTokenRefresh = messaging().onTokenRefresh(token => {
-      console.log("FCM Token refreshed:", token);
-      // Update your server with the new token
-    });
-
-    return () => {
-      unsubscribeOnMessage();
-      if (typeof unsubscribeOnBackgroundEvent === 'function') {
-        unsubscribeOnBackgroundEvent();
-      }
-      unsubscribeOnTokenRefresh();
-    };
+    initializeFirebaseServices();
   }, []);
 
+  if (!isFirebaseReady) {
+    // You might want to show a loading indicator here
+    return null;
+  }
+
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <View style={{ flex: 1 }}>
       {user ? <Redirect href={'/user/Home'} /> : <App />}
     </View>
   );
 }
+
+export default function index() {
+  return <AppWrapper />;
+}
+
+registerRootComponent(index);

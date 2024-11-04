@@ -1,3 +1,5 @@
+import { firebaseConfig } from './../configs/FirebaseConfig';
+import { initializeApp, getApps } from "firebase/app";
 import React, { useCallback } from "react";
 import {
   View,
@@ -12,6 +14,11 @@ import useLoadFont from "./../hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
 import { useRouter } from "expo-router";
 // import BottomNavigator from "./../app/user/BottomNavigator";
+
+// Initialize Firebase
+if (getApps().length === 0) {
+  initializeApp(firebaseConfig);
+}
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();

@@ -1,9 +1,10 @@
 const config = {
   development: {
     BASE_URL: "http://192.168.0.111:3000",
+    // BASE_URL: "https://incisafe-manager-backend.onrender.com",
   },
   production: {
-    BASE_URL: "https://your-production-url.com",
+    BASE_URL: "https://incisafe-manager-backend.onrender.com",
   },
 };
 
