@@ -1,5 +1,3 @@
-import { firebaseConfig } from './../../configs/FirebaseConfig';
-import { initializeApp, getApps } from "firebase/app";
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -21,8 +19,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import useLoadFont from "./../../hooks/useLoadFont";
 import { db } from "./../../configs/FirebaseConfig";
-import messaging from "@react-native-firebase/messaging";
-import getConfig from "./../../configs/config";
 
 const Home = () => {
   const router = useRouter();
@@ -31,56 +27,6 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { BASE_URL } = getConfig();
-
-  useEffect(() => {
-    const initializeFirebaseServices = async () => {
-      try {
-        // Ensure Firebase is initialized
-        if (getApps().length === 0) {
-          initializeApp(firebaseConfig);
-        }
-
-        const sendTokenToBackend = async (token) => {
-          try {
-            const response = await fetch(`${BASE_URL}/storeFCMToken`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ token }),
-            });
-            if (!response.ok) {
-              throw new Error('Failed to send FCM token to backend');
-            }
-            console.log('FCM token sent to backend successfully');
-          } catch (error) {
-            console.error('Error sending FCM token to backend:', error);
-          }
-        };
-
-        const getToken = async () => {
-          try {
-            const token = await messaging().getToken();
-            console.log("FCM Token:", token);
-            await sendTokenToBackend(token);
-          } catch (error) {
-            console.error("Error getting FCM token:", error);
-          }
-        };
-        await getToken();
-
-        const unsubscribeOnTokenRefresh = messaging().onTokenRefresh(async token => {
-          console.log("FCM Token refreshed:", token);
-          await sendTokenToBackend(token);
-        });
-      } catch (error) {
-        console.error("Error initializing Firebase: ", error);
-      }
-    };
-
-    initializeFirebaseServices();
-  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {

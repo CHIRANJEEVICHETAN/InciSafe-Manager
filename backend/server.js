@@ -110,24 +110,20 @@ app.post('/storeFCMToken', async (req, res) => {
   try {
     // Check if the token already exists
     const tokensSnapshot = await db.collection("FCMTokens").get();
-    let existingDocId = null;
+    let tokenExists = false;
 
     tokensSnapshot.forEach(doc => {
       if (doc.data()["FCM Token"] === token) {
-        existingDocId = doc.id;
+        tokenExists = true;
       }
     });
 
-    if (existingDocId) {
-      // Update the existing token
-      await db.collection("FCMTokens").doc(existingDocId).set({ "FCM Token": token });
-      console.log(`Updated FCM Token for document ID: ${existingDocId}`);
+    if (tokenExists) {
+      console.log(`FCM Token already exists: ${token}`);
     } else {
-      // Create a new document for the new token
-      const newDocId = `DeviceID${String(deviceCounter).padStart(4, '0')}`;
-      await db.collection("FCMTokens").doc(newDocId).set({ "FCM Token": token });
-      console.log(`Stored new FCM Token with document ID: ${newDocId}`);
-      deviceCounter++;
+      // Use Firestore's auto-generated ID for new tokens
+      await db.collection("FCMTokens").add({ "FCM Token": token });
+      console.log(`Stored new FCM Token with auto-generated document ID`);
     }
 
     res.status(200).send({ message: 'FCM Token processed successfully' });
