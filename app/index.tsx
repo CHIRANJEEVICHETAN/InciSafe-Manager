@@ -8,6 +8,7 @@ import { Redirect } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, { AndroidImportance, AuthorizationStatus, EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
+import crashlytics from '@react-native-firebase/crashlytics'; // Import Crashlytics
 import getConfig from "./../configs/config";
 
 // Initialize Firebase immediately
@@ -31,9 +32,18 @@ function AppWrapper() {
         // Initialize other Firebase services
         await messaging().registerDeviceForRemoteMessages();
 
+        console.log('Initializing Crashlytics');
+
+        try {
+          await crashlytics().setCrashlyticsCollectionEnabled(true);
+          crashlytics().log('App started');
+        } catch (error) {
+          console.error('Failed to initialize Crashlytics:', error);
+        }
+
         setIsFirebaseReady(true);
 
-    // Rest of your initialization logic
+        // Rest of your initialization logic
         const checkUserState = async () => {
           const storedUser = await AsyncStorage.getItem('user');
           if (storedUser) {
@@ -58,6 +68,7 @@ function AppWrapper() {
             console.log("Subscribed to all users topic");
           } catch (error) {
             console.error("Error subscribing to all users topic:", error);
+            crashlytics().recordError(error as Error); // Log error to Crashlytics
           }
         };
         await subscribeToTopic();
@@ -127,6 +138,7 @@ function AppWrapper() {
             console.log('FCM token sent to backend successfully');
           } catch (error) {
             console.error('Error sending FCM token to backend:', error);
+            crashlytics().recordError(error as Error); // Log error to Crashlytics
           }
         };
 
@@ -137,6 +149,7 @@ function AppWrapper() {
             await sendTokenToBackend(token);
           } catch (error) {
             console.error("Error getting FCM token:", error);
+            crashlytics().recordError(error as Error); // Log error to Crashlytics
           }
         };
         await getToken();
@@ -155,6 +168,7 @@ function AppWrapper() {
         };
       } catch (error) {
         console.error("Error initializing Firebase services:", error);
+        crashlytics().recordError(error as Error); // Log error to Crashlytics
         setIsFirebaseReady(true); // Set to true even on error to allow the app to proceed
       }
     };
