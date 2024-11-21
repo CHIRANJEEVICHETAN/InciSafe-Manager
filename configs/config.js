@@ -1,7 +1,6 @@
 const config = {
   development: {
-    // BASE_URL: "http://192.168.202.102:3000",
-    BASE_URL: "https://incisafemanagerserver-eyfdfhgra3b8ggca.centralindia-01.azurewebsites.net",
+    BASE_URL: "http://192.168.202.102:3000",
 
   },
   production: {
