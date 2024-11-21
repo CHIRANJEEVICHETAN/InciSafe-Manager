@@ -106,24 +106,21 @@ app.post('/sendNotification', async (req, res) => {
 
 // Endpoint to receive and store FCM tokens
 app.post('/storeFCMToken', async (req, res) => {
-  const { token } = req.body;
+  const { token, uid } = req.body;
   try {
-    // Check if the token already exists
-    const tokensSnapshot = await db.collection("FCMTokens").get();
-    let tokenExists = false;
+    if (!uid) {
+      return res.status(400).send({ error: 'User ID is required' });
+    }
 
-    tokensSnapshot.forEach(doc => {
-      if (doc.data()["FCM Token"] === token) {
-        tokenExists = true;
-      }
-    });
+    // Store the token under the user's UID
+    const userTokenRef = db.collection("FCMTokens").doc(uid);
+    const userTokenDoc = await userTokenRef.get();
 
-    if (tokenExists) {
-      console.log(`FCM Token already exists: ${token}`);
+    if (userTokenDoc.exists) {
+      console.log(`FCM Token already exists for user: ${uid}`);
     } else {
-      // Use Firestore's auto-generated ID for new tokens
-      await db.collection("FCMTokens").add({ "FCM Token": token });
-      console.log(`Stored new FCM Token with auto-generated document ID`);
+      await userTokenRef.set({ "FCM Token": token });
+      console.log(`Stored new FCM Token for user: ${uid}`);
     }
 
     res.status(200).send({ message: 'FCM Token processed successfully' });

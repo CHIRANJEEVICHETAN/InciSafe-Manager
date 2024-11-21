@@ -123,48 +123,11 @@ function AppWrapper() {
           }
         });
 
-        const sendTokenToBackend = async (token: string) => {
-          try {
-            const response = await fetch(`${BASE_URL}/storeFCMToken`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ token }),
-            });
-            if (!response.ok) {
-              throw new Error('Failed to send FCM token to backend');
-            }
-            console.log('FCM token sent to backend successfully');
-          } catch (error) {
-            console.error('Error sending FCM token to backend:', error);
-            crashlytics().recordError(error as Error); // Log error to Crashlytics
-          }
-        };
-
-        const getToken = async () => {
-          try {
-            const token = await messaging().getToken();
-            console.log("FCM Token:", token);
-            await sendTokenToBackend(token);
-          } catch (error) {
-            console.error("Error getting FCM token:", error);
-            crashlytics().recordError(error as Error); // Log error to Crashlytics
-          }
-        };
-        await getToken();
-
-        const unsubscribeOnTokenRefresh = messaging().onTokenRefresh(async token => {
-          console.log("FCM Token refreshed:", token);
-          await sendTokenToBackend(token);
-        });
-
         return () => {
           unsubscribeOnMessage();
           if (typeof unsubscribeOnBackgroundEvent === 'function') {
             unsubscribeOnBackgroundEvent();
           }
-          unsubscribeOnTokenRefresh();
         };
       } catch (error) {
         console.error("Error initializing Firebase services:", error);
