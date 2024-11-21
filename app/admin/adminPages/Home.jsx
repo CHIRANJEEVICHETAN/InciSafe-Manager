@@ -17,16 +17,22 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import useLoadFont from "./../../../hooks/useLoadFont";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { db } from "./../../../configs/FirebaseConfig";
+import getConfig from './../../../configs/config';
+import messaging from "@react-native-firebase/messaging";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const Home = () => {
   const router = useRouter();
   const { isFontLoaded } = useLoadFont();
   const auth = getAuth();
   const [loading, setLoading] = useState(true);
+  const { BASE_URL } = getConfig();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        setUser(currentUser);
         try {
           const userDoc = await getDoc(doc(db, "users", currentUser.uid));
           if (userDoc.exists()) {
@@ -46,6 +52,53 @@ const Home = () => {
 
     return () => unsubscribe();
   }, [auth, db, router]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const sendTokenToBackend = async (token, uid) => {
+      try {
+        const response = await fetch(`${BASE_URL}/storeFCMToken`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token, uid }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to send FCM token to backend');
+        }
+        console.log('FCM token sent to backend successfully');
+      } catch (error) {
+        console.error('Error sending FCM token to backend:', error);
+        crashlytics().recordError(error); // Log error to Crashlytics
+      }
+    };
+
+    const getToken = async () => {
+      try {
+        const token = await messaging().getToken();
+        console.log("FCM Token:", token);
+        await sendTokenToBackend(token, user.uid);
+      } catch (error) {
+        console.error("Error getting FCM token:", error);
+        crashlytics().recordError(error); // Log error to Crashlytics
+      }
+    };
+    getToken();
+
+    const unsubscribeOnTokenRefresh = messaging().onTokenRefresh(async token => {
+      try {
+        console.log("FCM Token refreshed:", token);
+        await sendTokenToBackend(token, user.uid);
+      } catch (error) {
+        console.error("Error handling token refresh:", error);
+        crashlytics().recordError(error); // Log error to Crashlytics
+      }
+    });
+
+    return () => unsubscribeOnTokenRefresh();
+  }, [user, BASE_URL]);
 
   if (loading) {
     return (

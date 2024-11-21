@@ -21,6 +21,7 @@ import useLoadFont from "./../../hooks/useLoadFont";
 import { db } from "./../../configs/FirebaseConfig";
 import getConfig from './../../configs/config';
 import messaging from "@react-native-firebase/messaging";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 
 const Home = () => {
@@ -70,7 +71,7 @@ const Home = () => {
         console.log('FCM token sent to backend successfully');
       } catch (error) {
         console.error('Error sending FCM token to backend:', error);
-        // crashlytics().recordError(error); // Log error to Crashlytics
+        crashlytics().recordError(error); // Log error to Crashlytics
       }
     };
 
@@ -81,14 +82,19 @@ const Home = () => {
         await sendTokenToBackend(token, user.uid);
       } catch (error) {
         console.error("Error getting FCM token:", error);
-        // crashlytics().recordError(error as Error); // Log error to Crashlytics
+        crashlytics().recordError(error); // Log error to Crashlytics
       }
     };
     getToken();
 
     const unsubscribeOnTokenRefresh = messaging().onTokenRefresh(async token => {
-      console.log("FCM Token refreshed:", token);
-      await sendTokenToBackend(token, user.uid);
+      try {
+        console.log("FCM Token refreshed:", token);
+        await sendTokenToBackend(token, user.uid);
+      } catch (error) {
+        console.error("Error handling token refresh:", error);
+        crashlytics().recordError(error); // Log error to Crashlytics
+      }
     });
 
     return () => unsubscribeOnTokenRefresh();
