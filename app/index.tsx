@@ -9,7 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, { AndroidImportance, AuthorizationStatus, EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
 import crashlytics from '@react-native-firebase/crashlytics'; // Import Crashlytics
-import getConfig from "./../configs/config";
 
 // Initialize Firebase immediately
 if (getApps().length === 0) {
@@ -19,7 +18,6 @@ if (getApps().length === 0) {
 function AppWrapper() {
   const [user, setUser] = useState(null);
   const [isFirebaseReady, setIsFirebaseReady] = useState(false);
-  const { BASE_URL } = getConfig();
 
   useEffect(() => {
     const initializeFirebaseServices = async () => {
@@ -134,6 +132,9 @@ function AppWrapper() {
         crashlytics().recordError(error as Error); // Log error to Crashlytics
         setIsFirebaseReady(true); // Set to true even on error to allow the app to proceed
       }
+      
+      // Explicitly return true to satisfy TypeScript
+      return true;
     };
 
     initializeFirebaseServices();
