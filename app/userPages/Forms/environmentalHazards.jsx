@@ -14,6 +14,7 @@ import LineSVG from './../../../components/LineSVG';
 import { getAuth } from 'firebase/auth';
 import { useRouter } from "expo-router";
 import getConfig from "./../../../configs/config";
+import VoiceInput from '../../../components/VoiceInput';
 
 export default function EnvironmentalHazard() {
   const { BASE_URL } = getConfig();
@@ -280,15 +281,22 @@ export default function EnvironmentalHazard() {
       )}
 
       <Text style={styles.label}>Incident Description</Text>
+      <View style={styles.descriptionContainer}>
       <TextInput
         placeholder="Incident Description"
         value={incidentDescription}
         onChangeText={text => setIncidentDescription(text)}
         multiline
         numberOfLines={4}
-        style={styles.textInput}
+          style={[styles.input, styles.descriptionInput]}
         placeholderTextColor="#000"
       />
+        <VoiceInput
+          onTextReceived={(text) => {
+            setIncidentDescription(prev => prev + " " + text);
+          }}
+        />
+      </View>
 
       {isLoading ? (
         <ActivityIndicator size="large" color="#007BFF" />
@@ -509,5 +517,19 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     marginLeft: -23,
     marginRight: 10,
+  },
+  descriptionContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  descriptionInput: {
+    flex: 1,
+    textAlignVertical: 'top',
+    minHeight: 100,
+    padding: 10,
   },
 });

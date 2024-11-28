@@ -1,14 +1,15 @@
 import { registerRootComponent } from 'expo';
 import { firebaseConfig } from './../configs/FirebaseConfig';
 import { initializeApp, getApps } from "firebase/app";
-import { View } from "react-native";
+import { View, Alert, Linking, Platform, AppState } from "react-native";
 import React, { useEffect, useState } from "react";
 import App from "./../components/App";
 import { Redirect } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, { AndroidImportance, AuthorizationStatus, EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
-import crashlytics from '@react-native-firebase/crashlytics'; // Import Crashlytics
+import crashlytics from '@react-native-firebase/crashlytics';
+import { Audio } from 'expo-av';
 
 // Initialize Firebase immediately
 if (getApps().length === 0) {
@@ -18,20 +19,107 @@ if (getApps().length === 0) {
 function AppWrapper() {
   const [user, setUser] = useState(null);
   const [isFirebaseReady, setIsFirebaseReady] = useState(false);
+  const [microphonePermission, setMicrophonePermission] = useState<boolean>(false);
+
+  const requestMicrophonePermission = async () => {
+    try {
+      console.log('Starting microphone permission request flow...');
+
+      // First check if we already have permission
+      const { status: existingStatus } = await Audio.getPermissionsAsync();
+      console.log('Existing permission status:', existingStatus);
+
+      if (existingStatus === 'granted') {
+        console.log('Microphone permission already granted');
+        setMicrophonePermission(true);
+        return true;
+      }
+
+      // Only request if we don't already have permission
+      console.log('Requesting microphone permission...');
+      const { status } = await Audio.requestPermissionsAsync();
+      console.log('Permission request result:', status);
+
+      if (status !== 'granted') {
+        console.log('Permission denied. Showing settings alert...');
+        Alert.alert(
+          'Microphone Permission Required',
+          'Voice recording requires microphone access. Please enable it in your device settings.',
+          [
+            {
+              text: 'Open Settings',
+              onPress: () => {
+                if (Platform.OS === 'ios') {
+                  Linking.openURL('app-settings:');
+                } else {
+                  Linking.openSettings();
+                }
+              }
+            },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+              onPress: () => {
+                console.log('User cancelled settings navigation');
+              }
+            }
+          ],
+          { cancelable: false }
+        );
+        setMicrophonePermission(false);
+        return false;
+      }
+
+      // Permission granted
+      console.log('Microphone permission granted successfully');
+      setMicrophonePermission(true);
+      return true;
+    } catch (error) {
+      console.error('Error in requestMicrophonePermission:', error);
+      crashlytics().recordError(error as Error);
+      setMicrophonePermission(false);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    const initializeFirebaseServices = async () => {
+    const initializeServices = async () => {
       try {
-        // Ensure Firebase is initialized
+        // Request microphone permission first, before other initializations
+        console.log('Initializing services - requesting microphone permission first');
+        const micPermissionResult = await requestMicrophonePermission();
+        console.log('Microphone permission result:', micPermissionResult);
+
+        // Initialize Firebase if not already initialized
         if (getApps().length === 0) {
           initializeApp(firebaseConfig);
         }
+        console.log('Firebase initialized');
 
-        // Initialize other Firebase services
+        // Initialize Audio Session
+        if (micPermissionResult) {
+          try {
+            console.log('Initializing audio session...');
+            await Audio.setAudioModeAsync({
+              allowsRecordingIOS: true,
+              playsInSilentModeIOS: true,
+            });
+            console.log('Audio session initialized successfully');
+          } catch (error) {
+            console.error('Error initializing audio session:', error);
+            crashlytics().recordError(error as Error);
+          }
+        }
+
+        // Initialize Firebase services
         await messaging().registerDeviceForRemoteMessages();
 
-        console.log('Initializing Crashlytics');
+        // Request notification permission
+        const authStatus = await messaging().requestPermission();
+        console.log('Permission settings:', authStatus);
 
+        // Initialize Crashlytics
+        console.log('Initializing Crashlytics');
         try {
           await crashlytics().setCrashlyticsCollectionEnabled(true);
           crashlytics().log('App started');
@@ -41,7 +129,7 @@ function AppWrapper() {
 
         setIsFirebaseReady(true);
 
-        // Rest of your initialization logic
+        // Check user state
         const checkUserState = async () => {
           const storedUser = await AsyncStorage.getItem('user');
           if (storedUser) {
@@ -50,6 +138,7 @@ function AppWrapper() {
         };
         await checkUserState();
 
+        // Request notification permissions
         const requestUserPermission = async () => {
           const settings = await notifee.requestPermission();
           if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
@@ -60,17 +149,19 @@ function AppWrapper() {
         };
         await requestUserPermission();
 
+        // Subscribe to topic
         const subscribeToTopic = async () => {
           try {
             await messaging().subscribeToTopic("all_users");
             console.log("Subscribed to all users topic");
           } catch (error) {
             console.error("Error subscribing to all users topic:", error);
-            crashlytics().recordError(error as Error); // Log error to Crashlytics
+            crashlytics().recordError(error as Error);
           }
         };
         await subscribeToTopic();
 
+        // Create notification channel
         const createNotificationChannel = async () => {
           await notifee.createChannel({
             id: "default",
@@ -81,6 +172,7 @@ function AppWrapper() {
         };
         await createNotificationChannel();
 
+        // Set up message handlers
         const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
           console.log("Notification Foreground received", remoteMessage);
 
@@ -128,20 +220,35 @@ function AppWrapper() {
           }
         };
       } catch (error) {
-        console.error("Error initializing Firebase services:", error);
-        crashlytics().recordError(error as Error); // Log error to Crashlytics
-        setIsFirebaseReady(true); // Set to true even on error to allow the app to proceed
+        console.error("Error initializing services:", error);
+        crashlytics().recordError(error as Error);
+        setIsFirebaseReady(true);
+        return () => { };
       }
-      
-      // Explicitly return true to satisfy TypeScript
-      return true;
     };
 
-    initializeFirebaseServices();
+    initializeServices();
   }, []);
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', async (nextAppState) => {
+      if (nextAppState === 'active' && !microphonePermission) {
+        // Check existing permissions first
+        const { status } = await Audio.getPermissionsAsync();
+        if (status !== 'granted') {
+          requestMicrophonePermission();
+        } else {
+          setMicrophonePermission(true);
+        }
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [microphonePermission]);
+
   if (!isFirebaseReady) {
-    // You might want to show a loading indicator here
     return null;
   }
 

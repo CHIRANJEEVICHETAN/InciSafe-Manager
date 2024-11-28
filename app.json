@@ -13,7 +13,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Allow InciSafe Manager to access your microphone for voice-based incident reporting"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +24,11 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.loginware.incisafe",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +38,13 @@
     "plugins": [
       "expo-router",
       "@react-native-firebase/app",
-      "@react-native-firebase/crashlytics"
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow InciSafe Manager to access your microphone for voice-based incident reporting."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -44,3 +57,4 @@
     "owner": "incisafemanager"
   }
 }
+
