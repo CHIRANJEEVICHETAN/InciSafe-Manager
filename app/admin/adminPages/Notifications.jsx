@@ -109,7 +109,7 @@ export default function NotificationsPage() {
               <Ionicons
                 name="person-outline"
                 size={24}
-                color="white"
+                color="black"
                 style={styles.icon}
               />
               <View style={styles.notificationContent}>
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     paddingTop: 40,
     paddingHorizontal: 20,
   },
@@ -155,10 +154,10 @@ const styles = StyleSheet.create({
     height: 80,
   },
   headerText: {
-    fontSize: 26,
+    fontSize: 32,
     textAlign: "center",
     fontWeight: "bold",
-    color: "white",
+    color: "black",
     marginTop: 10,
   },
   notificationContainer: {
@@ -170,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.3)",
+    borderBottomColor: "rgba(0, 0, 0, 0.3)", // Changed from white to black with opacity
   },
   icon: {
     marginRight: 10,
@@ -180,19 +179,17 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   notificationTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
-    color: "white",
-    // width: "100%",
-    // backgroundColor: "red",
+    color: "black",
   },
   notificationSubtitle: {
     fontSize: 14,
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "rgba(0, 0, 0, 0.7)",
   },
   daysAgo: {
     fontSize: 12,
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "rgba(0, 0, 0, 0.7)",
   },
   refreshButton: {
     backgroundColor: "#4CAF50",
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: -20,
     position: "relative",
-    right: 80,
+    right: 65,
     top: 7,
     zIndex: 1000,
   },
@@ -229,6 +226,6 @@ const styles = StyleSheet.create({
   },
   notificationBody: {
     fontSize: 14,
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "rgba(0, 0, 0, 0.7)",
   },
 });

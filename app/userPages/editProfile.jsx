@@ -8,6 +8,10 @@ import {
   TextInput,
   Alert,
   SafeAreaView,
+  Platform,
+  ImageBackground,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -125,108 +129,134 @@ const EditProfilePage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => router.back()}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-      >
-        <Image
-          source={require("./../../assets/images/back-button.png")}
-          style={styles.backButtonImage}
-        />
-      </TouchableOpacity>
-      <Text style={styles.title}>Edit Profile</Text>
-      <View style={styles.separator} />
-
-      <TouchableOpacity
-        style={styles.profileIconContainer}
-        onPress={selectImage}
-      >
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
-        ) : (
-          <FontAwesome name="user-circle" size={80} color="#000000" />
-        )}
-        <Text style={styles.changePhotoText}>Change Profile Photo</Text>
-      </TouchableOpacity>
-
-      <View style={styles.fieldContainer}>
-        <FontAwesome name="user" size={24} color="black" style={styles.icon} />
-        <TextInput
-          style={styles.usernameField}
-          placeholder="Username"
-          placeholderTextColor="#888"
-          value={username}
-          onChangeText={setUsername}
-        />
-      </View>
-
-      <View style={styles.fieldContainer}>
-        <FontAwesome
-          name="calendar"
-          size={24}
-          color="black"
-          style={styles.icon}
-        />
+    <ImageBackground
+      source={require("./../../assets/images/background.jpg")}
+      style={styles.backgroundImage}
+    >
+      {Platform.OS === "ios" && (
+        <View style={{ height: 20, backgroundColor: "transparent" }} />
+      )}
+      <SafeAreaView style={styles.safeArea}>
         <TouchableOpacity
-          onPress={() => setDatePickerVisibility(true)}
-          style={{ flex: 1 }}
+          style={styles.backButton}
+          onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
         >
-          <TextInput
-            style={styles.dobField}
-            placeholder="Date of Birth"
-            placeholderTextColor="#888"
-            value={dob}
-            editable={false}
+          <Image
+            source={require("./../../assets/images/back-button.png")}
+            style={styles.backButtonImage}
           />
         </TouchableOpacity>
-      </View>
+        <Text style={styles.title}>Edit Profile</Text>
+        <View style={styles.separator} />
 
-      <View style={styles.fieldContainer}>
-        <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
-        <TextInput
-          style={styles.contactField}
-          placeholder="Contact No"
-          placeholderTextColor="#888"
-          value={contact}
-          onChangeText={setContact}
-        />
-      </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 150 : 0}
+          enabled
+        >
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+            overScrollMode="never"
+            style={styles.scrollViewStyle}
+          >
+            <TouchableOpacity
+              style={styles.profileIconContainer}
+              onPress={selectImage}
+            >
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+              ) : (
+                <FontAwesome name="user-circle" size={80} color="#000000" />
+              )}
+              <Text style={styles.changePhotoText}>Change Profile Photo</Text>
+            </TouchableOpacity>
 
-      <View style={styles.fieldContainer}>
-        <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
-        <TextInput
-          style={styles.altContactField}
-          placeholder="Alternate Mobile"
-          placeholderTextColor="#888"
-          value={altContact}
-          onChangeText={setAltContact}
-        />
-      </View>
+            <View style={styles.fieldContainer}>
+              <FontAwesome name="user" size={24} color="black" style={styles.icon} />
+              <TextInput
+                style={styles.usernameField}
+                placeholder="Username"
+                placeholderTextColor="#888"
+                value={username}
+                onChangeText={setUsername}
+              />
+            </View>
 
-      <View style={[styles.fieldContainer, { height: 100 }]}>
-        <FontAwesome
-          name="map-marker"
-          size={24}
-          color="black"
-          style={styles.icon}
-        />
-        <TextInput
-          style={styles.addressField}
-          placeholder="Address"
-          placeholderTextColor="#888"
-          multiline={true}
-          numberOfLines={4}
-          value={address}
-          onChangeText={setAddress}
-        />
-      </View>
+            <View style={styles.fieldContainer}>
+              <FontAwesome
+                name="calendar"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
+              <TouchableOpacity
+                onPress={() => setDatePickerVisibility(true)}
+                style={{ flex: 1 }}
+              >
+                <TextInput
+                  style={styles.dobField}
+                  placeholder="Date of Birth"
+                  placeholderTextColor="#888"
+                  value={dob}
+                  editable={false}
+                />
+              </TouchableOpacity>
+            </View>
 
-      <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
-        <Text style={styles.updateButtonText}>Update</Text>
-      </TouchableOpacity>
+            <View style={styles.fieldContainer}>
+              <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
+              <TextInput
+                style={styles.contactField}
+                placeholder="Contact No"
+                placeholderTextColor="#888"
+                value={contact}
+                onChangeText={setContact}
+              />
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <FontAwesome name="phone" size={24} color="black" style={styles.icon} />
+              <TextInput
+                style={styles.altContactField}
+                placeholder="Alternate Mobile"
+                placeholderTextColor="#888"
+                value={altContact}
+                onChangeText={setAltContact}
+              />
+            </View>
+
+            <View style={[styles.fieldContainer, { height: 100 }]}>
+              <FontAwesome
+                name="map-marker"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
+              <TextInput
+                style={[styles.addressField, { height: 90 }]}
+                placeholder="Address"
+                placeholderTextColor="#888"
+                multiline={true}
+                numberOfLines={4}
+                value={address}
+                onChangeText={setAddress}
+              />
+            </View>
+
+            <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+              <Text style={styles.updateButtonText}>Update</Text>
+            </TouchableOpacity>
+
+            <View style={{ height: 200 }} />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -234,28 +264,39 @@ const EditProfilePage = () => {
         onConfirm={handleConfirm}
         onCancel={() => setDatePickerVisibility(false)}
       />
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-    padding: 25,
-    backgroundColor: "#f0f0f0",
+    width: '100%',
+    height: '100%',
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  scrollViewStyle: {
+    backgroundColor: 'transparent',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 25,
   },
   backButton: {
     alignSelf: "flex-start",
     marginTop: 10,
     marginBottom: -20,
     position: "relative",
-    right: 5,
-    top: 10,
+    right: -35,
+    top: 20,
     zIndex: 1000,
   },
   backButtonImage: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     marginTop: 15,
     zIndex: 1000,
   },
@@ -264,7 +305,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 35,
-    marginTop: -10,
+    // marginTop: 10,
+    color: "#000000",
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,

@@ -172,11 +172,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: -8,
     marginTop: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     shadowRadius: 2,
     elevation: 6,
+
   },
   line: {
     marginBottom: 10,
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: "flex-start",
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: -20,
     position: "relative",
     right: 80,
@@ -200,11 +201,11 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 21,
-    // margin: 25,
     marginTop: 15,
     marginBottom: 25,
     textAlign: "center",
-    color: "#555",
+    color: "black",
+    fontWeight: "bold",
   },
   menuList: {
     marginHorizontal: 15,

@@ -75,7 +75,10 @@
     "react-native-svg": "15.2.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
-    "expo-speech": "~12.0.2"
+    "expo-speech": "~12.0.2",
+    "expo-intent-launcher": "~11.0.1",
+    "expo-sharing": "~12.0.1",
+    "expo-file-system": "~17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

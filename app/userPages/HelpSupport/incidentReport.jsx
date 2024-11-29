@@ -1,12 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Image } from "react-native";
+import { useRouter } from 'expo-router';
 
 const Incident = () => {
+  const router = useRouter();
+
   return (
     <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require("../../../assets/images/back-button.png")}
+              style={styles.backButtonImage}
+            />
+          </TouchableOpacity>
       </View>
 
       <Text style={styles.titleText}>How to Report an Incident</Text>
@@ -59,20 +73,37 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
+    marginLeft: 30,
     marginBottom: -15,
     marginTop: 15,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginTop: 10,
+    marginBottom: -20,
+    position: "relative",
+    right: 250,
+    top: -2,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 15,
+    zIndex: 1000,
   },
   titleText: {
     fontSize: 22,
     margin: 25,
     textAlign: "center",
-    color: "#555",
-    marginBottom: 55,
+    color: "#000",
+    fontWeight: "bold",
+    marginBottom: 30,
   },
   menuList: {
     marginHorizontal: 15,
@@ -88,12 +119,12 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 18,
-    marginBottom: 15,
+    marginBottom: 3,
     color: "#222",
   },
   bulletContainer: {
     paddingLeft: 20,
-    marginBottom: 20,
+    // marginBottom: 10,
   },
   bulletText: {
     fontSize: 16,

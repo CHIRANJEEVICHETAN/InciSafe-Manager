@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  ImageBackground,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -163,9 +165,16 @@ export default function IncidentManagement() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-      <TouchableOpacity
+    <ImageBackground
+      source={require("./../../../assets/images/background.jpg")}
+      style={styles.backgroundImage}
+    >
+      {Platform.OS === "ios" && (
+        <View style={{ height: 20, backgroundColor: "transparent" }} />
+      )}
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
             style={styles.backButton}
             onPress={() => router.back()}
             accessibilityRole="button"
@@ -174,122 +183,128 @@ export default function IncidentManagement() {
             <Image
               source={require("./../../../assets/images/back-button.png")}
               style={styles.backButtonImage}
-          />
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Incident Management</Text>
+        </View>
+
+        <LogoSVG style={styles.logo} />
+
+        <View style={styles.filterContainer}>
+          <View style={styles.datePickerContainer}>
+            <TouchableOpacity
+              onPress={() => setShowStartDatePicker(true)}
+              style={styles.datePickerButton}
+            >
+              <Text>{selectedStartDate.toLocaleDateString()}</Text>
+              <Ionicons name="calendar-outline" size={24} color="#000" />
+            </TouchableOpacity>
+            {showStartDatePicker && (
+              <DateTimePicker
+                value={selectedStartDate}
+                mode="date"
+                display="default"
+                onChange={onStartDateChange}
+              />
+            )}
+          </View>
+          <View style={styles.datePickerContainer}>
+            <TouchableOpacity
+              onPress={() => setShowEndDatePicker(true)}
+              style={styles.datePickerButton}
+            >
+              <Text>{selectedEndDate.toLocaleDateString()}</Text>
+              <Ionicons name="calendar-outline" size={24} color="#000" />
+            </TouchableOpacity>
+            {showEndDatePicker && (
+              <DateTimePicker
+                value={selectedEndDate}
+                mode="date"
+                display="default"
+                onChange={onEndDateChange}
+              />
+            )}
+          </View>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedDepartment}
+              onValueChange={(itemValue) => setSelectedDepartment(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Select Department" value="" />
+              {departments.map((dept) => (
+                <Picker.Item
+                  key={dept.value}
+                  label={dept.label}
+                  value={dept.value}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={filterIncidents}
+          accessibilityLabel="Apply filters"
+        >
+          <Text style={styles.filterButtonText}>Apply Filters</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Incident Management</Text>
-      </View>
 
-      <LogoSVG style={styles.logo} />
+        <View style={styles.tableHeader}>
+          <Text style={styles.headerCell}>ID</Text>
+          <Text style={styles.headerCell}>Date</Text>
+          <Text style={styles.headerCell}>Department</Text>
+          <Text style={styles.headerCell}>View</Text>
+        </View>
 
-      <View style={styles.filterContainer}>
-        <View style={styles.datePickerContainer}>
-          <TouchableOpacity
-            onPress={() => setShowStartDatePicker(true)}
-            style={styles.datePickerButton}
-          >
-            <Text>{selectedStartDate.toLocaleDateString()}</Text>
-            <Ionicons name="calendar-outline" size={24} color="#000" />
-          </TouchableOpacity>
-          {showStartDatePicker && (
-            <DateTimePicker
-              value={selectedStartDate}
-              mode="date"
-              display="default"
-              onChange={onStartDateChange}
-            />
-          )}
-        </View>
-        <View style={styles.datePickerContainer}>
-          <TouchableOpacity
-            onPress={() => setShowEndDatePicker(true)}
-            style={styles.datePickerButton}
-          >
-            <Text>{selectedEndDate.toLocaleDateString()}</Text>
-            <Ionicons name="calendar-outline" size={24} color="#000" />
-          </TouchableOpacity>
-          {showEndDatePicker && (
-            <DateTimePicker
-              value={selectedEndDate}
-              mode="date"
-              display="default"
-              onChange={onEndDateChange}
-            />
-          )}
-        </View>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedDepartment}
-            onValueChange={(itemValue) => setSelectedDepartment(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Select Department" value="" />
-            {departments.map((dept) => (
-              <Picker.Item
-                key={dept.value}
-                label={dept.label}
-                value={dept.value}
+        {loading ? (
+          <ActivityIndicator size="large" color="#4CAF50" style={styles.loader} />
+        ) : (
+          <ScrollView style={styles.incidentList}>
+            {filteredIncidents.map((incident, index) => (
+              <IncidentItem
+                key={incident.id}
+                id={String(index + 1).padStart(3, "0")}
+                date={incident.date}
+                department={incident.department}
+                onDetailsClick={() => {
+                  const updatedIncident = {
+                    ...incident,
+                    evidence: encodeURIComponent(incident.evidence),
+                  };
+                  router.push({
+                    pathname: "/admin/adminScreens/incidentDetails",
+                    params: { incident: JSON.stringify(updatedIncident) },
+                  });
+                }}
               />
             ))}
-          </Picker>
-        </View>
-      </View>
+          </ScrollView>
+        )}
 
-      <TouchableOpacity
-        style={styles.filterButton}
-        onPress={filterIncidents}
-        accessibilityLabel="Apply filters"
-      >
-        <Text style={styles.filterButtonText}>Apply Filters</Text>
-      </TouchableOpacity>
-
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerCell}>ID</Text>
-        <Text style={styles.headerCell}>Date</Text>
-        <Text style={styles.headerCell}>Department</Text>
-        <Text style={styles.headerCell}>View</Text>
-      </View>
-
-      {loading ? (
-        <ActivityIndicator size="large" color="#4CAF50" style={styles.loader} />
-      ) : (
-        <ScrollView style={styles.incidentList}>
-          {filteredIncidents.map((incident, index) => (
-            <IncidentItem
-              key={incident.id}
-              id={String(index + 1).padStart(3, "0")}
-              date={incident.date}
-              department={incident.department}
-              onDetailsClick={() => {
-                const updatedIncident = {
-                  ...incident,
-                  evidence: encodeURIComponent(incident.evidence),
-                };
-                router.push({
-                  pathname: "/admin/adminScreens/incidentDetails",
-                  params: { incident: JSON.stringify(updatedIncident) },
-                });
-              }}
-            />
-          ))}
-        </ScrollView>
-      )}
-
-      <TouchableOpacity
-        style={styles.downloadButton}
-        onPress={() => router.push("/admin/adminScreens/reportDownload")}
-        accessibilityLabel="Download report"
-      >
-        <Text style={styles.downloadButtonText}>Download Report</Text>
-        <Ionicons name="download-outline" size={20} color="#fff" />
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity
+          style={styles.downloadButton}
+          onPress={() => router.push("/admin/adminScreens/reportDownload")}
+          accessibilityLabel="Download report"
+        >
+          <Text style={styles.downloadButtonText}>Download Report</Text>
+          <Ionicons name="download-outline" size={20} color="#fff" />
+        </TouchableOpacity>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
-    backgroundColor: "#e0f7f6",
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: "row",
@@ -310,7 +325,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#d1d1d1",
+    backgroundColor: "rgba(236, 240, 241, 0.5)",
     paddingVertical: 10,
     paddingHorizontal: 5,
     marginHorizontal: 10,
@@ -318,8 +333,6 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: "flex-start",
-    // marginTop: 10,
-    // marginBottom: -10,
     position: "absolute",
     left: 18,
     top: -8,
@@ -367,7 +380,7 @@ const styles = StyleSheet.create({
   incidentItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.7)", // Changed to white with transparency
     marginVertical: 5,
     padding: 10,
     borderRadius: 5,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -11,6 +11,17 @@ const GetStarted = () => {
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Help Center</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require("../../../assets/images/back-button.png")}
+              style={styles.backButtonImage}
+            />
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.getstartedText}>Get Started</Text>
@@ -18,7 +29,7 @@ const GetStarted = () => {
         <View style={styles.menuList}>
           <TouchableOpacity 
             style={styles.menuItem} 
-            onPress={() => router.push('/userPages/helpsupport/GETSTARTED/Accountcreation')}
+            onPress={() => router.push('/userPages/HelpSupport/GETSTARTED/Accountcreation')}
           >
             <Text style={styles.menuText}>Account Creation</Text>
             <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
@@ -26,7 +37,7 @@ const GetStarted = () => {
 
           <TouchableOpacity 
             style={styles.menuItem} 
-            onPress={() => router.push('/userPages/helpsupport/GETSTARTED/Login')}
+            onPress={() => router.push('/userPages/HelpSupport/GETSTARTED/Login')}
           >
             <Text style={styles.menuText}>Login</Text>
             <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
@@ -34,7 +45,7 @@ const GetStarted = () => {
 
           <TouchableOpacity 
             style={styles.menuItem} 
-            onPress={() => router.push('/userPages/helpsupport/GETSTARTED/system')} 
+            onPress={() => router.push('/userPages/HelpSupport/GETSTARTED/system')} 
           >
             <Text style={styles.menuText}>System Requirements</Text>
             <MaterialCommunityIcons name="chevron-right" size={20} color="black" style={styles.chevron} />
@@ -66,17 +77,34 @@ const styles = StyleSheet.create({
     marginBottom: -8,
     marginTop: 5,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
-    paddingLeft: 120,
+    paddingLeft: 100,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginTop: 10,
+    marginBottom: -20,
+    position: "relative",
+    right: 300,
+    top: -10,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 15,
+    zIndex: 1000,
   },
   getstartedText: {
     fontSize: 21,
     margin: 35,
     textAlign: "center",
-    color: "#555",
+    color: "#000",
+    fontWeight: "bold",
+    marginTop: 15,
   },
   menuList: {
     marginHorizontal: 15,

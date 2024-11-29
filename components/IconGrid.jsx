@@ -6,10 +6,71 @@ import { useRouter } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
 
-const IconGrid = ({ style }) => {
+const IconGrid = ({ style, searchQuery }) => {
   const fontsLoaded = useLoadFont();
   const router = useRouter();
-  // Hide the splash screen once the fonts are loaded
+
+  const gridItems = [
+    {
+      title: 'Uniform',
+      route: '/userPages/Forms/uniformSafety',
+      image: require('./../assets/images/HomeScreenIcons/uniformSafety.png'),
+      iconStyle: 'uniformIcon',
+      labelStyle: 'uniformIconLabel'
+    },
+    {
+      title: 'Health Safety',
+      route: '/userPages/Forms/healthSafety',
+      image: require('./../assets/images/HomeScreenIcons/healthSafety.png'),
+      iconStyle: 'healthSafetyIcon',
+      labelStyle: 'healthSafetyIconLabel'
+    },
+    {
+      title: 'Equipment Issues',
+      route: '/userPages/Forms/equipmentIssues',
+      image: require('./../assets/images/HomeScreenIcons/equipmentIssues.png'),
+    },
+    {
+      title: 'Fire Incident',
+      route: '/userPages/Forms/FireIncident',
+      image: require('./../assets/images/HomeScreenIcons/fireIncident.png'),
+      hasSpecialStyle: true
+    },
+    {
+      title: 'Hazardous Materials',
+      route: '/userPages/Forms/Hazardousmaterials',
+      image: require('./../assets/images/HomeScreenIcons/hazardousMaterials.png'),
+    },
+    {
+      title: 'Environmental Hazards',
+      route: '/userPages/Forms/environmentalHazards',
+      image: require('./../assets/images/HomeScreenIcons/environmentalHazards.png'),
+    },
+    {
+      title: 'Policy Violations',
+      route: '/userPages/Forms/policyViolations',
+      image: require('./../assets/images/HomeScreenIcons/policyViolations.png'),
+    },
+    {
+      title: 'Weather Hazards',
+      route: '/userPages/Forms/weatherHazards',
+      image: require('./../assets/images/HomeScreenIcons/weatherHazards.png'),
+    },
+    {
+      title: 'Human Errors',
+      route: '/userPages/Forms/humanErrors',
+      image: require('./../assets/images/HomeScreenIcons/humanErrors.png'),
+      hasSpecialStyle: true
+    }
+  ];
+
+  // Filter items based on search query
+  const filteredItems = searchQuery
+    ? gridItems.filter(item =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    : gridItems;
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -17,81 +78,41 @@ const IconGrid = ({ style }) => {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null; // Don't render anything until fonts are loaded
+    return null;
   }
+
   return (
-    <View style={[styles.grid, style]}>
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/uniformSafety')}>
-        <Text style={[styles.iconLabel, styles.uniformIconLabel]}>Uniform</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/uniformSafety.png')}
-          style={[styles.icon, styles.uniformIcon]}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/healthSafety')}>
-        <Text style={[styles.iconLabel, styles.healthSafetyIconLabel]}>Health Safety</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/healthSafety.png')}
-          style={[styles.icon, styles.healthSafetyIcon]}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/equipmentIssues')}>
-        <Text style={styles.iconLabel}>Equipment Issues</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/equipmentIssues.png')}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/FireIncident')}>
-        <Text style={styles.iconLabel}>Fire Incident</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/fireIncident.png')}
-          style={[styles.icon, { marginTop: 30 }, { transform: [{ scale: 1.2 }] }]}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/Hazardousmaterials')}>
-        <Text style={styles.iconLabel}>Hazardous Materials</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/hazardousMaterials.png')}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/environmentalHazards')}>
-        <Text style={[styles.iconLabel, { width: "100%", textAlign: "center", marginTop: 10 }]}>Environmental Hazards</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/environmentalHazards.png')}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/policyViolations')}>
-        <Text style={styles.iconLabel}>Policy Violations</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/policyViolations.png')}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/weatherHazards')}>
-        <Text style={styles.iconLabel}>Weather Hazards</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/weatherHazards.png')}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.iconContainer} onPress={() => router.push('/userPages/Forms/humanErrors')}>
-        <Text style={styles.iconLabel}>Human Errors</Text>
-        <Image
-          source={require('./../assets/images/HomeScreenIcons/humanErrors.png')}
-          style={[styles.icon, { marginTop: 30 }, { transform: [{ scale: 1.2 }] }]}
-        />
-      </TouchableOpacity>
+    <View style={[styles.grid, style]} onLayout={onLayoutRootView}>
+      {filteredItems.map((item, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.iconContainer}
+          onPress={() => router.push(item.route)}
+        >
+          <Text style={[
+            styles.iconLabel,
+            item.labelStyle && styles[item.labelStyle],
+            item.title === 'Environmental Hazards' && {
+              width: "100%",
+              textAlign: "center",
+              marginTop: 10
+            }
+          ]}>
+            {item.title}
+          </Text>
+          <Image
+            source={item.image}
+            style={[
+              styles.icon,
+              item.iconStyle && styles[item.iconStyle],
+              item.hasSpecialStyle && {
+                marginTop: 30,
+                transform: [{ scale: 1.2 }]
+              }
+            ]}
+          />
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
@@ -109,7 +130,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 20,
     marginTop: 20,
-    // backgroundColor: '#00bfa5',
     borderWidth: 2,
     borderColor: 'black',
     width: 100,

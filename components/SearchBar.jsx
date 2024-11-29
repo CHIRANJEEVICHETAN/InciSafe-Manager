@@ -3,15 +3,17 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useLoadFont from './../hooks/useLoadFont';
 
-const SearchBar = ({ style, inputStyle }) => {
+const SearchBar = ({ style, inputStyle, value, onChangeText }) => {
   
   return (
     <View style={[styles.searchBar, style]}>
       <Ionicons name="search" size={24} color="black" style={styles.searchIcon} />
       <TextInput 
+        value={value}
+        onChangeText={onChangeText}
         placeholder="Search for items..." 
         style={[styles.input, inputStyle]} 
-        placeholderTextColor="#888" // Optional improvement for contrast
+        placeholderTextColor="#888"
       />
     </View>
   );
@@ -25,6 +27,8 @@ const styles = StyleSheet.create({
     width: '80%',
     marginLeft: '10%',
     height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -32,26 +36,20 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5, // Android shadow
+    elevation: 5,
   },
   input: {
-    height: 40, // Match height with searchBar
-    borderRadius: 50,
-    paddingLeft: 50, // Space for the icon
+    flex: 1,
+    height: 40,
     fontSize: 17,
-    fontFamily: 'Roboto-Bold', // Ensure this font is loaded correctly
+    fontFamily: 'Roboto-Bold',
     color: '#000',
-    // backgroundColor: 'red',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    zIndex: 50,
+    paddingLeft: 40,
   },
   searchIcon: {
     position: 'absolute',
     left: 10,
-    top: 8,
-    zIndex: 100,
+    zIndex: 1,
   },
 });
 

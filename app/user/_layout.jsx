@@ -1,16 +1,74 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, Platform, Keyboard } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { Tabs } from "expo-router"
 import { Ionicons } from '@expo/vector-icons'
 
-
 export default function UserLayout() {
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
-    <Tabs screenOptions={{ tabBarStyle: styles.container, tabBarLabelStyle: styles.label }}>
-      <Tabs.Screen name="Home" options={{headerShown: false, tabBarIcon: () => <Ionicons name="home" size={28} color="black" style={styles.icon} />}} />
-      <Tabs.Screen name="Notifications" options={{headerShown: false, tabBarIcon: () => <Ionicons name="notifications" size={28} color="black" style={styles.icon} />}} />
-      <Tabs.Screen name="Help" options={{headerShown: false, tabBarIcon: () => <Ionicons name="help-circle" size={28} color="black" style={styles.icon} /> }} />
-      <Tabs.Screen name="Profile" options={{headerShown: false, tabBarIcon: () => <Ionicons name="person" size={28} color="black" style={styles.icon} /> }} />
+    <Tabs
+      screenOptions={{
+        tabBarStyle: [
+          styles.container,
+          {
+            position: 'absolute',
+            bottom: Platform.OS === 'ios' ? 20 : 10,
+            display: isKeyboardVisible ? 'none' : 'flex',
+          }
+        ],
+        tabBarLabelStyle: styles.label,
+        tabBarHideOnKeyboard: false,
+      }}
+    >
+      <Tabs.Screen
+        name="Home"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => <Ionicons name="home" size={28} color="black" style={styles.icon} />
+        }}
+      />
+      <Tabs.Screen
+        name="Notifications"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => <Ionicons name="notifications" size={28} color="black" style={styles.icon} />
+        }}
+      />
+      <Tabs.Screen
+        name="Help"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => <Ionicons name="help-circle" size={28} color="black" style={styles.icon} />
+        }}
+      />
+      <Tabs.Screen
+        name="Profile"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => <Ionicons name="person" size={28} color="black" style={styles.icon} />
+        }}
+      />
     </Tabs>
   )
 }
@@ -30,7 +88,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.7,
     borderTopWidth: 0.7,
     borderColor: 'gray',
-    height: '7%',
+    height: Platform.OS === 'ios' ? 85 : 65,
     borderRadius: 35,
     marginHorizontal: 10,
     paddingHorizontal: 10,
@@ -48,5 +106,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: 'bold',
+    marginBottom: Platform.OS === 'ios' ? 15 : 0,
   }
-})
+});

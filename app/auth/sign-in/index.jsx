@@ -62,11 +62,20 @@ export default function Login() {
   };
 
   const OnLogin = async (isAdminLogin = false) => {
-    if (email === "" || password === "") {
-      ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
+    // Input validation
+    if (email.trim() === "" || password.trim() === "") {
+      ToastAndroid.show("Please enter both email and password", ToastAndroid.LONG);
       return;
     }
-    setIsLoading(true); // Start loading
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      ToastAndroid.show("Please enter a valid email address", ToastAndroid.LONG);
+      return;
+    }
+
+    setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -76,12 +85,12 @@ export default function Login() {
       const user = userCredential.user;
 
       // Fetch the user's role from Firestore
-      const userDoc = doc(db, "users", user.uid); // Assuming user data is stored in a 'users' collection
+      const userDoc = doc(db, "users", user.uid);
       const userSnapshot = await getDoc(userDoc);
 
       if (userSnapshot.exists()) {
         const userData = userSnapshot.data();
-        const role = userData.role; // Get the role field from the document
+        const role = userData.role;
 
         // Store user data in AsyncStorage
         await AsyncStorage.setItem('user', JSON.stringify({ uid: user.uid, role }));
@@ -89,26 +98,57 @@ export default function Login() {
         // Check role based on the button clicked
         if (isAdminLogin) {
           if (role === "admin") {
-            router.replace("/admin/adminPages/Home"); // Navigate to admin dashboard
+            ToastAndroid.show("Welcome back, Admin!", ToastAndroid.SHORT);
+            router.replace("/admin/adminPages/Home");
           } else {
-            ToastAndroid.show("You are not an Admin", ToastAndroid.LONG);
+            ToastAndroid.show("Access denied. You don't have admin privileges.", ToastAndroid.LONG);
           }
         } else {
           if (role === "user") {
-            router.replace("/user/Home"); // Navigate to user dashboard
+            ToastAndroid.show("Welcome back!", ToastAndroid.SHORT);
+            router.replace("/user/Home");
           } else {
-            ToastAndroid.show("Click on Login as Admin for admin login", ToastAndroid.LONG);
+            ToastAndroid.show("Please use 'Login as Admin' button for admin access", ToastAndroid.LONG);
           }
         }
       } else {
-        ToastAndroid.show("User data not found!", ToastAndroid.LONG);
+        ToastAndroid.show("User profile not found. Please contact support.", ToastAndroid.LONG);
       }
     } catch (error) {
-      const errorMessage = error.message;
+      const errorCode = error.code;
+      let errorMessage = "An error occurred during login. Please try again.";
+
+      switch (errorCode) {
+        case "auth/invalid-email":
+          errorMessage = "Invalid email format. Please check your email address.";
+          break;
+        case "auth/user-disabled":
+          errorMessage = "This account has been disabled. Please contact support.";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "No account found with this email. Please sign up first.";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password. Please try again or reset your password.";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many failed attempts. Please try again later or reset your password.";
+          break;
+        case "auth/invalid-credential":
+          errorMessage = "Invalid login credentials. Please check your email and password.";
+          break;
+        case "auth/network-request-failed":
+          errorMessage = "Network error. Please check your internet connection.";
+          break;
+        case "auth/internal-error":
+          errorMessage = "Server error. Please try again later.";
+          break;
+      }
+
+      console.log("Login error:", errorCode, error.message);
       ToastAndroid.show(errorMessage, ToastAndroid.LONG);
-      console.log(errorMessage);
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
 

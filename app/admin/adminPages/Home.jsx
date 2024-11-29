@@ -9,7 +9,6 @@ import {
   ImageBackground,
 } from "react-native";
 import AdminHeader from "./../../../components/adminHeader";
-import SearchBar from "./../../../components/SearchBar";
 import LineSVG from "./../../../components/LineSVG";
 import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -119,7 +118,11 @@ const Home = () => {
           style={styles.header}
         />
         <LineSVG style={styles.line} />
-        <SearchBar style={styles.searchBar} />
+
+        <View style={styles.welcomeSection}>
+          <Text style={styles.welcomeTitle}>Welcome to Admin Dashboard</Text>
+          <Text style={styles.welcomeSubtitle}>Manage and monitor your system efficiently</Text>
+        </View>
 
         <View style={styles.menuContainer}>
           <TouchableOpacity
@@ -180,6 +183,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: -25,
   },
   menuItem: {
     alignItems: "center",
@@ -208,6 +212,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  welcomeSection: {
+    padding: 20,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  welcomeTitle: {
+    fontSize: 24,
+    fontWeight: '500',
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  welcomeSubtitle: {
+    fontSize: 16,
+    color: '#7f8c8d',
+    textAlign: 'center',
   },
 });
 

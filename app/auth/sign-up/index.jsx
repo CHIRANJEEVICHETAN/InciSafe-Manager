@@ -51,8 +51,22 @@ export default function SignUp() {
   };
 
   const OnCreateAccount = async (email, password) => {
-    if (username === "" || email === "" || password === "") {
-      ToastAndroid.show("Please fill in all fields", ToastAndroid.LONG);
+    // Validate empty fields
+    if (username.trim() === "" || email.trim() === "" || password.trim() === "") {
+      ToastAndroid.show("All fields are required", ToastAndroid.LONG);
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      ToastAndroid.show("Please enter a valid email address", ToastAndroid.LONG);
+      return;
+    }
+
+    // Validate password strength
+    if (password.length < 6) {
+      ToastAndroid.show("Password must be at least 6 characters long", ToastAndroid.LONG);
       return;
     }
 
@@ -81,7 +95,7 @@ export default function SignUp() {
       await setDoc(doc(db, "users", user.uid), {
         username: username,
         email: email,
-        role: "user", // Hardcoded role as 'user'
+        role: "user",
         userId: uniqueUserId,
         createdAt: serverTimestamp(),
       });
@@ -89,31 +103,35 @@ export default function SignUp() {
       // Store user data in AsyncStorage
       await AsyncStorage.setItem('user', JSON.stringify({ uid: user.uid, role: "user" }));
 
-      ToastAndroid.show("User created successfully", ToastAndroid.LONG);
+      ToastAndroid.show("Account created successfully! Welcome to InciSafe.", ToastAndroid.LONG);
       router.push("/user/Home");
     } catch (error) {
       const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("Error creating user:", errorCode, errorMessage);
+      let errorMessage = "An error occurred during signup. Please try again.";
 
-      if (errorCode === "auth/network-request-failed") {
-        ToastAndroid.show(
-          "Network error. Please check your internet connection and try again.",
-          ToastAndroid.LONG
-        );
-      } else if (errorCode === "auth/email-already-in-use") {
-        ToastAndroid.show(
-          "Email already in use. Please use a different email.",
-          ToastAndroid.LONG
-        );
-      } else if (errorCode === "auth/invalid-email") {
-        ToastAndroid.show(
-          "Invalid email format. Please enter a valid email.",
-          ToastAndroid.LONG
-        );
-      } else {
-        ToastAndroid.show(`Error: ${errorMessage}`, ToastAndroid.LONG);
+      switch (errorCode) {
+        case "auth/email-already-in-use":
+          errorMessage = "This email is already registered. Please use a different email or try logging in.";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "The email address is not valid. Please check and try again.";
+          break;
+        case "auth/operation-not-allowed":
+          errorMessage = "Email/password accounts are not enabled. Please contact support.";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password is too weak. Please use a stronger password.";
+          break;
+        case "auth/network-request-failed":
+          errorMessage = "Network error. Please check your internet connection and try again.";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many failed attempts. Please try again later.";
+          break;
       }
+
+      console.log("Error creating user:", errorCode, error.message);
+      ToastAndroid.show(errorMessage, ToastAndroid.LONG);
     }
   };
 

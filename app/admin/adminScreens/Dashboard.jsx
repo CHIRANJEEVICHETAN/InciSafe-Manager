@@ -204,12 +204,12 @@ export default function AdminDashboard() {
                   ) : (
                     <PieChart
                       data={pieChartData}
-                      width={screenWidth - 40}
+                        width={screenWidth - 25}
                       height={220}
                         chartConfig={chartConfig}
                         accessor="population"
                         backgroundColor="transparent"
-                        paddingLeft="15"
+                        paddingLeft="-3"
                         absolute
                         style={styles.chart}
                       />
@@ -316,6 +316,7 @@ const styles = StyleSheet.create({
   },
   chart: {
     marginVertical: 8,
+    // marginRight: 50,
     borderRadius: 16,
   },
   legendContainer: {

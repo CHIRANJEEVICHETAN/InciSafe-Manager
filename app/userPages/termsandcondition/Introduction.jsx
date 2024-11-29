@@ -23,7 +23,6 @@ const Introduction = () => {
           <Text style={styles.headerText}>Terms & Conditions</Text>
         </View>
         <Text style={styles.titleText}>Introduction</Text>
-        <View style={styles.shortUnderline} />
         <View style={styles.menuList}>
           <View style={styles.menuItem}>
             <Text style={styles.menuNumber}>1.</Text>

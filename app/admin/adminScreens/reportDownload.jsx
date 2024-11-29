@@ -9,6 +9,9 @@ import {
   Dimensions,
   ActivityIndicator,
   Image,
+  PermissionsAndroid,
+  ToastAndroid,
+  Linking,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
@@ -20,6 +23,9 @@ import LogoSVG from './../../../components/LogoSVG';
 import getConfig from './../../../configs/config';
 import { useRouter } from 'expo-router';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import * as Notifications from 'expo-notifications';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const { width, height } = Dimensions.get('window');
 const { BASE_URL } = getConfig();
@@ -100,121 +106,168 @@ export default function ReportDownloads() {
   };
 
   const handleDownload = async () => {
-    const filteredIncidents = incidents.filter((incident) => {
-      const incidentDate = new Date(incident.date);
-      return (
-        (!category || incident.category === category) &&
-        (!department || department === 'All' || incident.department === department) &&
-        incidentDate >= startDate && incidentDate <= endDate
-      );
-    });
-
-    const htmlContent = `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              line-height: 1.6;
-              color: #333;
-              max-width: 1200px;
-              margin: 0 auto;
-              padding: 20px;
-              background-color: #f5f5f5;
-            }
-            h1, h3 {
-              margin: 0;
-              padding: 10px 0;
-            }
-            h1 {
-              text-align: center;
-              font-size: 36px;
-              font-weight: 700;
-              color: #2c3e50;
-              text-transform: uppercase;
-              letter-spacing: 2px;
-              margin-bottom: 20px;
-            }
-            h3 {
-              text-align: center;
-              font-size: 18px;
-              font-weight: 600;
-              color: #34495e;
-              margin-bottom: 10px;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-top: 30px;
-              background-color: #fff;
-              box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            }
-            th, td {
-              padding: 15px;
-              border: 1px solid #e0e0e0;
-              text-align: left;
-            }
-            th {
-              background-color: #3498db;
-              color: #fff;
-              font-weight: bold;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-            }
-            tr:nth-child(even) {
-              background-color: #f8f8f8;
-            }
-            tr:hover {
-              background-color: #e8f4f8;
-              transition: background-color 0.3s ease;
-            }
-          </style>
-        </head>
-        <body>
-          <h1 style="text-align: center; font-size: 36px; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Incident Report</h1>
-          <h3 style="text-align: left; font-size: 18px; font-weight: 600; color: #34495e; margin-bottom: 10px;">Category: ${category || 'All'}</h3>
-          <h3 style="text-align: left; font-size: 18px; font-weight: 600; color: #34495e; margin-bottom: 10px;">Department: ${department || 'All'}</h3>
-          <h3 style="text-align: left; font-size: 18px; font-weight: 600; color: #34495e; margin-bottom: 10px;">Date: ${date.toLocaleDateString('en-GB')}</h3>
-          <table>
-            <tr>
-              <th style="width: 5%;">SlNo.</th>
-              <th style="width: 12%;">Date</th>
-              <th style="width: 13%;">Category</th>
-              <th style="width: 15%;">Department</th>
-              <th style="width: 15%;">Employee</th>
-              <th style="width: 30%;">Description</th>
-              <th style="width: 10%;">Status</th>
-            </tr>
-            ${filteredIncidents.map((incident, index) => `
-              <tr>
-                <td style="text-align: center;">${index + 1}</td>
-                <td>${new Date(incident.date).toLocaleDateString('en-GB')}</td>
-                <td>${incident.category}</td>
-                <td>${incident.department}</td>
-                <td>${incident.employeeName}</td>
-                <td>${incident.incidentDescription || 'N/A'}</td>
-                <td style="font-weight: bold; color: ${incident.status === 'resolved' ? '#27ae60' : '#e74c3c'};">${incident.status}</td>
-              </tr>
-            `).join('')}
-          </table>
-        </body>
-        </html>
-    `;
-
     try {
-      const formattedDate = date.toLocaleDateString('en-GB').split('/').reverse().join('-'); // Format date to DD-MM-YYYY
-      const timestamp = new Date().getTime(); // Get current timestamp
-      console.log(timestamp);
+      const filteredIncidents = incidents.filter((incident) => {
+        const incidentDate = new Date(incident.date);
+        return (
+          (!category || incident.category === category) &&
+          (!department || department === 'All' || incident.department === department) &&
+          incidentDate >= startDate && incidentDate <= endDate
+        );
+      });
+
+      const htmlContent = `
+        <html>
+          <head>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+              }
+              h1, h3 {
+                margin: 0;
+                padding: 10px 0;
+              }
+              h1 {
+                text-align: center;
+                font-size: 36px;
+                font-weight: 700;
+                color: #2c3e50;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 20px;
+              }
+              h3 {
+                text-align: center;
+                font-size: 18px;
+                font-weight: 600;
+                color: #34495e;
+                margin-bottom: 10px;
+              }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 30px;
+                background-color: #fff;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+              }
+              th, td {
+                padding: 15px;
+                border: 1px solid #e0e0e0;
+                text-align: left;
+              }
+              th {
+                background-color: #3498db;
+                color: #fff;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              }
+              tr:nth-child(even) {
+                background-color: #f8f8f8;
+              }
+              tr:hover {
+                background-color: #e8f4f8;
+                transition: background-color 0.3s ease;
+              }
+            </style>
+          </head>
+          <body>
+            <h1 style="text-align: center; font-size: 36px; font-weight: 700; color: #2c3e50; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Incident Report</h1>
+            <h3 style="text-align: left; font-size: 18px; font-weight: 600; color: #34495e; margin-bottom: 10px;">Category: ${category || 'All'}</h3>
+            <h3 style="text-align: left; font-size: 18px; font-weight: 600; color: #34495e; margin-bottom: 10px;">Department: ${department || 'All'}</h3>
+            <h3 style="text-align: left; font-size: 18px; font-weight: 600; color: #34495e; margin-bottom: 10px;">Date: ${date.toLocaleDateString('en-GB')}</h3>
+            <table>
+              <tr>
+                <th style="width: 5%;">SlNo.</th>
+                <th style="width: 12%;">Date</th>
+                <th style="width: 13%;">Category</th>
+                <th style="width: 15%;">Department</th>
+                <th style="width: 15%;">Employee</th>
+                <th style="width: 30%;">Description</th>
+                <th style="width: 10%;">Status</th>
+              </tr>
+              ${filteredIncidents.map((incident, index) => `
+                <tr>
+                  <td style="text-align: center;">${index + 1}</td>
+                  <td>${new Date(incident.date).toLocaleDateString('en-GB')}</td>
+                  <td>${incident.category}</td>
+                  <td>${incident.department}</td>
+                  <td>${incident.employeeName}</td>
+                  <td>${incident.incidentDescription || 'N/A'}</td>
+                  <td style="font-weight: bold; color: ${incident.status === 'resolved' ? '#27ae60' : '#e74c3c'};">${incident.status}</td>
+                </tr>
+              `).join('')}
+            </table>
+          </body>
+          </html>
+      `;
+
+      const formattedDate = date.toLocaleDateString('en-GB').split('/').reverse().join('-');
+      const timestamp = new Date().getTime();
+      const fileName = `Incident_Report_${formattedDate}_${timestamp}.pdf`;
+
+      // Generate PDF in app's cache directory
       const pdfOptions = {
         html: htmlContent,
-        fileName: `Incident_Report_${formattedDate}_${timestamp}`, // Append timestamp to file name
-        directory: 'Documents',
+        fileName: fileName,
+        directory: 'Cache'
       };
+
+      console.log('PDF options:', pdfOptions);
+
       const pdf = await RNHTMLtoPDF.convert(pdfOptions);
-      alert(`PDF saved to: ${pdf.filePath}`);
+      console.log('PDF generated at:', pdf.filePath);
+
+      if (pdf.filePath) {
+        const sourceUri = pdf.filePath;
+        console.log('Source URI:', sourceUri);
+
+        try {
+          // Ensure the file path starts with 'file://'
+          const fileUri = sourceUri.startsWith('file://') ? sourceUri : `file://${sourceUri}`;
+
+          // Schedule notification
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'Report Downloaded',
+              body: `${fileName} has been downloaded`,
+              data: { 
+                filePath: fileUri,
+                mimeType: 'application/pdf',
+                fileName: fileName
+              },
+            },
+            trigger: null,
+          });
+
+          // Share the file
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(fileUri, {
+              mimeType: 'application/pdf',
+              dialogTitle: 'Your report is ready'
+            });
+          } else {
+            console.log('Sharing is not available on this device');
+            ToastAndroid.show('PDF saved successfully!', ToastAndroid.LONG);
+          }
+
+          ToastAndroid.show('PDF saved and shared successfully!', ToastAndroid.LONG);
+        } catch (saveError) {
+          console.error('Error sharing file:', saveError);
+          throw new Error(`Failed to share file: ${saveError.message}`);
+        }
+      } else {
+        throw new Error('PDF generation failed: No file path returned');
+      }
     } catch (error) {
       console.error("Error generating PDF:", error);
-      alert("Failed to generate PDF. Please try again.");
+      ToastAndroid.show(`Failed to generate PDF: ${error.message}`, ToastAndroid.LONG);
     }
   };
 

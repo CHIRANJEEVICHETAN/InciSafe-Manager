@@ -10,7 +10,23 @@ const Settings = () => {
   const auth = getAuth();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Add this array of menu items
+  const menuItems = [
+    { id: 1, title: 'Edit profile', icon: 'pencil', iconType: 'FontAwesome', route: '/userPages/editProfile' },
+    { id: 2, title: 'Change Password', icon: 'lock', iconType: 'FontAwesome', route: '/userPages/changePassword' },
+    { id: 3, title: 'Help & Support', icon: 'help-circle-outline', iconType: 'Ionicons', route: '/userPages/helpcenter' },
+    { id: 4, title: 'Terms & Conditions', icon: 'description', iconType: 'MaterialIcons', route: '/userPages/terms' },
+    { id: 5, title: 'Feedback', icon: 'feedback', iconType: 'MaterialIcons', route: '/userPages/feedback' },
+    { id: 6, title: 'About', icon: 'information-circle', iconType: 'Ionicons', route: '/userPages/about' },
+    { id: 7, title: 'Log out', icon: 'logout', iconType: 'MaterialIcons', route: null },
+  ];
+
+  // Add this filter function
+  const filteredMenuItems = menuItems.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -40,10 +56,6 @@ const Settings = () => {
     } finally {
       setLoading(false); // Stop loading
     }
-  };
-
-  const toggleTheme = () => {
-    setIsDarkTheme(previousState => !previousState);
   };
 
   if (loading) {
@@ -87,120 +99,35 @@ const Settings = () => {
             color="black"
             style={{ marginLeft: 10 }}
           />
-          <TextInput placeholder="Search" style={styles.searchText} />
+          <TextInput
+            placeholder="Search"
+            style={styles.searchText}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
         </View>
         <ImageBackground
           source={require("./../../assets/images/background.jpg")}
           style={styles.menuItemlist}
         >
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0, marginTop: 10 }]}
-            onPress={() => router.push("/userPages/editProfile")}
-          >
-            <FontAwesome name="pencil" size={22} color="black" />
-            <Text style={styles.menuText}>Edit profile</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/changePassword")}
-          >
-            <FontAwesome name="lock" size={22} color="black" />
-            <Text style={styles.menuText}>Change Password</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
-          <View style={[styles.menuItem, { borderBottomWidth: 0 }]}>
-            <FontAwesome name="moon-o" size={22} color="black" />
-            <Text style={styles.menuText}>Theme</Text>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isDarkTheme ? "#f5dd4b" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleTheme}
-              value={isDarkTheme}
-              style={styles.switch}
-            />
-          </View>
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/helpcenter")}
-          >
-            <Ionicons
-              name="help-circle-outline"
-              size={28}
-              color="black"
-              style={{ marginLeft: -5 }}
-            />
-            <Text style={styles.menuText}>Help & Support</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/terms")}
-          >
-            <MaterialIcons name="description" size={22} color="black" />
-            <Text style={styles.menuText}>Terms & Conditions</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/feedback")}
-          >
-            <MaterialIcons name="feedback" size={22} color="black" />
-            <Text style={styles.menuText}>Feedback</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={() => router.push("/userPages/about")}
-          >
-            <Ionicons name="information-circle" size={22} color="black" />
-            <Text style={styles.menuText}>About</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.menuItem, { borderBottomWidth: 0 }]}
-            onPress={handleLogout}
-          >
-            <MaterialIcons name="logout" size={20} color="black" />
-            <Text style={styles.menuText}>Log out</Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={styles.chevron}
-            />
-          </TouchableOpacity>
+          {filteredMenuItems.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={[styles.menuItem, { borderBottomWidth: 0 }]}
+              onPress={() => item.route ? router.push(item.route) : handleLogout()}
+            >
+              {item.iconType === 'FontAwesome' && <FontAwesome name={item.icon} size={22} color="black" />}
+              {item.iconType === 'Ionicons' && <Ionicons name={item.icon} size={22} color="black" />}
+              {item.iconType === 'MaterialIcons' && <MaterialIcons name={item.icon} size={22} color="black" />}
+              <Text style={styles.menuText}>{item.title}</Text>
+              <MaterialCommunityIcons
+                name="chevron-right"
+                size={20}
+                color="black"
+                style={styles.chevron}
+              />
+            </TouchableOpacity>
+          ))}
         </ImageBackground>
       </ScrollView>
     </ImageBackground>
@@ -273,6 +200,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     marginLeft: 20,
     marginRight: 10,
+    marginTop: 10,
   },
   menuText: {
     marginLeft: 16,

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  ImageBackground,
+  Platform,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -78,105 +80,116 @@ const ProfilePage = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => router.back()}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-      >
-        <Image
-          source={require("./../../assets/images/back-button.png")}
-          style={styles.backButtonImage}
-        />
-      </TouchableOpacity>
-      <Text style={styles.title}>Profile</Text>
-      <View style={styles.separator} />
-      <View style={styles.profileIconContainer}>
-        {userData.profileURL ? (
+    <ImageBackground
+      source={require("./../../assets/images/background.jpg")}
+      style={styles.backgroundImage}
+    >
+      {Platform.OS === "ios" && (
+        <View style={{ height: 20, backgroundColor: "transparent" }} />
+      )}
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Image
-            source={{ uri: userData.profileURL }}
-            style={{ width: 85, height: 85, borderRadius: 42.5 }}
+            source={require("./../../assets/images/back-button.png")}
+            style={styles.backButtonImage}
           />
-        ) : (
-          <FontAwesome name="user-circle" size={85} color="#000000" />
-        )}
+        </TouchableOpacity>
+        <Text style={styles.title}>Profile</Text>
+        <View style={styles.separator} />
+        <View style={styles.profileIconContainer}>
+          {userData.profileURL ? (
+            <Image
+              source={{ uri: userData.profileURL }}
+              style={{ width: 85, height: 85, borderRadius: 42.5 }}
+            />
+          ) : (
+            <FontAwesome name="user-circle" size={85} color="#000000" />
+          )}
+        </View>
+        <ProfileField
+          icon="user"
+          label="Username"
+          value={userData.username || "N/A"}
+          style={styles.usernameField}
+          labelStyle={styles.usernameLabel}
+          valueStyle={styles.usernameValue}
+          iconStyle={styles.usernameIcon}
+        />
+        <ProfileField
+          icon="id-card"
+          label="User-ID"
+          value={userData.userId || "N/A"}
+          style={styles.userIdField}
+        />
+        <ProfileField
+          icon="calendar"
+          label="Date of Birth"
+          value={userData.dob || "N/A"}
+          style={styles.dobField}
+          labelStyle={styles.dobLabel}
+          valueStyle={styles.dobValue}
+          iconStyle={styles.dobIcon}
+        />
+        <ProfileField
+          icon="envelope"
+          label="Email"
+          value={userData.email || "N/A"}
+          style={styles.emailField}
+        />
+        <ProfileField
+          icon="phone"
+          label="Contact No"
+          value={userData.contact || "N/A"}
+          style={styles.contactField}
+          labelStyle={styles.contactLabel}
+          valueStyle={styles.contactValue}
+          iconStyle={styles.contactIcon}
+        />
+        <ProfileField
+          icon="phone"
+          label="Alternate Mobile"
+          value={userData.altContact || "N/A"}
+          style={styles.altContactField}
+          labelStyle={styles.altContactLabel}
+          valueStyle={styles.altContactValue}
+          iconStyle={styles.altContactIcon}
+        />
+        <ProfileField
+          icon="user-secret"
+          label="Role"
+          value={userData.role || "N/A"}
+          style={styles.roleField}
+          labelStyle={styles.roleLabel}
+          valueStyle={styles.roleValue}
+          iconStyle={styles.roleIcon}
+        />
+        <ProfileField
+          icon="map-marker"
+          label="Address"
+          value={userData.address || "N/A"}
+          style={[styles.addressField, { height: 80 }]}
+          labelStyle={[styles.addressLabel, { marginTop: -10 }]}
+          valueStyle={styles.addressValue}
+          iconStyle={styles.addressIcon}
+        />
       </View>
-      <ProfileField
-        icon="user"
-        label="Username"
-        value={userData.username || "N/A"}
-        style={styles.usernameField}
-        labelStyle={styles.usernameLabel}
-        valueStyle={styles.usernameValue}
-        iconStyle={styles.usernameIcon}
-      />
-      <ProfileField
-        icon="id-card"
-        label="User-ID"
-        value={userData.userId || "N/A"}
-        style={styles.userIdField}
-      />
-      <ProfileField
-        icon="calendar"
-        label="Date of Birth"
-        value={userData.dob || "N/A"}
-        style={styles.dobField}
-        labelStyle={styles.dobLabel}
-        valueStyle={styles.dobValue}
-        iconStyle={styles.dobIcon}
-      />
-      <ProfileField
-        icon="envelope"
-        label="Email"
-        value={userData.email || "N/A"}
-        style={styles.emailField}
-      />
-      <ProfileField
-        icon="phone"
-        label="Contact No"
-        value={userData.contact || "N/A"}
-        style={styles.contactField}
-        labelStyle={styles.contactLabel}
-        valueStyle={styles.contactValue}
-        iconStyle={styles.contactIcon}
-      />
-      <ProfileField
-        icon="phone"
-        label="Alternate Mobile"
-        value={userData.altContact || "N/A"}
-        style={styles.altContactField}
-        labelStyle={styles.altContactLabel}
-        valueStyle={styles.altContactValue}
-        iconStyle={styles.altContactIcon}
-      />
-      <ProfileField
-        icon="user-secret"
-        label="Role"
-        value={userData.role || "N/A"}
-        style={styles.roleField}
-        labelStyle={styles.roleLabel}
-        valueStyle={styles.roleValue}
-        iconStyle={styles.roleIcon}
-      />
-      <ProfileField
-        icon="map-marker"
-        label="Address"
-        value={userData.address || "N/A"}
-        style={[styles.addressField, { height: 80 }]}
-        labelStyle={[styles.addressLabel, { marginTop: -10 }]}
-        valueStyle={styles.addressValue}
-        iconStyle={styles.addressIcon}
-      />
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+  },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f0f0f0",
   },
   title: {
     fontSize: 30,

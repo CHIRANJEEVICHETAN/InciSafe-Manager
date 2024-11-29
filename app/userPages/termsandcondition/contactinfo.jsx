@@ -22,7 +22,7 @@ const Contactinfo = () => {
           <Text style={styles.headerText}>Terms & Conditions</Text>
         </View>
         <Text style={styles.titleText}>Contact Information</Text>
-        <View style={styles.underline} />
+        {/* <View style={styles.underline} /> */}
         <View style={styles.contentContainer}>
           <Text style={styles.contentText}>
             If you have any questions or concerns about these Terms, please contact our support team:
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 65,
+    paddingVertical: 35,
     borderBottomWidth: 1.8,
     borderColor: '#ccc',
   },

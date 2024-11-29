@@ -1,20 +1,75 @@
 import { registerRootComponent } from 'expo';
 import { firebaseConfig } from './../configs/FirebaseConfig';
 import { initializeApp, getApps } from "firebase/app";
-import { View, Alert, Linking, Platform, AppState } from "react-native";
+import { View, Alert, Platform, AppState, ToastAndroid, Linking } from "react-native";
 import React, { useEffect, useState } from "react";
 import App from "./../components/App";
 import { Redirect } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import notifee, { AndroidImportance, AuthorizationStatus, EventType } from "@notifee/react-native";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import messaging from "@react-native-firebase/messaging";
 import crashlytics from '@react-native-firebase/crashlytics';
 import { Audio } from 'expo-av';
+import * as Notifications from 'expo-notifications';
+import * as IntentLauncher from 'expo-intent-launcher';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import notifee, { AndroidImportance, AuthorizationStatus, EventType } from "@notifee/react-native";
 
 // Initialize Firebase immediately
 if (getApps().length === 0) {
   initializeApp(firebaseConfig);
 }
+
+// Configure notifications
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+// Add notification response handler
+Notifications.addNotificationResponseReceivedListener(async (response) => {
+  const { filePath, mimeType, fileName } = response.notification.request.content.data || {};
+  console.log('Notification data:', response.notification.request.content.data);
+  
+  if (filePath) {
+    try {
+      // Ensure the file path starts with 'file://'
+      const fileUri = filePath.startsWith('file://') ? filePath : `file://${filePath}`;
+
+      // Check if file exists
+      const fileInfo = await FileSystem.getInfoAsync(fileUri);
+      console.log('File info:', fileInfo);
+
+      if (!fileInfo.exists) {
+        console.log('File not found at:', fileUri);
+        ToastAndroid.show('File not found', ToastAndroid.LONG);
+        return;
+      }
+
+      // Use Sharing API to open the file
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'application/pdf',
+          dialogTitle: `Open ${fileName || 'PDF Report'}`,
+          UTI: 'com.adobe.pdf', // Uniform Type Identifier for PDFs
+        });
+      } else {
+        console.log('Sharing is not available');
+        ToastAndroid.show('Cannot open PDF. Please install a PDF viewer.', ToastAndroid.LONG);
+      }
+    } catch (error) {
+      console.error('Error opening PDF:', error);
+      ToastAndroid.show('Error opening PDF file', ToastAndroid.LONG);
+    }
+  } else {
+    console.log('No file path in notification data');
+    ToastAndroid.show('Error: No file path found', ToastAndroid.LONG);
+  }
+});
 
 function AppWrapper() {
   const [user, setUser] = useState(null);

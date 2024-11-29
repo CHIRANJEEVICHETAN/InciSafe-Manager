@@ -9,6 +9,7 @@ import {
   ImageBackground,
   StatusBar,
   Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import Header from "./../../components/Header";
 import SearchBar from "./../../components/SearchBar";
@@ -32,6 +33,7 @@ const Home = () => {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const { BASE_URL } = getConfig();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -109,37 +111,50 @@ const Home = () => {
   }
 
   return (
-    <ImageBackground
-      source={require("./../../assets/images/background.jpg")}
-      style={styles.backgroundImage}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? -64 : 0}
     >
-      {/* This view is used to simulate the background of the status bar on iOS */}
-      {Platform.OS === "ios" && (
-        <View style={{ height: 20, backgroundColor: "transparent" }} />
-      )}
-      {/* StatusBar configuration */}
-      <StatusBar
-        barStyle="dark-content"
-        translucent
-        backgroundColor="transparent"
-      />
-      <View style={styles.container}>
-        <Header username={user?.displayName || "User"} style={styles.header} />
-        <LineSVG style={styles.line} />
-        <SearchBar />
-        {role === "admin" && (
-          <TouchableOpacity
-            onPress={() => {
-              router.push("/admin/adminPages/Home");
-            }}
-            style={styles.adminButton}
-          >
-            <Text style={styles.adminText}>admin Page</Text>
-          </TouchableOpacity>
+      <ImageBackground
+        source={require("./../../assets/images/background.jpg")}
+        style={styles.backgroundImage}
+      >
+        {/* This view is used to simulate the background of the status bar on iOS */}
+        {Platform.OS === "ios" && (
+          <View style={{ height: 20, backgroundColor: "transparent" }} />
         )}
-        <IconGrid style={styles.iconGrid} />
-      </View>
-    </ImageBackground>
+        {/* StatusBar configuration */}
+        <StatusBar
+          barStyle="dark-content"
+          translucent
+          backgroundColor="transparent"
+        />
+        <View style={styles.container}>
+          <Header username={user?.displayName || "User"} style={styles.header} />
+          <LineSVG style={styles.line} />
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={styles.searchBar}
+          />
+          {role === "admin" && (
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/admin/adminPages/Home");
+              }}
+              style={styles.adminButton}
+            >
+              <Text style={styles.adminText}>admin Page</Text>
+            </TouchableOpacity>
+          )}
+          <IconGrid
+            style={styles.iconGrid}
+            searchQuery={searchQuery}
+          />
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -167,8 +182,10 @@ const styles = StyleSheet.create({
     marginTop: -6,
   },
   iconGrid: {
-    marginTop: 80,
-    transform: [{ scale: 1.2 }],
+    marginTop: height * 0.1,
+    width: '90%',
+    alignSelf: 'center',
+    transform: [{ scale: width < 380 ? 0.9 : width > 600 ? 1.3 : 1.2 }],
   },
   adminButton: {
     justifyContent: "center",
@@ -179,7 +196,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: "center",
     position: "absolute",
-    bottom: 10,
+    bottom: 120,
+    zIndex: 1000,
   },
   adminText: {
     color: "#fff",

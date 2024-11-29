@@ -1,12 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Image } from "react-native";
+import { useRouter } from 'expo-router';
 
 const IncidentManagement = () => {
+  const router = useRouter();
+
   return (
     <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require("../../../assets/images/back-button.png")}
+              style={styles.backButtonImage}
+            />
+          </TouchableOpacity>
       </View>
 
       <Text style={styles.titleText}>Incident Management</Text>
@@ -65,17 +79,34 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: -8,
     marginTop: 15,
+    marginLeft: 30,
+    textShadowColor: '#000',
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginTop: 10,
+    marginBottom: -20,
+    position: "relative",
+    right: 250,
+    top: -2,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 15,
+    zIndex: 1000,
   },
   titleText: {
     fontSize: 22,
     margin: 25,
     textAlign: "center",
-    color: "#555",
+    color: "black",
+    fontWeight: "bold",
     marginBottom: 45,
   },
   menuList: {
@@ -94,6 +125,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: "#333",
     textAlign: "justify",
+    paddingRight: 10,
+    marginRight: 8,
+    marginLeft: -5,
+    lineHeight: 23,
+    fontWeight:'450',
   },
 });
 
