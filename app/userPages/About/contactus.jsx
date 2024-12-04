@@ -1,25 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Image, Linking } from 'react-native';
+import { useRouter } from 'expo-router';
 
-const Contactus = () => {
+const contactInfo = () => {
+  const router = useRouter();
   return (
-    
     <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>About</Text>
-      </View>
-
-      <Text style={styles.titleText}>Contact Us</Text>
-
-      <View style={styles.contentContainer}>
-        <Text style={styles.contentText}>
-          If you have any questions or concerns about these Terms, please contact our support team:
-        </Text>
-        <Text style={styles.contactInfo}>Email: incisafemanager@gmail.com</Text>
-        <Text style={styles.contactInfo}>Phone: 1-800-123-4567</Text>
-      </View>
-    </ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require('./../../../assets/images/back-button.png')}
+              style={styles.backButtonImage}
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>About</Text>
+        </View>
+        <Text style={styles.titleText}>Contact Information</Text>
+        {/* <View style={styles.underline} /> */}
+        <View style={styles.contentContainer}>
+          <Text style={styles.contentText}>
+            If you have any questions or concerns about these Terms, please contact our support team:
+          </Text>
+          <TouchableOpacity onPress={() => Linking.openURL('mailto:incisafemanager@gmail.com')}>
+            <Text style={styles.contactLink}>Email: incisafemanager@gmail.com</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => Linking.openURL('tel:1-800-123-4567')}>
+            <Text style={styles.contactLink}>Phone: 1-800-123-4567</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -27,12 +42,23 @@ const Contactus = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContainer: {
     padding: 10,
   },
+  backButton: {
+    marginRight: 5,
+    marginLeft: 10,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+  },
   header: {
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 35,
     borderBottomWidth: 1.8,
     borderColor: '#ccc',
   },
@@ -40,37 +66,50 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: -8,
-    marginTop: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    alignSelf: 'center',
+    paddingRight: 40,
+    flex: 1,
+    color: '#000',
+    shadowColor: "#000",
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
   },
   titleText: {
     fontSize: 22,
     margin: 18,
     textAlign: 'center',
-    color: '#555',
-    marginBottom: 55,
+    color: '#000',
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  underline: {
+    width: 180,
+    borderBottomColor: 'black',
+    borderBottomWidth: 2,
+    marginHorizontal: 'auto',
+    marginBottom: 20,
+    alignSelf: 'center',
+    marginTop: -10,
   },
   contentContainer: {
     marginHorizontal: 15,
     alignItems: 'center',
   },
   contentText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 18,
+    color: '#000',
     textAlign: 'center',
     marginBottom: 15,
+    fontWeight: '450'
   },
-  contactInfo: {
-    fontSize: 18,
-    color: '#00796b', 
+  contactLink: {
+    fontSize: 20,
+    color: 'blue', // Blue color for links
     textAlign: 'center',
     marginBottom: 10,
   },
 });
 
-export default Contactus;
+export default contactInfo;

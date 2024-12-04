@@ -32,7 +32,7 @@ const About = () => {
               style={styles.backButtonImage}
             />
           </TouchableOpacity>
-          <Text style={styles.headerText}> About </Text>
+          <Text style={styles.headerText}>About </Text>
         </View>
 
         <LineSVG style={styles.line} />
@@ -163,11 +163,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: -8,
+    marginLeft: -15,
     marginTop: 15,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
   },
   line: {
@@ -209,6 +210,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 18,
+    color: '#000',
   },
   chevron: {
     position: "absolute",

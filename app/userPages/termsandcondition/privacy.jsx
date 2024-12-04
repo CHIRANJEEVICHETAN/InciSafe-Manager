@@ -21,7 +21,6 @@ const Privacy = () => {
           <Text style={styles.headerText}>Terms & Conditions</Text>
         </View>
         <Text style={styles.titleText}>Privacy and Confidentiality</Text>
-        <View style={styles.underline} />
         <View style={styles.menuList}>
           <View style={styles.menuItem}>
             <Text style={styles.menuText}>1. Our Commitment to Your Privacy</Text>

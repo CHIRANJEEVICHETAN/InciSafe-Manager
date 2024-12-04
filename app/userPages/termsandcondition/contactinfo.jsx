@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginRight: 10,
+    marginTop: 10,
   },
   backButtonImage: {
     width: 30,

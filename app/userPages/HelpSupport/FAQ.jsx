@@ -1,12 +1,25 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Image } from "react-native";
+import { useRouter } from 'expo-router';
 
 const FAQSection = () => {
+  const router = useRouter();
   return (
     <ImageBackground source={require('../../../assets/images/background.jpg')} style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Help Center</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require("../../../assets/images/back-button.png")}
+              style={styles.backButtonImage}
+            />
+          </TouchableOpacity>
       </View>
 
       <Text style={styles.titleText}>Frequently Asked Questions</Text>
@@ -66,28 +79,49 @@ const styles = StyleSheet.create({
   header: {
     justifyContent: "center",
     alignItems: "center",
-    padding: 25,
+    // padding: 25,
     borderBottomWidth: 1.5,
     borderColor: "#ccc",
+    // backgroundColor: "#fff",
+    // marginBottom: -30,
+    height: 90,
   },
   headerText: {
     fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: -8,
-    marginTop: 15,
+    marginBottom: -10,
+    // marginTop: 25,
+    paddingTop: 35,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginTop: 15,
+    marginBottom: -20,
+    position: "relative",
+    right: -25,
+    top: -50,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 15,
+    zIndex: 1000,
+    // marginRight: 5,
   },
   titleText: {
     fontSize: 21,
     margin: 25,
     textAlign: "center",
-    color: "#555",
-    paddingBottom: 25,
+    color: "#000",
+    fontWeight: "bold",
+    // paddingBottom: 25,
   },
   faqList: {
     marginHorizontal: 15,

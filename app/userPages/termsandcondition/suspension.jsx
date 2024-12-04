@@ -21,7 +21,6 @@ const Suspension = () => {
           <Text style={styles.headerText}>Terms & Conditions</Text>
         </View>
         <Text style={styles.titleText}>Suspension and Termination</Text>
-        <View style={styles.underline} />
         <View style={styles.menuList}>
           <View style={styles.menuItem}>
             <Text style={styles.menuText}>1. Account Suspension</Text>

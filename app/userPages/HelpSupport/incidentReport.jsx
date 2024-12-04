@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 18,
     marginBottom: 3,
-    color: "#222",
+    color: "#000",
   },
   bulletContainer: {
     paddingLeft: 20,

@@ -12,7 +12,7 @@ import DateTimePickerField from './../../../components/DateTimePicker';
 import LogoSVG from './../../../components/LogoSVG';
 import LineSVG from './../../../components/LineSVG';
 import { getAuth } from 'firebase/auth';
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import getConfig from "./../../../configs/config";
 import VoiceInput from '../../../components/VoiceInput';
 
@@ -20,9 +20,27 @@ export default function FireIncident() {
   const { BASE_URL } = getConfig();
   const router = useRouter();
   const auth = getAuth();
+  const params = useLocalSearchParams();
+  const {
+  autoFill,
+  department,
+  severity,
+  description,
+  violationType,
+  date: autoFillDate,
+  evidenceUrl
+  } = params; 
+  console.log('Navigation Params:', {
+    autoFill,
+    department,
+    severity,
+    description,
+    violationType,
+    autoFillDate
+  });
   const [user, setUser] = useState(null);
   // State variables for form data and UI control
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(autoFill && autoFillDate ? new Date(autoFillDate) : new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [Severity, setSeverity] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -30,9 +48,9 @@ export default function FireIncident() {
   const [selectedSeverity, setSelectedSeverity] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [incidentDescription, setIncidentDescription] = useState('');
+  const [incidentDescription, setIncidentDescription] = useState(autoFill ? description : '');
   const [violationTypes, setViolationTypes] = useState({
-    fire: false,
+    fire: autoFill ? violationType === 'fire' : false,
   });
   const [openSeverity, setOpenSeverity] = useState(null);
   const [openDepartment, setOpenDepartment] = useState(false);
@@ -48,6 +66,14 @@ export default function FireIncident() {
   const [evidenceName, setEvidenceName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Add this to the first useEffect
+  useEffect(() => {
+    if (autoFill === "true" && evidenceUrl) {
+      setEvidence(evidenceUrl);
+      setEvidenceName('auto-generated-evidence.jpg');
+    }
+  }, [autoFill, evidenceUrl]);
+  
   // Fetch departments and employees data on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +92,56 @@ export default function FireIncident() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log('Auto-fill Effect Triggered:', {
+      autoFill,
+      departmentsLoaded: departments.length > 0,
+      severityLoaded: Severity.length > 0,
+      department,
+      severity
+    });
+    
+    if (autoFill === "true" && departments.length > 0 && Severity.length > 0) {
+      if (department) {
+        const matchingDept = departments.find(
+          dept => dept.value.toUpperCase() === department.toUpperCase()
+        );
+        console.log('Matching Department:', matchingDept);
+        if (matchingDept) {
+          setSelectedDepartment(matchingDept.value);
+        }
+      }
+      if (severity) {
+        const matchingSeverity = Severity.find(
+          sev => sev.value.toLowerCase() === severity.toLowerCase()
+        );
+        console.log('Matching Severity:', matchingSeverity);
+        if (matchingSeverity) {
+          setSelectedSeverity(matchingSeverity.value);
+        }
+      }
+    }
+  }, [autoFill, departments, Severity, department, severity]);
+
+  // Modify the auto-submit effect
+useEffect(() => {
+  console.log('Auto-submit Effect Triggered:', {
+    autoFill,
+    selectedDepartment,
+    selectedSeverity,
+    incidentDescription,
+    allFieldsFilled: !!(autoFill === "true" && selectedDepartment && selectedSeverity && incidentDescription)
+  });
+  
+  if (autoFill === "true" && selectedDepartment && selectedSeverity && incidentDescription) {
+    console.log('Attempting auto-submit...');
+    // Add a small delay to ensure all states are updated
+    setTimeout(() => {
+      handleSubmit();
+    }, 1000);
+  }
+}, [autoFill, selectedDepartment, selectedSeverity, incidentDescription]);
 
   // Handle date selection from date picker
   const handleDateConfirm = (selectedDate) => {
@@ -148,6 +224,13 @@ export default function FireIncident() {
 
   // Handle form submission
   const handleSubmit = async () => {
+    console.log('handleSubmit called with values:', {
+      selectedDepartment,
+      selectedSeverity,
+      incidentDescription,
+      violationTypes,
+      date: date.toISOString()
+    });
     setIsLoading(true); // Start loading
     try {
       const incidentCategory = "Fire and Electrical Hazard Incident Form";

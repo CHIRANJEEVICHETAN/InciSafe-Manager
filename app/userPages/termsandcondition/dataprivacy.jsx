@@ -21,7 +21,6 @@ const DataPrivacy = () => {
           <Text style={styles.headerText}>Terms & Conditions</Text>
         </View>
         <Text style={styles.titleText}>Data Privacy And Security</Text>
-        <View style={styles.underline} />
         <View style={styles.menuList}>
           <View style={styles.menuItem}>
             <Text style={styles.menuText}>1. Data Collection</Text>
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginRight: 25,
     marginLeft: -20,
-    marginTop: 22,
+    marginTop: 10,
   },
   backButtonImage: {
     width: 30,
@@ -72,13 +71,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.8,
     borderColor: '#ccc',
     alignItems: 'center',
+    height: 80,
   },
   headerText: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: -8,
-    marginTop: 10,
+    // marginTop: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,

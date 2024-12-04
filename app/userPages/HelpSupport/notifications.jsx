@@ -109,15 +109,16 @@ const styles = StyleSheet.create({
     fontSize: 22,
     margin: 15,
     textAlign: "center",
-    color: "#555",
-    marginBottom: 55,
+    color: "#000",
+    fontWeight: "bold",
+    marginBottom: 40,
   },
   menuList: {
     marginHorizontal: 15,
   },
   menuItem: {
     justifyContent: "space-between",
-    alignItems: "baseline",
+    alignItems: "flex-start",
     paddingVertical: 10,
     // borderBottomWidth: 0.8,
     // borderBottomColor: "#ddd",
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 18,
     marginBottom: 15,
-    color: "#333",
+    color: "#000",
   },
   bulletContainer: {
     paddingLeft: 20,
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   },
   bulletText: {
     fontSize: 16,
-    color: "#555",
+    color: "#333",
     marginBottom: 5,
   },
 });

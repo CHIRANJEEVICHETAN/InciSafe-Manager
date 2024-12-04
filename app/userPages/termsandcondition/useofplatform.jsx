@@ -34,7 +34,6 @@ const UseOfPlatform = () => {
           <Text style={styles.headerText}>Terms & Conditions</Text>
         </View>
         <Text style={styles.titleText}>Use of Platform</Text>
-        <View style={styles.underline} />
         <View style={styles.menuList}>
           <View style={styles.menuItem}>
             <Text style={styles.menuText}>1. Eligibility</Text>
@@ -142,12 +141,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   menuItem: {
-    paddingVertical: 5,
+    paddingVertical: 10,
     marginHorizontal: 5,
   },
   menuText: {
     fontSize: 18,
-    marginBottom: 12,
+    marginBottom: 18,
     color: "#000",
     textAlign: "justify",
     fontWeight: "bold",

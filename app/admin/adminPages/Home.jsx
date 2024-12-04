@@ -224,10 +224,11 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginBottom: 8,
+    fontWeight: 'bold',
   },
   welcomeSubtitle: {
     fontSize: 16,
-    color: '#7f8c8d',
+    color: '#1F2937',
     textAlign: 'center',
   },
 });

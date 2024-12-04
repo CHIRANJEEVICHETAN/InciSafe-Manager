@@ -1,12 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Image } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const NotificationIssues = () => {
+    const router = useRouter();
   return (
     <ImageBackground source={require('../../../../assets/images/background.jpg')} style={styles.container}>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Help Center</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Image
+              source={require("../../../../assets/images/back-button.png")}
+              style={styles.backButtonImage}
+            />
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.issueText}>Notification Issues</Text>
@@ -65,33 +78,50 @@ const styles = StyleSheet.create({
     marginBottom: -8,
     marginTop: 5,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     elevation: 6,
     paddingLeft: 120,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginTop: 15,
+    marginBottom: -20,
+    position: "relative",
+    right: 300,
+    top: -20,
+    zIndex: 1000,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
+    marginTop: 15,
+    zIndex: 1000,
+    marginLeft: 50,
   },
   issueText: {
     fontSize: 21,
     margin: 25,
     textAlign: "center",
-    color: "#555",
+    color: "#000",
+    fontWeight: "bold",
   },
   issuesList: {
-    marginHorizontal: 25,
+    marginHorizontal: 10,
   },
   issueTitle: {
     fontSize: 18,
-    marginBottom: 15,
+    marginBottom: 5,
     fontWeight: 'bold',
   },
   subBulletContainer: {
     marginLeft: 25,
-    marginBottom: 20,
+    marginBottom: 3,
   },
   subBulletPoint: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 5,
   },
 });
 
