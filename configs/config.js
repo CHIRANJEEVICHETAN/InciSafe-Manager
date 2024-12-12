@@ -1,6 +1,6 @@
 const config = {
   development: {
-    BASE_URL: "http://192.168.0.108:3000",
+    BASE_URL: "http://192.168.0.105:3000",
     GEMINI_API_KEY: "AIzaSyByr0MMSAV70uJveZj6XAUbvKODOBhlulI",
     GOOGLE_CLOUD_API_KEY: "AIzaSyDKbV2_T0sxpjbsL_IidOc4PgCHUIBkgkc"
   },

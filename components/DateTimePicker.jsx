@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -8,9 +8,16 @@ export default function DateTimePickerField() {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleConfirm = (selectedDate) => {
-    const formattedDate = selectedDate.toLocaleString();
-    setDate(formattedDate);
-    setDatePickerVisibility(false);
+    const currentDate = new Date();
+    
+    if (selectedDate <= currentDate) {
+      const formattedDate = selectedDate.toLocaleString();
+      setDate(formattedDate);
+      setDatePickerVisibility(false);
+    } else {
+      Alert.alert('Invalid Time', 'Please select current or past time only');
+      setDatePickerVisibility(false);
+    }
   };
 
   return (
@@ -30,6 +37,7 @@ export default function DateTimePickerField() {
         mode="datetime"
         onConfirm={handleConfirm}
         onCancel={() => setDatePickerVisibility(false)}
+        maximumDate={new Date()}
       />
     </View>
   );

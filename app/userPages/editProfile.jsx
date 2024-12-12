@@ -81,8 +81,22 @@ const EditProfilePage = () => {
   };
 
   const handleConfirm = (date) => {
-    setDob(date.toLocaleDateString());
-    setDatePickerVisibility(false);
+    const today = new Date();
+    const birthDate = new Date(date);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    if (age >= 18) {
+      setDob(date.toLocaleDateString());
+      setDatePickerVisibility(false);
+    } else {
+      Alert.alert('Age Restriction', 'You must be at least 18 years old to register');
+      setDatePickerVisibility(false);
+    }
   };
 
   const selectImage = async () => {
@@ -231,7 +245,7 @@ const EditProfilePage = () => {
               />
             </View>
 
-            <View style={[styles.fieldContainer, { height: 100 }]}>
+            <View style={[styles.fieldContainer, { height: 100 }]} >
               <FontAwesome
                 name="map-marker"
                 size={24}
@@ -263,6 +277,7 @@ const EditProfilePage = () => {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={() => setDatePickerVisibility(false)}
+        maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
       />
     </ImageBackground>
   );

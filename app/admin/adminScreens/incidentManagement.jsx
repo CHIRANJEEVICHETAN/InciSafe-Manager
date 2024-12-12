@@ -205,6 +205,7 @@ export default function IncidentManagement() {
                 mode="date"
                 display="default"
                 onChange={onStartDateChange}
+                maximumDate={new Date()}
               />
             )}
           </View>
@@ -222,6 +223,7 @@ export default function IncidentManagement() {
                 mode="date"
                 display="default"
                 onChange={onEndDateChange}
+                maximumDate={new Date()}
               />
             )}
           </View>

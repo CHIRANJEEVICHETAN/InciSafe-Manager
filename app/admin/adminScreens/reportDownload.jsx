@@ -326,6 +326,7 @@ export default function ReportDownloads() {
                 setShowStartDatePicker(false);
                 if (selectedDate) setStartDate(selectedDate);
               }}
+              maximumDate={new Date()}
             />
           )}
 
@@ -346,6 +347,7 @@ export default function ReportDownloads() {
                 setShowEndDatePicker(false);
                 if (selectedDate) setEndDate(selectedDate);
               }}
+              maximumDate={new Date()}
             />
           )}
 
