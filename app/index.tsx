@@ -5,12 +5,10 @@ import { View, Alert, Platform, AppState, ToastAndroid, Linking } from "react-na
 import React, { useEffect, useState } from "react";
 import App from "./../components/App";
 import { Redirect } from "expo-router";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import messaging from "@react-native-firebase/messaging";
 import crashlytics from '@react-native-firebase/crashlytics';
 import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
-import * as IntentLauncher from 'expo-intent-launcher';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';

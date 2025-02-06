@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "../../../constants/Colors";
@@ -26,6 +27,7 @@ export default function SignUp() {
   const [secureText, setSecureText] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("./../../../assets/fonts/Inter/Inter_24pt-Regular.ttf"),
@@ -75,6 +77,7 @@ export default function SignUp() {
       return;
     }
 
+    setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -132,6 +135,8 @@ export default function SignUp() {
 
       console.log("Error creating user:", errorCode, error.message);
       ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -224,10 +229,15 @@ export default function SignUp() {
       </View>
 
       <TouchableOpacity
-        style={styles.SignUpButton}
+        style={[styles.SignUpButton, isLoading && styles.disabledButton]}
         onPress={() => OnCreateAccount(email, password)}
+        disabled={isLoading}
       >
-        <Text style={styles.SignUpButtonText}>Register</Text>
+        {isLoading ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Text style={styles.SignUpButtonText}>Register</Text>
+        )}
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
@@ -350,5 +360,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     transform: [{ scale: 1.2 }],
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 });

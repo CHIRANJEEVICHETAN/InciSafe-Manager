@@ -1,13 +1,14 @@
 const config = {
   development: {
-    BASE_URL: "http://192.168.0.105:3000",
-    GEMINI_API_KEY: "AIzaSyByr0MMSAV70uJveZj6XAUbvKODOBhlulI",
-    GOOGLE_CLOUD_API_KEY: "AIzaSyDKbV2_T0sxpjbsL_IidOc4PgCHUIBkgkc"
+    BASE_URL: "http://192.168.0.109:3001",
+    GEMINI_API_KEY: "AIzaSyBZUuhcihJSdw264bcQ9KMFiuBduNrJiQc",
+    GOOGLE_CLOUD_API_KEY: "AIzaSyDKbV2_T0sxpjbsL_IidOc4PgCHUIBkgkc",
   },
   production: {
-    BASE_URL: "https://incisafemanagerserver-eyfdfhgra3b8ggca.centralindia-01.azurewebsites.net",
-    GEMINI_API_KEY: "AIzaSyByr0MMSAV70uJveZj6XAUbvKODOBhlulI",
-    GOOGLE_CLOUD_API_KEY: "AIzaSyDKbV2_T0sxpjbsL_IidOc4PgCHUIBkgkc"
+    BASE_URL:
+      "https://incisafemanagerserver-eyfdfhgra3b8ggca.centralindia-01.azurewebsites.net",
+    GEMINI_API_KEY: "AIzaSyBZUuhcihJSdw264bcQ9KMFiuBduNrJiQc",
+    GOOGLE_CLOUD_API_KEY: "AIzaSyDKbV2_T0sxpjbsL_IidOc4PgCHUIBkgkc",
   },
 };
 
