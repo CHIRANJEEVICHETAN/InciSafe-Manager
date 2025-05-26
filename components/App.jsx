@@ -13,7 +13,6 @@ import {
 import useLoadFont from "./../hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
 import { useRouter } from "expo-router";
-// import BottomNavigator from "./../app/user/BottomNavigator";
 
 // Initialize Firebase
 if (getApps().length === 0) {

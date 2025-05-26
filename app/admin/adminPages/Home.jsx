@@ -52,6 +52,7 @@ const Home = () => {
     return () => unsubscribe();
   }, [auth, db, router]);
 
+
   useEffect(() => {
     if (!user) return;
 

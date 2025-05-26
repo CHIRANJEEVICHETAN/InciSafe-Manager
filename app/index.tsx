@@ -28,41 +28,75 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Add notification response handler
+// Create notification channel with enhanced configuration
+const createNotificationChannel = async () => {
+  await notifee.createChannel({
+    id: "default",
+    name: "Default Channel",
+    importance: AndroidImportance.HIGH,
+    sound: "default",
+    vibration: true,
+    vibrationPattern: [300, 500],
+    lights: true,
+    lightColor: 'red',
+    description: 'Receives all important notifications',
+    badge: true,
+  });
+
+  // Create a separate channel for PDF notifications
+  await notifee.createChannel({
+    id: "pdf_notifications",
+    name: "PDF Reports",
+    importance: AndroidImportance.HIGH,
+    sound: "default",
+    vibration: true,
+    description: 'Notifications for PDF reports and documents',
+  });
+};
+
+// Enhanced error handling for file operations
+const handleFileOpen = async (filePath: string, fileName?: string) => {
+  try {
+    const fileUri = filePath.startsWith('file://') ? filePath : `file://${filePath}`;
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+
+    if (!fileInfo.exists) {
+      throw new Error('FILE_NOT_FOUND');
+    }
+
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(fileUri, {
+        mimeType: 'application/pdf',
+        dialogTitle: `Open ${fileName || 'PDF Report'}`,
+        UTI: 'com.adobe.pdf',
+      });
+    } else {
+      throw new Error('SHARING_UNAVAILABLE');
+    }
+  } catch (error: unknown) {
+    crashlytics().log('File operation failed');
+    if (error instanceof Error) {
+      crashlytics().recordError(error);
+      
+      const errorMessage = error.message === 'FILE_NOT_FOUND' 
+        ? 'The requested file was not found'
+        : error.message === 'SHARING_UNAVAILABLE'
+        ? 'Cannot open PDF. Please install a PDF viewer.'
+        : 'Error opening PDF file';
+        
+      ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+      console.error('File operation error:', error);
+    }
+  }
+};
+
+// Add notification response handler with improved error handling
 Notifications.addNotificationResponseReceivedListener(async (response) => {
-  const { filePath, mimeType, fileName } = response.notification.request.content.data || {};
+  const { filePath, fileName } = response.notification.request.content.data || {};
   console.log('Notification data:', response.notification.request.content.data);
   
   if (filePath) {
-    try {
-      // Ensure the file path starts with 'file://'
-      const fileUri = filePath.startsWith('file://') ? filePath : `file://${filePath}`;
-
-      // Check if file exists
-      const fileInfo = await FileSystem.getInfoAsync(fileUri);
-      console.log('File info:', fileInfo);
-
-      if (!fileInfo.exists) {
-        console.log('File not found at:', fileUri);
-        ToastAndroid.show('File not found', ToastAndroid.LONG);
-        return;
-      }
-
-      // Use Sharing API to open the file
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri, {
-          mimeType: 'application/pdf',
-          dialogTitle: `Open ${fileName || 'PDF Report'}`,
-          UTI: 'com.adobe.pdf', // Uniform Type Identifier for PDFs
-        });
-      } else {
-        console.log('Sharing is not available');
-        ToastAndroid.show('Cannot open PDF. Please install a PDF viewer.', ToastAndroid.LONG);
-      }
-    } catch (error) {
-      console.error('Error opening PDF:', error);
-      ToastAndroid.show('Error opening PDF file', ToastAndroid.LONG);
-    }
+    await handleFileOpen(filePath, fileName);
   } else {
     console.log('No file path in notification data');
     ToastAndroid.show('Error: No file path found', ToastAndroid.LONG);
@@ -215,14 +249,6 @@ function AppWrapper() {
         await subscribeToTopic();
 
         // Create notification channel
-        const createNotificationChannel = async () => {
-          await notifee.createChannel({
-            id: "default",
-            name: "Default Channel",
-            importance: AndroidImportance.HIGH,
-            sound: "default",
-          });
-        };
         await createNotificationChannel();
 
         // Set up message handlers
@@ -259,7 +285,8 @@ function AppWrapper() {
           });
         });
 
-        const unsubscribeOnBackgroundEvent = notifee.onBackgroundEvent(async ({ type, detail }) => {
+        // Set up background event handler
+        notifee.onBackgroundEvent(async ({ type, detail }) => {
           console.log("Background event handled", type, detail);
           if (type === EventType.PRESS) {
             console.log("Notification pressed in background", detail.notification);
@@ -268,9 +295,6 @@ function AppWrapper() {
 
         return () => {
           unsubscribeOnMessage();
-          if (typeof unsubscribeOnBackgroundEvent === 'function') {
-            unsubscribeOnBackgroundEvent();
-          }
         };
       } catch (error) {
         console.error("Error initializing services:", error);
@@ -317,3 +341,4 @@ export default function index() {
 }
 
 registerRootComponent(index);
+
